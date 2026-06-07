@@ -1,0 +1,10 @@
+[
+  { "id": "log-1", "timestamp": "2026-06-05T08:00:01Z", "level": "INFO", "source": "firewall", "message": "Inbound scan blocked from 203.0.113.42" },
+  { "id": "log-2", "timestamp": "2026-06-05T08:00:15Z", "level": "WARN", "source": "ids", "message": "Suspicious User-Agent detected on /api/admin" },
+  { "id": "log-3", "timestamp": "2026-06-05T08:01:02Z", "level": "INFO", "source": "auth", "message": "Session validated for analyst-node-01" },
+  { "id": "log-4", "timestamp": "2026-06-05T08:01:30Z", "level": "CRITICAL", "source": "siem", "message": "Brute force attempt on SSH port 22 — mitigated" },
+  { "id": "log-5", "timestamp": "2026-06-05T08:02:00Z", "level": "INFO", "source": "honeypot", "message": "Decoy service triggered — payload captured" },
+  { "id": "log-6", "timestamp": "2026-06-05T08:02:45Z", "level": "WARN", "source": "waf", "message": "SQL injection pattern blocked — rule OWASP-942" },
+  { "id": "log-7", "timestamp": "2026-06-05T08:03:10Z", "level": "INFO", "source": "endpoint", "message": "EDR heartbeat OK — 12 agents online" },
+  { "id": "log-8", "timestamp": "2026-06-05T08:03:55Z", "level": "INFO", "source": "dns", "message": "DNS tunneling check — no anomalies" }
+]

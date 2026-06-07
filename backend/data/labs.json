@@ -1,0 +1,33 @@
+[
+  {
+    "id": "lab-1",
+    "title": "SQL Injection Lab",
+    "description": "Exploit and remediate classic SQLi in a vulnerable web app.",
+    "difficulty": "intermediate",
+    "category": "Web App Security",
+    "status": "active",
+    "tools": ["Burp Suite", "SQLMap", "Python"],
+    "url": "https://github.com",
+    "createdAt": "2026-03-01T09:00:00.000Z"
+  },
+  {
+    "id": "lab-2",
+    "title": "Active Directory Attack Chain",
+    "description": "Kerberoasting, lateral movement, and domain dominance simulation.",
+    "difficulty": "advanced",
+    "category": "Red Team",
+    "status": "active",
+    "tools": ["BloodHound", "Impacket", "CrackMapExec"],
+    "createdAt": "2026-02-10T11:00:00.000Z"
+  },
+  {
+    "id": "lab-3",
+    "title": "Cloud IAM Misconfiguration",
+    "description": "Enumerate overly permissive IAM roles in AWS sandbox.",
+    "difficulty": "intermediate",
+    "category": "Cloud Security",
+    "status": "completed",
+    "tools": ["ScoutSuite", "Prowler", "AWS CLI"],
+    "createdAt": "2026-01-20T08:00:00.000Z"
+  }
+]

@@ -1,0 +1,131 @@
+:root {
+  --bg: #050a0f;
+  --panel: #0c141c;
+  --green: #00ff9d;
+  --cyan: #00d4ff;
+  --border: #1a3a2e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Consolas', 'Courier New', monospace;
+  background: var(--bg);
+  color: #c9d1d9;
+}
+
+.admin-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.admin-sidebar {
+  width: 220px;
+  border-right: 1px solid var(--border);
+  background: var(--panel);
+  padding: 1.5rem 1rem;
+}
+
+.admin-logo {
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  color: var(--green);
+  margin: 0 0 1.5rem;
+}
+
+.admin-sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.admin-sidebar a {
+  color: #6b7280;
+  text-decoration: none;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.admin-sidebar a.active,
+.admin-sidebar a:hover {
+  color: var(--green);
+  background: rgba(0, 255, 157, 0.08);
+}
+
+.admin-main {
+  flex: 1;
+  padding: 1.5rem 2rem;
+}
+
+.admin-card {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.admin-card h2 {
+  margin: 0 0 1rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--cyan);
+}
+
+.admin-form label {
+  display: block;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+.admin-form input,
+.admin-form textarea,
+.admin-form select {
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.5rem 0.75rem;
+  background: #000;
+  border: 1px solid var(--border);
+  color: #e5e7eb;
+  border-radius: 4px;
+  font-family: inherit;
+}
+
+.admin-form button {
+  background: rgba(0, 255, 157, 0.15);
+  border: 1px solid var(--green);
+  color: var(--green);
+  padding: 0.6rem 1.25rem;
+  font-family: inherit;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.admin-form button:hover {
+  background: rgba(0, 255, 157, 0.25);
+}
+
+.status-console {
+  font-size: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.status-console .ok {
+  color: var(--green);
+}
+.status-console .err {
+  color: #ff3366;
+}

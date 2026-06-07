@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --cyber-bg: #050a0f;
+  --cyber-green: #00ff9d;
+  --cyber-cyan: #00d4ff;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-cyber-bg text-gray-200 antialiased;
+  background-image: radial-gradient(ellipse at 50% 0%, rgba(0, 255, 157, 0.06) 0%, transparent 55%);
+}
+
+::selection {
+  background: rgba(0, 255, 157, 0.3);
+  color: #fff;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a1219;
+}
+::-webkit-scrollbar-thumb {
+  background: #1a3a2e;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00ff9d44;
+}

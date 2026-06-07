@@ -1,0 +1,33 @@
+[
+  {
+    "id": "proj-1",
+    "title": "Threat Intel Dashboard",
+    "description": "Real-time IOC feed aggregator with MITRE ATT&CK mapping.",
+    "techStack": ["Next.js", "Python", "PostgreSQL", "Redis"],
+    "githubUrl": "https://github.com",
+    "category": "Blue Team",
+    "featured": true,
+    "createdAt": "2026-04-01T12:00:00.000Z"
+  },
+  {
+    "id": "proj-2",
+    "title": "Vulnerability Scanner CLI",
+    "description": "Modular network scanner with CVE correlation and PDF reporting.",
+    "techStack": ["Python", "Nmap", "SQLite"],
+    "githubUrl": "https://github.com",
+    "liveUrl": "",
+    "category": "Offensive Security",
+    "featured": true,
+    "createdAt": "2026-03-15T16:00:00.000Z"
+  },
+  {
+    "id": "proj-3",
+    "title": "Secure Auth Microservice",
+    "description": "JWT + refresh rotation, rate limiting, and audit logging.",
+    "techStack": ["Node.js", "Express", "MongoDB"],
+    "githubUrl": "https://github.com",
+    "category": "AppSec",
+    "featured": false,
+    "createdAt": "2026-02-28T10:00:00.000Z"
+  }
+]
