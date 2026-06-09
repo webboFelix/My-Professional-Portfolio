@@ -1,9 +1,13 @@
 import VideoForm from "@/components/VideoForm";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 export default function NewVideoPage() {
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Upload New Video</h1>
+    <div>
+      <PageHeader
+        title="Create Video"
+        description="Upload a video to Cloudinary"
+      />
       <VideoForm />
     </div>
   );

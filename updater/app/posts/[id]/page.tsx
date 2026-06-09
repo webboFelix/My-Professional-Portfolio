@@ -4,26 +4,29 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import api from "@/lib/api";
 import PostForm from "@/components/PostForm";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 
 export default function EditPostPage() {
   const { id } = useParams();
-  const [post, setPost] = useState(null);
+  const [post, setPost] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPost = async () => {
-      const res = await api.get(`/posts/${id}`);
+      const res = await api.get(`/posts/id/${id}`);
       setPost(res.data);
       setLoading(false);
     };
     if (id) fetchPost();
   }, [id]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <LoadingSkeleton rows={6} />;
+
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-6">Edit Post</h1>
-      <PostForm initialData={post} id={id as string} />
+      <PageHeader title="Edit Post" description="Update post content" />
+      <PostForm initialData={post!} id={id as string} />
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { databases, DATABASE_ID, ID } from "../config/appwrite.js";
+import { listCollection } from "../utils/appwriteQueries.js";
 
 const COLLECTION_ID = "contacts";
 
@@ -22,17 +23,15 @@ export const createContact = async (req, res) => {
 };
 
 export const getContacts = async (req, res) => {
-  // if (!req.admin) return res.status(401).json({ error: "Unauthorized" });
   try {
-    const response = await databases.listDocuments(DATABASE_ID, COLLECTION_ID);
-    res.json(response.documents);
+    const documents = await listCollection(COLLECTION_ID);
+    res.json(documents);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
 export const markAsRead = async (req, res) => {
-  // if (!req.admin) return res.status(401).json({ error: "Unauthorized" });
   try {
     const doc = await databases.updateDocument(
       DATABASE_ID,
@@ -47,7 +46,6 @@ export const markAsRead = async (req, res) => {
 };
 
 export const deleteContact = async (req, res) => {
-  //  if (!req.admin) return res.status(401).json({ error: "Unauthorized" });
   try {
     await databases.deleteDocument(DATABASE_ID, COLLECTION_ID, req.params.id);
     res.status(204).send();

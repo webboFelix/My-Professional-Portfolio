@@ -1,6 +1,13 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
+import { Mail, Trash2, Check } from "lucide-react";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { Badge } from "@/components/ui/Badge";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
+import { Button } from "@/components/ui/Button";
 
 interface Contact {
   $id: string;
@@ -16,9 +23,14 @@ export default function ContactsPage() {
   const [loading, setLoading] = useState(true);
 
   const fetchContacts = async () => {
-    const res = await api.get("/contacts");
-    setContacts(res.data);
-    setLoading(false);
+    try {
+      const res = await api.get("/contacts");
+      setContacts(res.data);
+    } catch {
+      setContacts([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -37,44 +49,79 @@ export default function ContactsPage() {
     }
   };
 
-  if (loading) return <div className="p-8">Loading...</div>;
+  const unread = contacts.filter((c) => !c.read).length;
 
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Contact Messages</h1>
-      {contacts.length === 0 ? (
-        <p>No messages yet.</p>
+    <div>
+      <PageHeader
+        title="Messages"
+        description={
+          unread > 0
+            ? `${unread} unread message${unread > 1 ? "s" : ""}`
+            : "Contact form submissions"
+        }
+      />
+
+      {loading ? (
+        <LoadingSkeleton rows={3} />
+      ) : contacts.length === 0 ? (
+        <EmptyState
+          title="No messages yet"
+          description="Messages from your portfolio contact form will appear here"
+        />
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {contacts.map((contact) => (
             <div
               key={contact.$id}
-              className={`border rounded p-4 ${contact.read ? "border-gray-700" : "border-blue-500"}`}
+              className={`rounded-xl border p-5 transition ${
+                contact.read
+                  ? "border-white/5 bg-white/[0.02]"
+                  : "border-cyan-500/20 bg-cyan-500/[0.03]"
+              }`}
             >
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="font-bold">
-                    {contact.name} ({contact.email})
-                  </h3>
-                  <p className="text-gray-400 text-sm">
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5">
+                      <Mail size={16} className="text-gray-400" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-white">
+                        {contact.name}
+                      </h3>
+                      <a
+                        href={`mailto:${contact.email}`}
+                        className="text-sm text-cyan-400 hover:underline"
+                      >
+                        {contact.email}
+                      </a>
+                    </div>
+                    {!contact.read && <Badge variant="info">New</Badge>}
+                  </div>
+                  <p className="mt-1 text-xs text-gray-600">
                     {new Date(contact.date).toLocaleString()}
                   </p>
-                  <p className="mt-2 whitespace-pre-wrap">{contact.message}</p>
+                  <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-gray-300">
+                    {contact.message}
+                  </p>
                 </div>
-                <div className="space-x-2">
+                <div className="flex shrink-0 gap-2">
                   {!contact.read && (
-                    <button
+                    <Button
+                      variant="secondary"
                       onClick={() => markAsRead(contact.$id)}
-                      className="bg-green-600 text-white px-3 py-1 rounded text-sm"
+                      className="!px-3 !py-1.5 text-xs"
                     >
+                      <Check size={14} />
                       Mark Read
-                    </button>
+                    </Button>
                   )}
                   <button
                     onClick={() => deleteContact(contact.$id)}
-                    className="text-red-400 hover:underline"
+                    className="rounded-lg p-2 text-gray-400 transition hover:bg-red-500/10 hover:text-red-400"
                   >
-                    Delete
+                    <Trash2 size={16} />
                   </button>
                 </div>
               </div>

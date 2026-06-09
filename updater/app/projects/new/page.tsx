@@ -1,9 +1,13 @@
 import ProjectForm from "@/components/ProjectForm";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 export default function NewProjectPage() {
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Create New Project</h1>
+    <div>
+      <PageHeader
+        title="Create Project"
+        description="Add a new project to your portfolio"
+      />
       <ProjectForm />
     </div>
   );

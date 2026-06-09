@@ -1,9 +1,13 @@
 import PostForm from "@/components/PostForm";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 export default function NewPostPage() {
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-6">Create New Post</h1>
+      <PageHeader
+        title="Create Post"
+        description="Write a new blog post or writeup"
+      />
       <PostForm />
     </div>
   );

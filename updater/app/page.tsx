@@ -3,6 +3,17 @@
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import { Card } from "@/components/ui/Card";
+import { StatCardSkeleton } from "@/components/ui/LoadingSkeleton";
+import {
+  FileText,
+  FlaskConical,
+  FolderKanban,
+  Video,
+  Mail,
+  Zap,
+  Sparkles,
+} from "lucide-react";
+import Link from "next/link";
 
 interface Stats {
   posts: number;
@@ -11,6 +22,56 @@ interface Stats {
   videos: number;
   contacts: number;
 }
+
+const statConfig = [
+  {
+    key: "posts" as const,
+    title: "Posts",
+    icon: FileText,
+    href: "/posts",
+    color: "#22d3ee",
+    empty: "No posts yet",
+  },
+  {
+    key: "labs" as const,
+    title: "Labs",
+    icon: FlaskConical,
+    href: "/labs",
+    color: "#a78bfa",
+    empty: "No labs yet",
+  },
+  {
+    key: "projects" as const,
+    title: "Projects",
+    icon: FolderKanban,
+    href: "/projects",
+    color: "#34d399",
+    empty: "No projects yet",
+  },
+  {
+    key: "videos" as const,
+    title: "Videos",
+    icon: Video,
+    href: "/videos",
+    color: "#f472b6",
+    empty: "No videos yet",
+  },
+  {
+    key: "contacts" as const,
+    title: "Messages",
+    icon: Mail,
+    href: "/contacts",
+    color: "#fbbf24",
+    empty: "No messages yet",
+  },
+];
+
+const quickActions = [
+  { label: "New Post", href: "/posts/new", color: "text-cyan-400" },
+  { label: "New Lab", href: "/labs/new", color: "text-violet-400" },
+  { label: "New Project", href: "/projects/new", color: "text-emerald-400" },
+  { label: "New Video", href: "/videos/new", color: "text-pink-400" },
+];
 
 export default function Dashboard() {
   const [stats, setStats] = useState<Stats>({
@@ -21,42 +82,23 @@ export default function Dashboard() {
     contacts: 0,
   });
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [apiError, setApiError] = useState(false);
 
   useEffect(() => {
     const fetchStats = async () => {
       setLoading(true);
-      setError(null);
+      setApiError(false);
       try {
-        const endpoints = [
-          { key: "posts", url: "/posts" },
-          { key: "labs", url: "/labs" },
-          { key: "projects", url: "/projects" },
-          { key: "videos", url: "/videos" },
-          { key: "contacts", url: "/contacts" },
-        ];
-        const results = await Promise.all(
-          endpoints.map(async (endpoint) => {
-            try {
-              const res = await api.get(endpoint.url);
-              // Check if response data is an array
-              const data = res.data;
-              const count = Array.isArray(data) ? data.length : 0;
-              return { key: endpoint.key, count };
-            } catch (err) {
-              console.error(`Error fetching ${endpoint.url}:`, err);
-              return { key: endpoint.key, count: 0 };
-            }
-          }),
-        );
-        const newStats = results.reduce((acc, { key, count }) => {
-          acc[key as keyof Stats] = count;
-          return acc;
-        }, {} as Stats);
-        setStats(newStats);
-      } catch (err) {
-        console.error("Failed to fetch stats:", err);
-        setError("Unable to load statistics. Please try again later.");
+        const res = await api.get("/stats");
+        setStats({
+          posts: res.data.posts ?? 0,
+          labs: res.data.labs ?? 0,
+          projects: res.data.projects ?? 0,
+          videos: res.data.videos ?? 0,
+          contacts: res.data.contacts ?? 0,
+        });
+      } catch {
+        setApiError(true);
       } finally {
         setLoading(false);
       }
@@ -64,54 +106,106 @@ export default function Dashboard() {
     fetchStats();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="p-8">
-        <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          {[...Array(5)].map((_, i) => (
-            <div
-              key={i}
-              className="bg-gray-800 animate-pulse h-32 rounded-lg"
-            ></div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="p-8">
-        <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
-        <div className="bg-red-900/50 border border-red-500 text-red-200 p-4 rounded">
-          {error}
-        </div>
-      </div>
-    );
-  }
+  const contentTotal =
+    stats.posts + stats.labs + stats.projects + stats.videos;
+  const isEmpty = !loading && !apiError && contentTotal === 0;
 
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <Card title="Posts" value={stats.posts} emptyMessage="No posts yet" />
-        <Card title="Labs" value={stats.labs} emptyMessage="No labs yet" />
-        <Card
-          title="Projects"
-          value={stats.projects}
-          emptyMessage="No projects yet"
-        />
-        <Card
-          title="Videos"
-          value={stats.videos}
-          emptyMessage="No videos yet"
-        />
-        <Card
-          title="Messages"
-          value={stats.contacts}
-          emptyMessage="No messages yet"
-        />
+    <div>
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold tracking-tight text-white">
+          Dashboard
+        </h1>
+        <p className="mt-1 text-sm text-gray-500">
+          Manage your portfolio content from one place
+        </p>
+      </div>
+
+      {apiError && (
+        <div className="mb-6 rounded-lg border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-300">
+          Could not reach the backend. Make sure it is running on port 5000.
+        </div>
+      )}
+
+      {isEmpty && (
+        <div className="mb-6 flex items-start gap-4 rounded-xl border border-cyan-500/20 bg-cyan-500/[0.05] p-5">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-cyan-500/10">
+            <Sparkles size={20} className="text-cyan-400" />
+          </div>
+          <div>
+            <h2 className="font-semibold text-white">
+              Your portfolio is empty — let&apos;s get started
+            </h2>
+            <p className="mt-1 text-sm text-gray-400">
+              All collections are empty. Create your first post, project, or lab
+              using the quick actions below.
+            </p>
+          </div>
+        </div>
+      )}
+
+      <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        {loading
+          ? Array.from({ length: 5 }).map((_, i) => (
+              <StatCardSkeleton key={i} />
+            ))
+          : statConfig.map((cfg) => (
+              <Card
+                key={cfg.key}
+                title={cfg.title}
+                value={stats[cfg.key]}
+                icon={cfg.icon}
+                href={cfg.href}
+                color={cfg.color}
+                emptyMessage={cfg.empty}
+              />
+            ))}
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6">
+          <div className="mb-4 flex items-center gap-2">
+            <Zap size={18} className="text-cyan-400" />
+            <h2 className="font-semibold text-white">Quick Actions</h2>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {quickActions.map((action) => (
+              <Link
+                key={action.href}
+                href={action.href}
+                className={`rounded-lg border border-white/5 bg-white/[0.03] px-4 py-3 text-sm font-medium transition hover:border-white/10 hover:bg-white/[0.06] ${action.color}`}
+              >
+                + {action.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6">
+          <h2 className="mb-4 font-semibold text-white">Overview</h2>
+          <div className="space-y-3">
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-500">Total content items</span>
+              <span className="font-medium text-white">
+                {loading ? "—" : contentTotal}
+              </span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-500">Messages</span>
+              <span className="font-medium text-amber-400">
+                {loading ? "—" : stats.contacts}
+              </span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-500">API status</span>
+              <span
+                className={`font-medium ${apiError ? "text-amber-400" : "text-emerald-400"}`}
+              >
+                {apiError ? "Disconnected" : "Connected"}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

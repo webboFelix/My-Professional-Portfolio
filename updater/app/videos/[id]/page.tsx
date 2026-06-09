@@ -1,28 +1,32 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import api from "@/lib/api";
 import VideoForm from "@/components/VideoForm";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 
 export default function EditVideoPage() {
   const { id } = useParams();
-  const [video, setVideo] = useState(null);
+  const [video, setVideo] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchVideo = async () => {
-      const res = await api.get(`/videos/${id}`);
+      const res = await api.get(`/videos/id/${id}`);
       setVideo(res.data);
       setLoading(false);
     };
     if (id) fetchVideo();
   }, [id]);
 
-  if (loading) return <div className="p-8">Loading...</div>;
+  if (loading) return <LoadingSkeleton rows={6} />;
+
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Edit Video</h1>
-      <VideoForm initialData={video} id={id as string} />
+    <div>
+      <PageHeader title="Edit Video" description="Update video details" />
+      <VideoForm initialData={video!} id={id as string} />
     </div>
   );
 }

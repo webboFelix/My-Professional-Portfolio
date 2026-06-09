@@ -1,17 +1,28 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import api from "@/lib/api";
+import api, { listAll } from "@/lib/api";
 import { Post } from "@/lib/types";
 import Link from "next/link";
 import { Edit, Trash2 } from "lucide-react";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { Badge } from "@/components/ui/Badge";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 
 export default function PostsPage() {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchPosts = async () => {
-    const res = await api.get("/posts");
-    setPosts(res.data);
+    try {
+      const res = await listAll("/posts");
+      setPosts(res.data);
+    } catch {
+      setPosts([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -27,44 +38,57 @@ export default function PostsPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Posts</h1>
-        <Link
-          href="/posts/new"
-          className="bg-cyan-600 hover:bg-cyan-700 px-4 py-2 rounded"
-        >
-          + New Post
-        </Link>
-      </div>
-      <div className="space-y-4">
-        {posts.map((post) => (
-          <div
-            key={post.$id}
-            className="bg-gray-800/50 border border-gray-700 rounded-lg p-4 flex justify-between items-center"
-          >
-            <div>
-              <h2 className="text-xl font-semibold">{post.title}</h2>
-              <p className="text-gray-400 text-sm">
-                {post.slug} • {post.published ? "Published" : "Draft"}
-              </p>
+      <PageHeader
+        title="Posts"
+        description="Blog posts and writeups for your portfolio"
+        action={{ label: "New Post", href: "/posts/new" }}
+      />
+
+      {loading ? (
+        <LoadingSkeleton rows={4} />
+      ) : posts.length === 0 ? (
+        <EmptyState
+          title="No posts yet"
+          description="Create your first blog post or writeup"
+          actionLabel="Create Post"
+          actionHref="/posts/new"
+        />
+      ) : (
+        <div className="space-y-3">
+          {posts.map((post) => (
+            <div
+              key={post.$id}
+              className="group flex items-center justify-between rounded-xl border border-white/5 bg-white/[0.02] p-4 transition hover:border-white/10 hover:bg-white/[0.04]"
+            >
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-3">
+                  <h2 className="truncate font-semibold text-white">
+                    {post.title}
+                  </h2>
+                  <Badge variant={post.published ? "success" : "warning"}>
+                    {post.published ? "Published" : "Draft"}
+                  </Badge>
+                </div>
+                <p className="mt-1 text-sm text-gray-500">{post.slug}</p>
+              </div>
+              <div className="flex gap-1 opacity-60 transition group-hover:opacity-100">
+                <Link
+                  href={`/posts/${post.$id}`}
+                  className="rounded-lg p-2 text-gray-400 transition hover:bg-white/5 hover:text-cyan-400"
+                >
+                  <Edit size={16} />
+                </Link>
+                <button
+                  onClick={() => handleDelete(post.$id)}
+                  className="rounded-lg p-2 text-gray-400 transition hover:bg-red-500/10 hover:text-red-400"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <Link
-                href={`/posts/${post.$id}`}
-                className="p-2 hover:bg-gray-700 rounded"
-              >
-                <Edit size={18} />
-              </Link>
-              <button
-                onClick={() => handleDelete(post.$id)}
-                className="p-2 hover:bg-red-900 rounded"
-              >
-                <Trash2 size={18} className="text-red-400" />
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

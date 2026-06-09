@@ -1,11 +1,12 @@
 import { databases, DATABASE_ID, ID } from "../config/appwrite.js";
+import { listCollection } from "../utils/appwriteQueries.js";
 
 const COLLECTION_ID = "projects";
 
 export const getProjects = async (req, res) => {
   try {
-    const response = await databases.listDocuments(DATABASE_ID, COLLECTION_ID);
-    res.json(response.documents);
+    const documents = await listCollection(COLLECTION_ID);
+    res.json(documents);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -25,13 +26,18 @@ export const getProjectById = async (req, res) => {
 };
 
 export const createProject = async (req, res) => {
-  if (!req.admin) return res.status(401).json({ error: "Unauthorized" });
   try {
+    const data = {
+      ...req.body,
+      date: req.body.date?.includes("T")
+        ? req.body.date
+        : new Date(`${req.body.date}T00:00:00.000Z`).toISOString(),
+    };
     const doc = await databases.createDocument(
       DATABASE_ID,
       COLLECTION_ID,
       ID.unique(),
-      req.body,
+      data,
     );
     res.status(201).json(doc);
   } catch (err) {
@@ -40,13 +46,16 @@ export const createProject = async (req, res) => {
 };
 
 export const updateProject = async (req, res) => {
-  if (!req.admin) return res.status(401).json({ error: "Unauthorized" });
   try {
+    const data = { ...req.body };
+    if (data.date && !data.date.includes("T")) {
+      data.date = new Date(`${data.date}T00:00:00.000Z`).toISOString();
+    }
     const doc = await databases.updateDocument(
       DATABASE_ID,
       COLLECTION_ID,
       req.params.id,
-      req.body,
+      data,
     );
     res.json(doc);
   } catch (err) {
@@ -55,7 +64,6 @@ export const updateProject = async (req, res) => {
 };
 
 export const deleteProject = async (req, res) => {
-  if (!req.admin) return res.status(401).json({ error: "Unauthorized" });
   try {
     await databases.deleteDocument(DATABASE_ID, COLLECTION_ID, req.params.id);
     res.status(204).send();

@@ -1,9 +1,13 @@
 import LabForm from "@/components/LabForm";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 export default function NewLabPage() {
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">Create New Lab</h1>
+    <div>
+      <PageHeader
+        title="Create Lab"
+        description="Document a new lab walkthrough"
+      />
       <LabForm />
     </div>
   );

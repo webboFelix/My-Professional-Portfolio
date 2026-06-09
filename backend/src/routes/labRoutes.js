@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getLabs,
+  getLabById,
   getLabBySlug,
   createLab,
   updateLab,
@@ -10,6 +11,7 @@ import {
 const router = express.Router();
 
 router.get("/", getLabs);
+router.get("/id/:id", getLabById);
 router.get("/:slug", getLabBySlug);
 router.post("/", createLab);
 router.put("/:id", updateLab);
