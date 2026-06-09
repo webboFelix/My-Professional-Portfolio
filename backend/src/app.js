@@ -1,35 +1,31 @@
-import express from 'express';
-import { corsMiddleware } from './middleware/cors.js';
-import { apiLimiter } from './middleware/rateLimiter.js';
-import postsRoutes from './routes/posts.routes.js';
-import labsRoutes from './routes/labs.routes.js';
-import projectsRoutes from './routes/projects.routes.js';
-import logsRoutes from './routes/logs.routes.js';
-import contactRoutes from './routes/contact.routes.js';
-import authRoutes from './routes/auth.routes.js';
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import postRoutes from "./routes/postRoutes.js";
+import labRoutes from "./routes/labRoutes.js";
+import projectRoutes from "./routes/projectRoutes.js";
+import contactRoutes from "./routes/contactRoutes.js";
+import videoRoutes from "./routes/videoRoutes.js";
+import uploadRoutes from "./routes/uploadRoutes.js";
+import statsRoutes from "./routes/statsRoutes.js";
+
+dotenv.config();
 
 const app = express();
 
-app.set('trust proxy', 1);
+app.use(cors());
+app.use(express.json());
 
-app.use(corsMiddleware);
-app.use(express.json({ limit: '1mb' }));
-app.use('/api', apiLimiter);
+// Routes
+app.use("/api/posts", postRoutes);
+app.use("/api/labs", labRoutes);
+app.use("/api/projects", projectRoutes);
+app.use("/api/contacts", contactRoutes);
+app.use("/api/videos", videoRoutes);
+app.use("/api/upload", uploadRoutes);
+app.use("/api/stats", statsRoutes);
 
-app.get('/api/health', (_req, res) => {
-  res.json({ status: 'online', service: 'cyber-portfolio-api', time: new Date().toISOString() });
-});
-
-app.use('/api/auth', authRoutes);
-app.use('/api/contact', contactRoutes);
-app.use('/api/posts', postsRoutes);
-app.use('/api/labs', labsRoutes);
-app.use('/api/projects', projectsRoutes);
-app.use('/api/logs', logsRoutes);
-
-app.use((err, _req, res, _next) => {
-  console.error(err);
-  res.status(err.status || 500).json({ error: err.message || 'Internal server error' });
-});
+// Health check
+app.get("/health", (req, res) => res.send("OK"));
 
 export default app;
