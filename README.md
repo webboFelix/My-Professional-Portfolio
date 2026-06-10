@@ -1,82 +1,72 @@
-# Cyber Portfolio — Interactive Security Portfolio System
+# 👋 Hi, I'm Felix Webbo
 
-Futuristic cybersecurity portfolio with a hacker-style public UI, Express API, and hidden admin panel for content updates.
+### Cybersecurity Analyst | Aspiring VAPT Engineer | Cloud & Network Security Enthusiast
 
-## Features
+I am a cybersecurity professional with a strong foundation in Vulnerability Assessment and Penetration Testing (VAPT), Web Application Security, Cloud Security, Network Security, and Security Automation.
 
-- **Terminal boot screen** on homepage with typing animation
-- **SOC dashboard** — stats, skills radar (Recharts), threat map, active labs feed
-- **Dynamic content** — projects, labs, posts from REST API
-- **Live logs page** — SIEM-style feed with pause and simulated events
-- **Interactive CLI** — type commands (`help`, `dashboard`, `labs`, …)
-- **Admin panel** — create posts, labs, projects without editing JSON
+---
 
-## Quick start
+## 🛡️ Areas of Interest
 
-### 1. Backend (port 4000)
+- Vulnerability Assessment & Penetration Testing (VAPT)
+- Web Application Security Testing
+- Cloud Security
+- Network Security
+- Security Automation with Python
+- Threat Detection & Analysis
 
-```bash
-cd backend
-cp .env.example .env
-npm install
-npm run dev
-```
+---
 
-### 2. Frontend (port 3000)
+## 🚀 Currently Working On
 
-```bash
-cd frontend
-cp .env.local.example .env.local
-npm install
-npm run dev
-```
+- Building cybersecurity automation tools with Python
+- Cloud security and IAM security research
+- Vulnerability assessment and web application testing
+- Security-focused projects and hands-on labs
 
-Open http://localhost:3000
+---
 
-### 3. Admin panel (port 5173)
+## 🎓 Certifications
 
-```bash
-cd updater
-npm install
-npm run dev
-```
+- Cloud & Network Security Analyst – Cyber Shujaa
+- Ethical Hacking Certifications
+- Cybersecurity Fundamentals Certifications
 
-Open http://localhost:5173
+---
 
-## Project structure
+## 🧰 Tools & Technologies
 
-```
-cyber-portfolio/
-├── frontend/     # Next.js public site
-├── backend/      # Express API + JSON data
-├── updater/      # Vite admin panel
-├── shared/       # Shared types & constants
-└── docs/         # Architecture & API docs
-```
+### Security
+- Burp Suite
+- Nmap
+- Wireshark
+- Metasploit
+- Kali Linux
 
-## Customize
+### Cloud
+- AWS
+- Azure
+- GCP
+- IAM
 
-- Profile copy: `frontend/app/page.tsx`, `frontend/lib/api.ts`
-- Sample data: `backend/data/*.json`
-- Theme: `frontend/styles/cyber-theme.css`, `tailwind.config.ts`
-- Your video: `frontend/public/assets/videos/`
+### Programming & Automation
+- Python
+- Bash
+- PowerShell
+- JavaScript
 
-## Docker (optional)
+---
 
-```bash
-docker compose up --build
-```
+## 🤝 Let's Connect
 
-## Authentication & contact
+📧 **Email:** felixwebbo8@gmail.com
 
-**Admin API key** — set `ADMIN_API_KEY` in `backend/.env`. The admin panel (`updater`) sends it via `X-API-Key` (configure in UI or `updater/.env` as `VITE_ADMIN_API_KEY`).
+💼 **LinkedIn:** [linkedin.com/in/webboFelix](https://linkedin.com/in/webboFelix)
 
-**Contact form** — `POST /api/contact` saves messages to `backend/data/messages.json`. For email delivery, add [Resend](https://resend.com) keys:
+💻 **GitHub:** [github.com/webboFelix](https://github.com/webboFelix)
 
-```env
-RESEND_API_KEY=re_...
-CONTACT_TO_EMAIL=you@example.com
-CONTACT_FROM_EMAIL=Portfolio <onboarding@resend.dev>
-```
+📍 **Location:** Nairobi, Kenya
 
-**Branding** — edit `frontend/.env.local` (see `.env.local.example`) for your name, GitHub, LinkedIn, and tagline.
+---
+
+> Securing today, automating the future, and continuously learning to stay ahead of emerging threats.
