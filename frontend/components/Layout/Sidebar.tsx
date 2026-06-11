@@ -10,6 +10,7 @@ const nav = [
   { href: '/dashboard', label: 'SOC Dashboard', icon: '◈' },
   { href: '/projects', label: 'Projects', icon: '▣' },
   { href: '/labs', label: 'Labs', icon: '⚗' },
+  { href: '/videos', label: 'Videos', icon: '▶' },
   { href: '/logs', label: 'Live Logs', icon: '▤' },
   { href: '/contact', label: 'Contact', icon: '✉' },
 ];

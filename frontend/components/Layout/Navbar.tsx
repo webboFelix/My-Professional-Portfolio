@@ -14,6 +14,7 @@ const links = [
   { href: "/posts", label: "Posts", icon: "✍" },
   { href: "/projects", label: "Projects", icon: "⚙" },
   { href: "/labs", label: "Labs", icon: "⚗" },
+  { href: "/videos", label: "Videos", icon: "▶" },
   { href: "/cheatsheet", label: "Cheatsheet", icon: "⚡" },
   { href: "/contact", label: "Contact", icon: "✉" },
 ];
