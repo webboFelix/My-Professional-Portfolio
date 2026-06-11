@@ -24,7 +24,7 @@ export function ThreatLevel() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.4 }}
     >
-      <GlassCard title="Threat Level" glow="red">
+      <GlassCard title="Threat Level" glow="magenta">
         {/* Circular threat gauge */}
         <div className="flex flex-col items-center gap-6 py-4">
           {/* SVG Gauge */}
