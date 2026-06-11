@@ -7,6 +7,8 @@ import { slugify } from "@/lib/utils";
 import CloudinaryUpload from "./CloudinaryUpload";
 import { Input, Textarea, Checkbox } from "./ui/Input";
 import { Button } from "./ui/Button";
+import { useToast } from "./providers/ToastProvider";
+import { useStats } from "./providers/StatsProvider";
 
 interface VideoFormProps {
   initialData?: Record<string, unknown>;
@@ -15,6 +17,8 @@ interface VideoFormProps {
 
 export default function VideoForm({ initialData, id }: VideoFormProps) {
   const router = useRouter();
+  const { toast } = useToast();
+  const { refresh } = useStats();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
@@ -87,13 +91,18 @@ export default function VideoForm({ initialData, id }: VideoFormProps) {
     try {
       if (id) {
         await api.put(`/videos/${id}`, dataToSend);
+        toast("Video updated");
       } else {
         await api.post("/videos", dataToSend);
+        toast("Video created");
       }
+      refresh();
       router.push("/videos");
     } catch (err: unknown) {
       const axiosErr = err as { response?: { data?: { error?: string } } };
-      setError(axiosErr.response?.data?.error || "Error saving video");
+      const msg = axiosErr.response?.data?.error || "Error saving video";
+      setError(msg);
+      toast(msg, "error");
     } finally {
       setLoading(false);
     }

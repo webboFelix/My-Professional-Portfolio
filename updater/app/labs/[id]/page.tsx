@@ -25,7 +25,11 @@ export default function EditLabPage() {
 
   return (
     <div>
-      <PageHeader title="Edit Lab" description="Update lab writeup" />
+      <PageHeader
+        title="Edit Lab"
+        description={(lab?.title as string) || "Update lab writeup"}
+        backHref="/labs"
+      />
       <LabForm initialData={lab!} id={id as string} />
     </div>
   );

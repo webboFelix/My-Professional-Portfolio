@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import api, { listAll } from "@/lib/api";
 import { Edit, Trash2, Play } from "lucide-react";
@@ -8,6 +8,11 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
+import { SearchInput } from "@/components/ui/SearchInput";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useToast } from "@/components/providers/ToastProvider";
+import { useStats } from "@/components/providers/StatsProvider";
+import { useDeleteConfirm } from "@/hooks/useDeleteConfirm";
 
 interface Video {
   $id: string;
@@ -22,6 +27,11 @@ interface Video {
 export default function VideosPage() {
   const [videos, setVideos] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const { toast } = useToast();
+  const { refresh } = useStats();
+  const { target, deleting, setDeleting, open, close } =
+    useDeleteConfirm<Video>();
 
   const fetchVideos = async () => {
     try {
@@ -38,10 +48,29 @@ export default function VideosPage() {
     fetchVideos();
   }, []);
 
-  const deleteVideo = async (id: string) => {
-    if (confirm("Delete this video?")) {
-      await api.delete(`/videos/${id}`);
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase().trim();
+    if (!q) return videos;
+    return videos.filter(
+      (v) =>
+        v.title.toLowerCase().includes(q) ||
+        v.slug.toLowerCase().includes(q),
+    );
+  }, [videos, search]);
+
+  const handleDelete = async () => {
+    if (!target) return;
+    setDeleting(true);
+    try {
+      await api.delete(`/videos/${target.$id}`);
+      toast("Video deleted");
+      close();
       fetchVideos();
+      refresh();
+    } catch {
+      toast("Failed to delete video", "error");
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -60,8 +89,18 @@ export default function VideosPage() {
         action={{ label: "New Video", href: "/videos/new" }}
       />
 
+      {!loading && videos.length > 0 && (
+        <div className="mb-6">
+          <SearchInput
+            value={search}
+            onChange={setSearch}
+            placeholder="Search videos..."
+          />
+        </div>
+      )}
+
       {loading ? (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 3 }).map((_, i) => (
             <div
               key={i}
@@ -76,9 +115,11 @@ export default function VideosPage() {
           actionLabel="Create Video"
           actionHref="/videos/new"
         />
+      ) : filtered.length === 0 ? (
+        <EmptyState title="No matches" description={`Nothing found for "${search}"`} />
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {videos.map((video) => (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((video) => (
             <div
               key={video.$id}
               className="group overflow-hidden rounded-xl border border-white/5 bg-white/[0.02] transition hover:border-white/10"
@@ -94,14 +135,14 @@ export default function VideosPage() {
                 ) : (
                   <Play size={32} className="text-gray-600" />
                 )}
-                {video.duration && (
+                {video.duration ? (
                   <span className="absolute bottom-2 right-2 rounded bg-black/70 px-1.5 py-0.5 text-xs text-white">
                     {formatDuration(video.duration)}
                   </span>
-                )}
+                ) : null}
               </div>
               <div className="p-4">
-                <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0 flex-1">
                     <h3 className="truncate font-semibold text-white">
                       {video.title}
@@ -120,7 +161,7 @@ export default function VideosPage() {
                     <Edit size={16} />
                   </Link>
                   <button
-                    onClick={() => deleteVideo(video.$id)}
+                    onClick={() => open(video)}
                     className="rounded-lg p-2 text-gray-400 transition hover:bg-red-500/10 hover:text-red-400"
                   >
                     <Trash2 size={16} />
@@ -131,6 +172,15 @@ export default function VideosPage() {
           ))}
         </div>
       )}
+
+      <ConfirmDialog
+        open={!!target}
+        title="Delete video?"
+        description={`"${target?.title}" will be permanently removed from Cloudinary and Appwrite.`}
+        onConfirm={handleDelete}
+        onCancel={close}
+        loading={deleting}
+      />
     </div>
   );
 }

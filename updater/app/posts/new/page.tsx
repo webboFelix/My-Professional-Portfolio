@@ -7,6 +7,7 @@ export default function NewPostPage() {
       <PageHeader
         title="Create Post"
         description="Write a new blog post or writeup"
+        backHref="/posts"
       />
       <PostForm />
     </div>

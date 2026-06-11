@@ -7,6 +7,7 @@ export default function NewProjectPage() {
       <PageHeader
         title="Create Project"
         description="Add a new project to your portfolio"
+        backHref="/projects"
       />
       <ProjectForm />
     </div>

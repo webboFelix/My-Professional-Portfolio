@@ -7,6 +7,7 @@ export default function NewLabPage() {
       <PageHeader
         title="Create Lab"
         description="Document a new lab walkthrough"
+        backHref="/labs"
       />
       <LabForm />
     </div>

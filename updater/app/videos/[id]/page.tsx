@@ -25,7 +25,11 @@ export default function EditVideoPage() {
 
   return (
     <div>
-      <PageHeader title="Edit Video" description="Update video details" />
+      <PageHeader
+        title="Edit Video"
+        description={(video?.title as string) || "Update video details"}
+        backHref="/videos"
+      />
       <VideoForm initialData={video!} id={id as string} />
     </div>
   );

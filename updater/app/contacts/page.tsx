@@ -1,13 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import api from "@/lib/api";
 import { Mail, Trash2, Check } from "lucide-react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
+import { SearchInput } from "@/components/ui/SearchInput";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { Button } from "@/components/ui/Button";
+import { useToast } from "@/components/providers/ToastProvider";
+import { useStats } from "@/components/providers/StatsProvider";
+import { useDeleteConfirm } from "@/hooks/useDeleteConfirm";
 
 interface Contact {
   $id: string;
@@ -21,6 +26,11 @@ interface Contact {
 export default function ContactsPage() {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const { toast } = useToast();
+  const { refresh } = useStats();
+  const { target, deleting, setDeleting, open, close } =
+    useDeleteConfirm<Contact>();
 
   const fetchContacts = async () => {
     try {
@@ -37,19 +47,45 @@ export default function ContactsPage() {
     fetchContacts();
   }, []);
 
-  const markAsRead = async (id: string) => {
-    await api.put(`/contacts/${id}/read`);
-    fetchContacts();
-  };
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase().trim();
+    if (!q) return contacts;
+    return contacts.filter(
+      (c) =>
+        c.name.toLowerCase().includes(q) ||
+        c.email.toLowerCase().includes(q) ||
+        c.message.toLowerCase().includes(q),
+    );
+  }, [contacts, search]);
 
-  const deleteContact = async (id: string) => {
-    if (confirm("Delete this message?")) {
-      await api.delete(`/contacts/${id}`);
+  const unread = contacts.filter((c) => !c.read).length;
+
+  const markAsRead = async (id: string) => {
+    try {
+      await api.put(`/contacts/${id}/read`);
+      toast("Marked as read");
       fetchContacts();
+      refresh();
+    } catch {
+      toast("Failed to update message", "error");
     }
   };
 
-  const unread = contacts.filter((c) => !c.read).length;
+  const handleDelete = async () => {
+    if (!target) return;
+    setDeleting(true);
+    try {
+      await api.delete(`/contacts/${target.$id}`);
+      toast("Message deleted");
+      close();
+      fetchContacts();
+      refresh();
+    } catch {
+      toast("Failed to delete message", "error");
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   return (
     <div>
@@ -62,6 +98,16 @@ export default function ContactsPage() {
         }
       />
 
+      {!loading && contacts.length > 0 && (
+        <div className="mb-6">
+          <SearchInput
+            value={search}
+            onChange={setSearch}
+            placeholder="Search messages..."
+          />
+        </div>
+      )}
+
       {loading ? (
         <LoadingSkeleton rows={3} />
       ) : contacts.length === 0 ? (
@@ -69,9 +115,11 @@ export default function ContactsPage() {
           title="No messages yet"
           description="Messages from your portfolio contact form will appear here"
         />
+      ) : filtered.length === 0 ? (
+        <EmptyState title="No matches" description={`Nothing found for "${search}"`} />
       ) : (
         <div className="space-y-3">
-          {contacts.map((contact) => (
+          {filtered.map((contact) => (
             <div
               key={contact.$id}
               className={`rounded-xl border p-5 transition ${
@@ -82,8 +130,8 @@ export default function ContactsPage() {
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/5">
                       <Mail size={16} className="text-gray-400" />
                     </div>
                     <div>
@@ -118,7 +166,7 @@ export default function ContactsPage() {
                     </Button>
                   )}
                   <button
-                    onClick={() => deleteContact(contact.$id)}
+                    onClick={() => open(contact)}
                     className="rounded-lg p-2 text-gray-400 transition hover:bg-red-500/10 hover:text-red-400"
                   >
                     <Trash2 size={16} />
@@ -129,6 +177,15 @@ export default function ContactsPage() {
           ))}
         </div>
       )}
+
+      <ConfirmDialog
+        open={!!target}
+        title="Delete message?"
+        description={`Message from "${target?.name}" will be permanently removed.`}
+        onConfirm={handleDelete}
+        onCancel={close}
+        loading={deleting}
+      />
     </div>
   );
 }

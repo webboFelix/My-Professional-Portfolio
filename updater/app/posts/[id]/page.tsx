@@ -25,7 +25,11 @@ export default function EditPostPage() {
 
   return (
     <div>
-      <PageHeader title="Edit Post" description="Update post content" />
+      <PageHeader
+        title="Edit Post"
+        description={(post?.title as string) || "Update post content"}
+        backHref="/posts"
+      />
       <PostForm initialData={post!} id={id as string} />
     </div>
   );

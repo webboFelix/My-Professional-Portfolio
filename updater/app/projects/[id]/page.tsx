@@ -25,7 +25,11 @@ export default function EditProjectPage() {
 
   return (
     <div>
-      <PageHeader title="Edit Project" description="Update project details" />
+      <PageHeader
+        title="Edit Project"
+        description={(project?.title as string) || "Update project details"}
+        backHref="/projects"
+      />
       <ProjectForm initialData={project!} id={id as string} />
     </div>
   );

@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import api from "@/lib/api";
+import { useStats } from "@/components/providers/StatsProvider";
 import { Card } from "@/components/ui/Card";
 import { StatCardSkeleton } from "@/components/ui/LoadingSkeleton";
 import {
@@ -12,16 +11,9 @@ import {
   Mail,
   Zap,
   Sparkles,
+  ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
-
-interface Stats {
-  posts: number;
-  labs: number;
-  projects: number;
-  videos: number;
-  contacts: number;
-}
 
 const statConfig = [
   {
@@ -67,48 +59,39 @@ const statConfig = [
 ];
 
 const quickActions = [
-  { label: "New Post", href: "/posts/new", color: "text-cyan-400" },
-  { label: "New Lab", href: "/labs/new", color: "text-violet-400" },
-  { label: "New Project", href: "/projects/new", color: "text-emerald-400" },
-  { label: "New Video", href: "/videos/new", color: "text-pink-400" },
+  {
+    label: "New Post",
+    href: "/posts/new",
+    color: "from-cyan-500/10 to-cyan-600/5",
+    text: "text-cyan-400",
+    border: "hover:border-cyan-500/30",
+  },
+  {
+    label: "New Lab",
+    href: "/labs/new",
+    color: "from-violet-500/10 to-violet-600/5",
+    text: "text-violet-400",
+    border: "hover:border-violet-500/30",
+  },
+  {
+    label: "New Project",
+    href: "/projects/new",
+    color: "from-emerald-500/10 to-emerald-600/5",
+    text: "text-emerald-400",
+    border: "hover:border-emerald-500/30",
+  },
+  {
+    label: "New Video",
+    href: "/videos/new",
+    color: "from-pink-500/10 to-pink-600/5",
+    text: "text-pink-400",
+    border: "hover:border-pink-500/30",
+  },
 ];
 
 export default function Dashboard() {
-  const [stats, setStats] = useState<Stats>({
-    posts: 0,
-    labs: 0,
-    projects: 0,
-    videos: 0,
-    contacts: 0,
-  });
-  const [loading, setLoading] = useState(true);
-  const [apiError, setApiError] = useState(false);
-
-  useEffect(() => {
-    const fetchStats = async () => {
-      setLoading(true);
-      setApiError(false);
-      try {
-        const res = await api.get("/stats");
-        setStats({
-          posts: res.data.posts ?? 0,
-          labs: res.data.labs ?? 0,
-          projects: res.data.projects ?? 0,
-          videos: res.data.videos ?? 0,
-          contacts: res.data.contacts ?? 0,
-        });
-      } catch {
-        setApiError(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchStats();
-  }, []);
-
-  const contentTotal =
-    stats.posts + stats.labs + stats.projects + stats.videos;
-  const isEmpty = !loading && !apiError && contentTotal === 0;
+  const { stats, loading, error, contentTotal } = useStats();
+  const isEmpty = !loading && !error && contentTotal === 0;
 
   return (
     <div>
@@ -121,30 +104,37 @@ export default function Dashboard() {
         </p>
       </div>
 
-      {apiError && (
-        <div className="mb-6 rounded-lg border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-300">
+      {error && (
+        <div className="mb-6 rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-300">
           Could not reach the backend. Make sure it is running on port 5000.
         </div>
       )}
 
       {isEmpty && (
-        <div className="mb-6 flex items-start gap-4 rounded-xl border border-cyan-500/20 bg-cyan-500/[0.05] p-5">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-cyan-500/10">
-            <Sparkles size={20} className="text-cyan-400" />
+        <div className="mb-6 flex flex-col gap-4 rounded-xl border border-cyan-500/20 bg-gradient-to-r from-cyan-500/[0.06] to-blue-500/[0.04] p-5 sm:flex-row sm:items-center">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-cyan-500/10">
+            <Sparkles size={22} className="text-cyan-400" />
           </div>
-          <div>
+          <div className="flex-1">
             <h2 className="font-semibold text-white">
               Your portfolio is empty — let&apos;s get started
             </h2>
             <p className="mt-1 text-sm text-gray-400">
-              All collections are empty. Create your first post, project, or lab
-              using the quick actions below.
+              All collections are empty. Pick a content type below to create your
+              first entry.
             </p>
           </div>
+          <Link
+            href="/posts/new"
+            className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-cyan-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-cyan-500"
+          >
+            Create first post
+            <ArrowRight size={16} />
+          </Link>
         </div>
       )}
 
-      <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
         {loading
           ? Array.from({ length: 5 }).map((_, i) => (
               <StatCardSkeleton key={i} />
@@ -173,7 +163,7 @@ export default function Dashboard() {
               <Link
                 key={action.href}
                 href={action.href}
-                className={`rounded-lg border border-white/5 bg-white/[0.03] px-4 py-3 text-sm font-medium transition hover:border-white/10 hover:bg-white/[0.06] ${action.color}`}
+                className={`rounded-xl border border-white/5 bg-gradient-to-br px-4 py-4 text-sm font-medium transition ${action.color} ${action.text} ${action.border}`}
               >
                 + {action.label}
               </Link>
@@ -183,25 +173,40 @@ export default function Dashboard() {
 
         <div className="rounded-xl border border-white/5 bg-white/[0.02] p-6">
           <h2 className="mb-4 font-semibold text-white">Overview</h2>
-          <div className="space-y-3">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-500">Total content items</span>
-              <span className="font-medium text-white">
-                {loading ? "—" : contentTotal}
-              </span>
-            </div>
-            <div className="flex justify-between text-sm">
+          <div className="space-y-4">
+            {[
+              { label: "Posts", value: stats.posts, color: "bg-cyan-500" },
+              { label: "Labs", value: stats.labs, color: "bg-violet-500" },
+              {
+                label: "Projects",
+                value: stats.projects,
+                color: "bg-emerald-500",
+              },
+              { label: "Videos", value: stats.videos, color: "bg-pink-500" },
+            ].map((item) => (
+              <div key={item.label}>
+                <div className="mb-1 flex justify-between text-sm">
+                  <span className="text-gray-500">{item.label}</span>
+                  <span className="font-medium text-white">
+                    {loading ? "—" : item.value}
+                  </span>
+                </div>
+                <div className="h-1.5 overflow-hidden rounded-full bg-white/5">
+                  <div
+                    className={`h-full rounded-full ${item.color} transition-all duration-500`}
+                    style={{
+                      width: loading
+                        ? "0%"
+                        : `${contentTotal ? (item.value / Math.max(contentTotal, 1)) * 100 : 0}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
+            <div className="flex justify-between border-t border-white/5 pt-3 text-sm">
               <span className="text-gray-500">Messages</span>
               <span className="font-medium text-amber-400">
                 {loading ? "—" : stats.contacts}
-              </span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-500">API status</span>
-              <span
-                className={`font-medium ${apiError ? "text-amber-400" : "text-emerald-400"}`}
-              >
-                {apiError ? "Disconnected" : "Connected"}
               </span>
             </div>
           </div>

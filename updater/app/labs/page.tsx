@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import api, { listAll } from "@/lib/api";
 import { Edit, Trash2 } from "lucide-react";
@@ -8,6 +8,11 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
+import { SearchInput } from "@/components/ui/SearchInput";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useToast } from "@/components/providers/ToastProvider";
+import { useStats } from "@/components/providers/StatsProvider";
+import { useDeleteConfirm } from "@/hooks/useDeleteConfirm";
 
 interface Lab {
   $id: string;
@@ -19,7 +24,10 @@ interface Lab {
   published: boolean;
 }
 
-const difficultyColor: Record<string, "success" | "warning" | "default" | "info"> = {
+const difficultyColor: Record<
+  string,
+  "success" | "warning" | "default" | "info"
+> = {
   Easy: "success",
   Medium: "info",
   Hard: "warning",
@@ -29,6 +37,11 @@ const difficultyColor: Record<string, "success" | "warning" | "default" | "info"
 export default function LabsPage() {
   const [labs, setLabs] = useState<Lab[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const { toast } = useToast();
+  const { refresh } = useStats();
+  const { target, deleting, setDeleting, open, close } =
+    useDeleteConfirm<Lab>();
 
   const fetchLabs = async () => {
     try {
@@ -45,10 +58,29 @@ export default function LabsPage() {
     fetchLabs();
   }, []);
 
-  const deleteLab = async (id: string) => {
-    if (confirm("Delete this lab?")) {
-      await api.delete(`/labs/${id}`);
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase().trim();
+    if (!q) return labs;
+    return labs.filter(
+      (l) =>
+        l.title.toLowerCase().includes(q) ||
+        l.platform.toLowerCase().includes(q),
+    );
+  }, [labs, search]);
+
+  const handleDelete = async () => {
+    if (!target) return;
+    setDeleting(true);
+    try {
+      await api.delete(`/labs/${target.$id}`);
+      toast("Lab deleted");
+      close();
       fetchLabs();
+      refresh();
+    } catch {
+      toast("Failed to delete lab", "error");
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -60,6 +92,16 @@ export default function LabsPage() {
         action={{ label: "New Lab", href: "/labs/new" }}
       />
 
+      {!loading && labs.length > 0 && (
+        <div className="mb-6">
+          <SearchInput
+            value={search}
+            onChange={setSearch}
+            placeholder="Search labs..."
+          />
+        </div>
+      )}
+
       {loading ? (
         <LoadingSkeleton rows={4} />
       ) : labs.length === 0 ? (
@@ -69,73 +111,88 @@ export default function LabsPage() {
           actionLabel="Create Lab"
           actionHref="/labs/new"
         />
+      ) : filtered.length === 0 ? (
+        <EmptyState title="No matches" description={`Nothing found for "${search}"`} />
       ) : (
         <div className="overflow-hidden rounded-xl border border-white/5">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-white/5 bg-white/[0.02]">
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                  Title
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                  Difficulty
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                  Platform
-                </th>
-                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                  Status
-                </th>
-                <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {labs.map((lab) => (
-                <tr
-                  key={lab.$id}
-                  className="border-b border-white/5 transition hover:bg-white/[0.02]"
-                >
-                  <td className="px-4 py-3">
-                    <p className="font-medium text-white">{lab.title}</p>
-                    <p className="text-xs text-gray-600">{lab.slug}</p>
-                  </td>
-                  <td className="px-4 py-3">
-                    <Badge variant={difficultyColor[lab.difficulty] || "default"}>
-                      {lab.difficulty}
-                    </Badge>
-                  </td>
-                  <td className="px-4 py-3 text-sm text-gray-400">
-                    {lab.platform}
-                  </td>
-                  <td className="px-4 py-3">
-                    <Badge variant={lab.published ? "success" : "warning"}>
-                      {lab.published ? "Published" : "Draft"}
-                    </Badge>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex justify-end gap-1">
-                      <Link
-                        href={`/labs/${lab.$id}`}
-                        className="rounded-lg p-2 text-gray-400 transition hover:bg-white/5 hover:text-cyan-400"
-                      >
-                        <Edit size={16} />
-                      </Link>
-                      <button
-                        onClick={() => deleteLab(lab.$id)}
-                        className="rounded-lg p-2 text-gray-400 transition hover:bg-red-500/10 hover:text-red-400"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[640px]">
+              <thead>
+                <tr className="border-b border-white/5 bg-white/[0.02]">
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                    Title
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                    Difficulty
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                    Platform
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                    Status
+                  </th>
+                  <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+                    Actions
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {filtered.map((lab) => (
+                  <tr
+                    key={lab.$id}
+                    className="border-b border-white/5 transition hover:bg-white/[0.02]"
+                  >
+                    <td className="px-4 py-3">
+                      <p className="font-medium text-white">{lab.title}</p>
+                      <p className="text-xs text-gray-600">{lab.slug}</p>
+                    </td>
+                    <td className="px-4 py-3">
+                      <Badge
+                        variant={difficultyColor[lab.difficulty] || "default"}
+                      >
+                        {lab.difficulty}
+                      </Badge>
+                    </td>
+                    <td className="px-4 py-3 text-sm text-gray-400">
+                      {lab.platform}
+                    </td>
+                    <td className="px-4 py-3">
+                      <Badge variant={lab.published ? "success" : "warning"}>
+                        {lab.published ? "Published" : "Draft"}
+                      </Badge>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex justify-end gap-1">
+                        <Link
+                          href={`/labs/${lab.$id}`}
+                          className="rounded-lg p-2 text-gray-400 transition hover:bg-white/5 hover:text-cyan-400"
+                        >
+                          <Edit size={16} />
+                        </Link>
+                        <button
+                          onClick={() => open(lab)}
+                          className="rounded-lg p-2 text-gray-400 transition hover:bg-red-500/10 hover:text-red-400"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
+
+      <ConfirmDialog
+        open={!!target}
+        title="Delete lab?"
+        description={`"${target?.title}" will be permanently removed.`}
+        onConfirm={handleDelete}
+        onCancel={close}
+        loading={deleting}
+      />
     </div>
   );
 }

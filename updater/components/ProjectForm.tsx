@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import api from "@/lib/api";
 import { Input, Textarea, Checkbox } from "./ui/Input";
 import { Button } from "./ui/Button";
+import { useToast } from "./providers/ToastProvider";
+import { useStats } from "./providers/StatsProvider";
 
 interface ProjectFormProps {
   initialData?: Record<string, unknown>;
@@ -13,6 +15,8 @@ interface ProjectFormProps {
 
 export default function ProjectForm({ initialData, id }: ProjectFormProps) {
   const router = useRouter();
+  const { toast } = useToast();
+  const { refresh } = useStats();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
@@ -56,13 +60,18 @@ export default function ProjectForm({ initialData, id }: ProjectFormProps) {
     try {
       if (id) {
         await api.put(`/projects/${id}`, dataToSend);
+        toast("Project updated");
       } else {
         await api.post("/projects", dataToSend);
+        toast("Project created");
       }
+      refresh();
       router.push("/projects");
     } catch (err: unknown) {
       const axiosErr = err as { response?: { data?: { error?: string } } };
-      setError(axiosErr.response?.data?.error || "Error saving project");
+      const msg = axiosErr.response?.data?.error || "Error saving project";
+      setError(msg);
+      toast(msg, "error");
     } finally {
       setLoading(false);
     }

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
-import { Sidebar } from "@/components/ui/Sidebar";
+import { ToastProvider } from "@/components/providers/ToastProvider";
+import { StatsProvider } from "@/components/providers/StatsProvider";
+import { AppShell } from "@/components/ui/AppShell";
 
 export const metadata: Metadata = {
   title: "Portfolio Admin",
@@ -21,10 +23,11 @@ export default function RootLayout({
           defaultTheme="dark"
           enableSystem={false}
         >
-          <div className="min-h-screen bg-[#060b14] text-gray-100">
-            <Sidebar />
-            <main className="ml-64 min-h-screen p-8">{children}</main>
-          </div>
+          <ToastProvider>
+            <StatsProvider>
+              <AppShell>{children}</AppShell>
+            </StatsProvider>
+          </ToastProvider>
         </ThemeProvider>
       </body>
     </html>

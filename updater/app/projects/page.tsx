@@ -1,13 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import api from "@/lib/api";
+import api, { listAll } from "@/lib/api";
 import { Edit, Trash2, ExternalLink } from "lucide-react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
+import { SearchInput } from "@/components/ui/SearchInput";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useToast } from "@/components/providers/ToastProvider";
+import { useStats } from "@/components/providers/StatsProvider";
+import { useDeleteConfirm } from "@/hooks/useDeleteConfirm";
 
 interface Project {
   $id: string;
@@ -23,6 +28,11 @@ interface Project {
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const { toast } = useToast();
+  const { refresh } = useStats();
+  const { target, deleting, setDeleting, open, close } =
+    useDeleteConfirm<Project>();
 
   const fetchProjects = async () => {
     try {
@@ -39,10 +49,29 @@ export default function ProjectsPage() {
     fetchProjects();
   }, []);
 
-  const deleteProject = async (id: string) => {
-    if (confirm("Delete this project?")) {
-      await api.delete(`/projects/${id}`);
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase().trim();
+    if (!q) return projects;
+    return projects.filter(
+      (p) =>
+        p.title.toLowerCase().includes(q) ||
+        p.technologies.some((t) => t.toLowerCase().includes(q)),
+    );
+  }, [projects, search]);
+
+  const handleDelete = async () => {
+    if (!target) return;
+    setDeleting(true);
+    try {
+      await api.delete(`/projects/${target.$id}`);
+      toast("Project deleted");
+      close();
       fetchProjects();
+      refresh();
+    } catch {
+      toast("Failed to delete project", "error");
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -54,6 +83,16 @@ export default function ProjectsPage() {
         action={{ label: "New Project", href: "/projects/new" }}
       />
 
+      {!loading && projects.length > 0 && (
+        <div className="mb-6">
+          <SearchInput
+            value={search}
+            onChange={setSearch}
+            placeholder="Search projects..."
+          />
+        </div>
+      )}
+
       {loading ? (
         <LoadingSkeleton rows={4} />
       ) : projects.length === 0 ? (
@@ -63,16 +102,18 @@ export default function ProjectsPage() {
           actionLabel="Create Project"
           actionHref="/projects/new"
         />
+      ) : filtered.length === 0 ? (
+        <EmptyState title="No matches" description={`Nothing found for "${search}"`} />
       ) : (
         <div className="grid gap-4">
-          {projects.map((project) => (
+          {filtered.map((project) => (
             <div
               key={project.$id}
               className="group rounded-xl border border-white/5 bg-white/[0.02] p-5 transition hover:border-white/10"
             >
-              <div className="flex items-start justify-between">
+              <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <h2 className="text-lg font-semibold text-white">
                       {project.title}
                     </h2>
@@ -116,7 +157,7 @@ export default function ProjectsPage() {
                     )}
                   </div>
                 </div>
-                <div className="flex gap-1 opacity-60 transition group-hover:opacity-100">
+                <div className="flex shrink-0 gap-1 opacity-60 transition group-hover:opacity-100">
                   <Link
                     href={`/projects/${project.$id}`}
                     className="rounded-lg p-2 text-gray-400 transition hover:bg-white/5 hover:text-cyan-400"
@@ -124,7 +165,7 @@ export default function ProjectsPage() {
                     <Edit size={16} />
                   </Link>
                   <button
-                    onClick={() => deleteProject(project.$id)}
+                    onClick={() => open(project)}
                     className="rounded-lg p-2 text-gray-400 transition hover:bg-red-500/10 hover:text-red-400"
                   >
                     <Trash2 size={16} />
@@ -135,6 +176,15 @@ export default function ProjectsPage() {
           ))}
         </div>
       )}
+
+      <ConfirmDialog
+        open={!!target}
+        title="Delete project?"
+        description={`"${target?.title}" will be permanently removed.`}
+        onConfirm={handleDelete}
+        onCancel={close}
+        loading={deleting}
+      />
     </div>
   );
 }

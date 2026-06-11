@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import api, { listAll } from "@/lib/api";
 import { Post } from "@/lib/types";
 import Link from "next/link";
@@ -9,10 +9,20 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
+import { SearchInput } from "@/components/ui/SearchInput";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { useToast } from "@/components/providers/ToastProvider";
+import { useStats } from "@/components/providers/StatsProvider";
+import { useDeleteConfirm } from "@/hooks/useDeleteConfirm";
 
 export default function PostsPage() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const { toast } = useToast();
+  const { refresh } = useStats();
+  const { target, deleting, setDeleting, open, close } =
+    useDeleteConfirm<Post>();
 
   const fetchPosts = async () => {
     try {
@@ -29,10 +39,29 @@ export default function PostsPage() {
     fetchPosts();
   }, []);
 
-  const handleDelete = async (id: string) => {
-    if (confirm("Delete this post?")) {
-      await api.delete(`/posts/${id}`);
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase().trim();
+    if (!q) return posts;
+    return posts.filter(
+      (p) =>
+        p.title.toLowerCase().includes(q) ||
+        p.slug.toLowerCase().includes(q),
+    );
+  }, [posts, search]);
+
+  const handleDelete = async () => {
+    if (!target) return;
+    setDeleting(true);
+    try {
+      await api.delete(`/posts/${target.$id}`);
+      toast("Post deleted");
+      close();
       fetchPosts();
+      refresh();
+    } catch {
+      toast("Failed to delete post", "error");
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -44,6 +73,16 @@ export default function PostsPage() {
         action={{ label: "New Post", href: "/posts/new" }}
       />
 
+      {!loading && posts.length > 0 && (
+        <div className="mb-6">
+          <SearchInput
+            value={search}
+            onChange={setSearch}
+            placeholder="Search posts..."
+          />
+        </div>
+      )}
+
       {loading ? (
         <LoadingSkeleton rows={4} />
       ) : posts.length === 0 ? (
@@ -53,15 +92,20 @@ export default function PostsPage() {
           actionLabel="Create Post"
           actionHref="/posts/new"
         />
+      ) : filtered.length === 0 ? (
+        <EmptyState
+          title="No matches"
+          description={`Nothing found for "${search}"`}
+        />
       ) : (
         <div className="space-y-3">
-          {posts.map((post) => (
+          {filtered.map((post) => (
             <div
               key={post.$id}
               className="group flex items-center justify-between rounded-xl border border-white/5 bg-white/[0.02] p-4 transition hover:border-white/10 hover:bg-white/[0.04]"
             >
               <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                   <h2 className="truncate font-semibold text-white">
                     {post.title}
                   </h2>
@@ -79,7 +123,7 @@ export default function PostsPage() {
                   <Edit size={16} />
                 </Link>
                 <button
-                  onClick={() => handleDelete(post.$id)}
+                  onClick={() => open(post)}
                   className="rounded-lg p-2 text-gray-400 transition hover:bg-red-500/10 hover:text-red-400"
                 >
                   <Trash2 size={16} />
@@ -89,6 +133,15 @@ export default function PostsPage() {
           ))}
         </div>
       )}
+
+      <ConfirmDialog
+        open={!!target}
+        title="Delete post?"
+        description={`"${target?.title}" will be permanently removed.`}
+        onConfirm={handleDelete}
+        onCancel={close}
+        loading={deleting}
+      />
     </div>
   );
 }

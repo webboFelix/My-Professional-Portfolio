@@ -7,6 +7,7 @@ export default function NewVideoPage() {
       <PageHeader
         title="Create Video"
         description="Upload a video to Cloudinary"
+        backHref="/videos"
       />
       <VideoForm />
     </div>

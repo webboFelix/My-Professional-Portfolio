@@ -6,6 +6,8 @@ import api from "@/lib/api";
 import { slugify } from "@/lib/utils";
 import { Input, Textarea, Select, Checkbox } from "./ui/Input";
 import { Button } from "./ui/Button";
+import { useToast } from "./providers/ToastProvider";
+import { useStats } from "./providers/StatsProvider";
 
 interface LabFormProps {
   initialData?: Record<string, unknown>;
@@ -14,6 +16,8 @@ interface LabFormProps {
 
 export default function LabForm({ initialData, id }: LabFormProps) {
   const router = useRouter();
+  const { toast } = useToast();
+  const { refresh } = useStats();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
@@ -67,13 +71,18 @@ export default function LabForm({ initialData, id }: LabFormProps) {
     try {
       if (id) {
         await api.put(`/labs/${id}`, dataToSend);
+        toast("Lab updated");
       } else {
         await api.post("/labs", dataToSend);
+        toast("Lab created");
       }
+      refresh();
       router.push("/labs");
     } catch (err: unknown) {
       const axiosErr = err as { response?: { data?: { error?: string } } };
-      setError(axiosErr.response?.data?.error || "Error saving lab");
+      const msg = axiosErr.response?.data?.error || "Error saving lab";
+      setError(msg);
+      toast(msg, "error");
     } finally {
       setLoading(false);
     }
