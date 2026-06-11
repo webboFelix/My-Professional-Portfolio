@@ -62,7 +62,7 @@ export function RegionalThreatChart() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.3 }}
     >
-      <GlassCard title="Regional Threat Distribution" glow="amber">
+      <GlassCard title="Regional Threat Distribution" glow="green">
         <ResponsiveContainer width="100%" height={280}>
           <BarChart
             data={regionalData}
