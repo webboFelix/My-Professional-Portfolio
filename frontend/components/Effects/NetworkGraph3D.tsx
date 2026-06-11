@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 interface Node {
   x: number;
@@ -16,7 +16,7 @@ export function NetworkGraph3D() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     let frame = 0;
@@ -25,7 +25,10 @@ export function NetworkGraph3D() {
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      const count = Math.min(80, Math.floor((canvas.width * canvas.height) / 18000));
+      const count = Math.min(
+        80,
+        Math.floor((canvas.width * canvas.height) / 18000),
+      );
       nodes = Array.from({ length: count }, () => ({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
@@ -36,11 +39,11 @@ export function NetworkGraph3D() {
     };
 
     resize();
-    window.addEventListener('resize', resize);
+    window.addEventListener("resize", resize);
 
     const draw = () => {
       frame++;
-      ctx.fillStyle = 'rgba(5, 10, 15, 0.25)';
+      ctx.fillStyle = "rgba(5, 10, 15, 0.25)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       nodes.forEach((n) => {
@@ -82,7 +85,7 @@ export function NetworkGraph3D() {
     const id = requestAnimationFrame(draw);
     return () => {
       cancelAnimationFrame(id);
-      window.removeEventListener('resize', resize);
+      window.removeEventListener("resize", resize);
     };
   }, []);
 

@@ -14,7 +14,11 @@ html {
 
 body {
   @apply bg-cyber-bg text-gray-200 antialiased;
-  background-image: radial-gradient(ellipse at 50% 0%, rgba(0, 255, 157, 0.06) 0%, transparent 55%);
+  background-image: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(0, 255, 157, 0.06) 0%,
+    transparent 55%
+  );
 }
 
 ::selection {

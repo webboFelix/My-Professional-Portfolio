@@ -4,11 +4,13 @@
 }
 
 .cyber-glow-text {
-  text-shadow: 0 0 10px rgba(0, 255, 157, 0.6), 0 0 30px rgba(0, 255, 157, 0.2);
+  text-shadow:
+    0 0 10px rgba(0, 255, 157, 0.6),
+    0 0 30px rgba(0, 255, 157, 0.2);
 }
 
 .scanline::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   background: repeating-linear-gradient(
@@ -27,21 +29,35 @@
 }
 
 @keyframes glitch {
-  0%, 100% { transform: translate(0); filter: hue-rotate(0deg); }
-  25% { transform: translate(-2px, 0); filter: hue-rotate(90deg); }
-  50% { transform: translate(2px, 0); }
-  75% { transform: translate(0, 1px); filter: hue-rotate(-90deg); }
+  0%,
+  100% {
+    transform: translate(0);
+    filter: hue-rotate(0deg);
+  }
+  25% {
+    transform: translate(-2px, 0);
+    filter: hue-rotate(90deg);
+  }
+  50% {
+    transform: translate(2px, 0);
+  }
+  75% {
+    transform: translate(0, 1px);
+    filter: hue-rotate(-90deg);
+  }
 }
 
 .terminal-cursor::after {
-  content: '▋';
+  content: "▋";
   animation: blink 1s step-end infinite;
   color: var(--cyber-green);
   margin-left: 2px;
 }
 
 @keyframes blink {
-  50% { opacity: 0; }
+  50% {
+    opacity: 0;
+  }
 }
 
 .grid-bg {

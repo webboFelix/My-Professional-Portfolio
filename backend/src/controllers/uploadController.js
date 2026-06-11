@@ -1,6 +1,7 @@
 import cloudinary from "../config/cloudinary.js";
 
 export const uploadImage = async (req, res) => {
+  //if (!req.admin) return res.status(401).json({ error: "Unauthorized" });
   try {
     if (!req.file) return res.status(400).json({ error: "No file uploaded" });
     const result = await new Promise((resolve, reject) => {
@@ -18,19 +19,24 @@ export const uploadImage = async (req, res) => {
 
 export const uploadVideo = async (req, res) => {
   try {
-    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
+    if (!req.file) return res.status(400).json({ error: "No video uploaded" });
+
     const result = await new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
-        { resource_type: "video", folder: "cyber_portfolio_videos" },
+        {
+          folder: "cyber_portfolio_videos",
+          resource_type: "video",
+        },
         (err, uploadResult) => (err ? reject(err) : resolve(uploadResult)),
       );
+
       uploadStream.end(req.file.buffer);
     });
+
     res.json({
       url: result.secure_url,
       publicId: result.public_id,
-      duration: result.duration || 0,
-      thumbnailUrl: result.thumbnail_url || "",
+      duration: result.duration,
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
