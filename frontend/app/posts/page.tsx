@@ -78,6 +78,17 @@ export default function PostsPage() {
                   whileHover={{ y: -4 }}
                   className="group relative h-full border border-cyber-green/30 rounded-lg p-5 bg-black/50 backdrop-blur-sm hover:border-cyber-green/60 transition-colors duration-300 cursor-pointer overflow-hidden"
                 >
+                  {/* Cover Image */}
+                  {post.coverImage && (
+                    <div className="w-full h-40 rounded-md overflow-hidden mb-3 border border-cyber-green/30">
+                      <img
+                        src={post.coverImage}
+                        alt={post.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                  )}
+
                   {/* Gradient overlay */}
                   <div className="absolute inset-0 bg-gradient-to-br from-cyber-green/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 

@@ -21,6 +21,7 @@ export interface Post {
   tags: string[];
   publishedAt: string;
   featured?: boolean;
+  coverImage?: string;
 }
 
 export interface Lab {

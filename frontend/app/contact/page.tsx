@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { api } from "@/lib/api";
+import api from "@/lib/api";
 import { GlassCard } from "@/components/UI/GlassCard";
 
 export default function ContactPage() {

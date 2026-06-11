@@ -15,8 +15,10 @@ export function TerminalCarousel() {
   const { posts } = usePosts();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [terminalLines, setTerminalLines] = useState<TerminalLine[]>([]);
+  const [timerKey, setTimerKey] = useState(0);
 
   const recentPosts = posts.slice(0, 10);
+  const recentPostsLength = recentPosts.length;
   const currentPost = recentPosts[currentIndex];
 
   useEffect(() => {
@@ -44,13 +46,29 @@ export function TerminalCarousel() {
     ];
 
     setTerminalLines(lines);
+  }, [currentIndex, posts]);
+
+  useEffect(() => {
+    if (recentPostsLength === 0) return;
 
     const timer = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % recentPosts.length);
+      setCurrentIndex((prev) => (prev + 1) % recentPostsLength);
     }, 8000); // Auto-rotate every 8 seconds
 
     return () => clearInterval(timer);
-  }, [currentPost, recentPosts]);
+  }, [timerKey, recentPostsLength]);
+
+  const handlePrev = () => {
+    setCurrentIndex(
+      (prev) => (prev - 1 + recentPosts.length) % recentPosts.length,
+    );
+    setTimerKey((k) => k + 1); // Reset timer
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % recentPosts.length);
+    setTimerKey((k) => k + 1); // Reset timer
+  };
 
   if (!currentPost || recentPosts.length === 0) {
     return (
@@ -82,7 +100,7 @@ export function TerminalCarousel() {
 
       {/* Terminal Content */}
       <div className="p-6 font-mono text-sm space-y-2">
-        <AnimatePresence mode="wait">
+        <AnimatePresence>
           {terminalLines.map((line) => (
             <motion.div
               key={`${currentIndex}-${line.id}`}
@@ -106,11 +124,7 @@ export function TerminalCarousel() {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() =>
-              setCurrentIndex(
-                (prev) => (prev - 1 + recentPosts.length) % recentPosts.length,
-              )
-            }
+            onClick={handlePrev}
             className="px-3 py-1 border border-cyber-green text-cyber-green font-mono text-xs hover:bg-cyber-green/10 rounded-sm transition-colors"
           >
             ◀ PREV
@@ -118,9 +132,7 @@ export function TerminalCarousel() {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() =>
-              setCurrentIndex((prev) => (prev + 1) % recentPosts.length)
-            }
+            onClick={handleNext}
             className="px-3 py-1 border border-cyber-green text-cyber-green font-mono text-xs hover:bg-cyber-green/10 rounded-sm transition-colors"
           >
             NEXT ▶

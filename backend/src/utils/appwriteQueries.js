@@ -2,7 +2,7 @@ import { Query } from "node-appwrite";
 import { databases, DATABASE_ID } from "../config/appwrite.js";
 
 // Helper to add timeout to async operations
-function withTimeout(promise, timeoutMs = 5000) {
+function withTimeout(promise, timeoutMs = 15000) {
   return Promise.race([
     promise,
     new Promise((_, reject) =>
@@ -20,7 +20,7 @@ export async function isCollectionEmpty(collectionId) {
   try {
     const peek = await withTimeout(
       databases.listDocuments(DATABASE_ID, collectionId, [Query.limit(1)]),
-      5000,
+      15000,
     );
     const isEmpty = peek.total === 0;
     console.log(
@@ -42,7 +42,7 @@ export async function getCollectionTotal(collectionId) {
   try {
     const peek = await withTimeout(
       databases.listDocuments(DATABASE_ID, collectionId, [Query.limit(1)]),
-      5000,
+      15000,
     );
     console.log(`✅ Collection "${collectionId}" total: ${peek.total}`);
     return peek.total;
@@ -67,7 +67,7 @@ export async function listCollection(collectionId, extraQueries = []) {
     console.log(`📥 Fetching documents from "${collectionId}"...`);
     const response = await withTimeout(
       databases.listDocuments(DATABASE_ID, collectionId, extraQueries),
-      5000,
+      15000,
     );
     console.log(
       `✅ Fetched ${response.documents.length} documents from "${collectionId}"`,
