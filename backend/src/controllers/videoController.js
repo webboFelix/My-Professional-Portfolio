@@ -1,11 +1,7 @@
 import { databases, DATABASE_ID, ID } from "../config/appwrite.js";
 import cloudinary from "../config/cloudinary.js";
 import { normalizeDate, parseTags } from "../utils/normalize.js";
-import {
-  listCollection,
-  findBySlug,
-  Query,
-} from "../utils/appwriteQueries.js";
+import { listCollection, findBySlug, Query } from "../utils/appwriteQueries.js";
 
 const COLLECTION_ID = "videos";
 
@@ -47,50 +43,17 @@ export const createVideo = async (req, res) => {
   try {
     let videoData;
 
-    if (req.file) {
-      const result = await new Promise((resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream(
-          { resource_type: "video", folder: "cyber_portfolio_videos" },
-          (err, uploadResult) => (err ? reject(err) : resolve(uploadResult)),
-        );
-        uploadStream.end(req.file.buffer);
-      });
-
-      videoData = {
-        title: req.body.title,
-        slug: req.body.slug,
-        description: req.body.description,
-        cloudinaryUrl: result.secure_url,
-        cloudinaryPublicId: result.public_id,
-        duration: result.duration || 0,
-        thumbnailUrl: result.thumbnail_url || "",
-        tags: parseTags(req.body.tags),
-        date: normalizeDate(req.body.date),
-        published: req.body.published === "true" || req.body.published === true,
-      };
-    } else if (req.body.cloudinaryUrl) {
-      videoData = {
-        title: req.body.title,
-        slug: req.body.slug,
-        description: req.body.description,
-        cloudinaryUrl: req.body.cloudinaryUrl,
-        cloudinaryPublicId: req.body.cloudinaryPublicId,
-        duration: Number(req.body.duration) || 0,
-        thumbnailUrl: req.body.thumbnailUrl || "",
-        tags: parseTags(req.body.tags),
-        date: normalizeDate(req.body.date),
-        published: req.body.published === "true" || req.body.published === true,
-      };
-    } else {
-      return res.status(400).json({ error: "No video file or URL provided" });
-    }
-
+    console.log(
+      "📝 Creating post with body:",
+      JSON.stringify(req.body, null, 2),
+    );
     const doc = await databases.createDocument(
       DATABASE_ID,
       COLLECTION_ID,
       ID.unique(),
-      videoData,
+      req.body,
     );
+    console.log("✅ Post created:", doc.$id);
     res.status(201).json(doc);
   } catch (err) {
     console.error(err);

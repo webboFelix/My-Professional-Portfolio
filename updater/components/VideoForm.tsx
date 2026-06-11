@@ -29,9 +29,7 @@ export default function VideoForm({ initialData, id }: VideoFormProps) {
     cloudinaryPublicId: (initialData?.cloudinaryPublicId as string) || "",
     duration: (initialData?.duration as number) || 0,
     thumbnailUrl: (initialData?.thumbnailUrl as string) || "",
-    tags: initialData?.tags
-      ? (initialData.tags as string[]).join(", ")
-      : "",
+    tags: initialData?.tags ? (initialData.tags as string[]).join(", ") : "",
     date:
       (initialData?.date as string)?.split("T")[0] ||
       new Date().toISOString().split("T")[0],
@@ -93,6 +91,7 @@ export default function VideoForm({ initialData, id }: VideoFormProps) {
         await api.put(`/videos/${id}`, dataToSend);
         toast("Video updated");
       } else {
+        console.log("Creating video with data:", dataToSend);
         await api.post("/videos", dataToSend);
         toast("Video created");
       }

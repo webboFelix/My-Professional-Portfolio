@@ -27,6 +27,10 @@ export const getProjectById = async (req, res) => {
 
 export const createProject = async (req, res) => {
   try {
+    console.log(
+      "📋 Creating project with body:",
+      JSON.stringify(req.body, null, 2),
+    );
     const data = {
       ...req.body,
       date: req.body.date?.includes("T")
@@ -39,8 +43,10 @@ export const createProject = async (req, res) => {
       ID.unique(),
       data,
     );
+    console.log("✅ Project created:", doc.$id);
     res.status(201).json(doc);
   } catch (err) {
+    console.error("❌ Error creating project:", err.message);
     res.status(500).json({ error: err.message });
   }
 };

@@ -1,9 +1,5 @@
 import { databases, DATABASE_ID, ID } from "../config/appwrite.js";
-import {
-  listCollection,
-  findBySlug,
-  Query,
-} from "../utils/appwriteQueries.js";
+import { listCollection, findBySlug, Query } from "../utils/appwriteQueries.js";
 
 const COLLECTION_ID = "posts";
 
@@ -43,14 +39,20 @@ export const getPostBySlug = async (req, res) => {
 
 export const createPost = async (req, res) => {
   try {
+    console.log(
+      "📝 Creating post with body:",
+      JSON.stringify(req.body, null, 2),
+    );
     const doc = await databases.createDocument(
       DATABASE_ID,
       COLLECTION_ID,
       ID.unique(),
       req.body,
     );
+    console.log("✅ Post created:", doc.$id);
     res.status(201).json(doc);
   } catch (err) {
+    console.error("❌ Error creating post:", err.message);
     res.status(500).json({ error: err.message });
   }
 };

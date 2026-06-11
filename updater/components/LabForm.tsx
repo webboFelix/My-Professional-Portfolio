@@ -29,9 +29,7 @@ export default function LabForm({ initialData, id }: LabFormProps) {
     content: (initialData?.content as string) || "",
     difficulty: (initialData?.difficulty as string) || "Easy",
     platform: (initialData?.platform as string) || "HTB",
-    tags: initialData?.tags
-      ? (initialData.tags as string[]).join(", ")
-      : "",
+    tags: initialData?.tags ? (initialData.tags as string[]).join(", ") : "",
     published: (initialData?.published as boolean) || false,
   });
 

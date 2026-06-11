@@ -24,10 +24,9 @@ async function setupDatabase() {
         { key: "title", type: "string", size: 256, required: true },
         {
           key: "slug",
-          type: "string",
-          size: 256,
+          type: "array",
+          arrayType: "string",
           required: true,
-          unique: true,
         },
         { key: "date", type: "datetime", required: true },
         { key: "content", type: "string", size: 1000000, required: true },
@@ -74,7 +73,6 @@ async function setupDatabase() {
           required: true,
         },
         { key: "date", type: "datetime", required: true },
-        { key: "featured", type: "boolean", required: true },
       ],
     },
     {

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/lib/api";
-import { Input, Textarea, Checkbox } from "./ui/Input";
+import { Input, Textarea } from "./ui/Input";
 import { Button } from "./ui/Button";
 import { useToast } from "./providers/ToastProvider";
 import { useStats } from "./providers/StatsProvider";
@@ -30,7 +30,6 @@ export default function ProjectForm({ initialData, id }: ProjectFormProps) {
     date:
       (initialData?.date as string)?.split("T")[0] ||
       new Date().toISOString().split("T")[0],
-    featured: (initialData?.featured as boolean) || false,
   });
 
   const handleChange = (
@@ -133,12 +132,6 @@ export default function ProjectForm({ initialData, id }: ProjectFormProps) {
         value={formData.date}
         onChange={handleChange}
         required
-      />
-      <Checkbox
-        label="Featured project"
-        name="featured"
-        checked={formData.featured}
-        onChange={handleChange}
       />
 
       <div className="flex gap-3 pt-2">

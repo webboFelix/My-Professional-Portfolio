@@ -28,9 +28,7 @@ export default function PostForm({ initialData, id }: PostFormProps) {
     excerpt: (initialData?.excerpt as string) || "",
     wordCount: (initialData?.wordCount as number) || 0,
     readTime: (initialData?.readTime as number) || 0,
-    tags: initialData?.tags
-      ? (initialData.tags as string[]).join(", ")
-      : "",
+    tags: initialData?.tags ? (initialData.tags as string[]).join(", ") : "",
     published: (initialData?.published as boolean) || false,
     coverImage: (initialData?.coverImage as string) || "",
   });
@@ -197,11 +195,7 @@ export default function PostForm({ initialData, id }: PostFormProps) {
         <Button type="submit" disabled={loading}>
           {loading ? "Saving..." : id ? "Update Post" : "Create Post"}
         </Button>
-        <Button
-          type="button"
-          variant="secondary"
-          onClick={() => router.back()}
-        >
+        <Button type="button" variant="secondary" onClick={() => router.back()}>
           Cancel
         </Button>
       </div>
