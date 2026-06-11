@@ -35,7 +35,7 @@ export default function ContactPage() {
     setErrorMessage("");
 
     try {
-      await api.contact.submit(formData);
+      await api.post("/api/contacts", formData);
       setStatus("success");
       setFormData({ name: "", email: "", message: "" });
       setTimeout(() => setStatus("idle"), 3000);
