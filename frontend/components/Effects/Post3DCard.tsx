@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { Holographic3DCard } from '@/components/Effects/Holographic3DCard';
-import { ReactNode } from 'react';
+import { motion } from "framer-motion";
+import { Holographic3DCard } from "@/components/Effects/Holographic3DCard";
+import { ReactNode } from "react";
 
 interface Post3DCardProps {
   children: ReactNode;
