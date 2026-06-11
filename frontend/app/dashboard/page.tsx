@@ -1,6 +1,6 @@
 "use client";
 
-import { api } from "@/lib/api";
+import api from "@/lib/api";
 import { StatsPanel } from "./components/StatsPanel";
 import { ActivityFeed } from "./components/ActivityFeed";
 import { SkillRadar } from "./components/SkillRadar";
@@ -10,7 +10,8 @@ import { Matrix3D } from "@/components/Effects/Matrix3D";
 
 async function getLabs() {
   try {
-    return await api.labs();
+    const response = await api.get("/api/labs?all=true");
+    return response.data || [];
   } catch {
     return [];
   }
