@@ -1,9 +1,11 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { GlassCard } from '@/components/UI/GlassCard';
-import { NeonButton } from '@/components/UI/NeonButton';
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { GlassCard } from "@/components/UI/GlassCard";
+import { NeonButton } from "@/components/UI/NeonButton";
+import { Holographic3DCard } from "@/components/Effects/Holographic3DCard";
+import { GlitchEffect } from "@/components/Effects/GlitchEffect";
 import {
   profile,
   aboutBullets,
@@ -11,9 +13,9 @@ import {
   focusAreas,
   tools,
   githubStats,
-} from '@/lib/profile';
-import { site } from '@/lib/site';
-import { fadeInUp } from '@/lib/animations';
+} from "@/lib/profile";
+import { site } from "@/lib/site";
+import { fadeInUp } from "@/lib/animations";
 
 export function BioDashboard() {
   return (
@@ -24,14 +26,15 @@ export function BioDashboard() {
           className="pointer-events-none absolute inset-0 opacity-20"
           style={{
             backgroundImage: `radial-gradient(circle, rgba(0,255,157,0.5) 1px, transparent 1px)`,
-            backgroundSize: '20px 20px',
+            backgroundSize: "20px 20px",
           }}
         />
         <div className="relative z-10 grid gap-8 lg:grid-cols-[1fr_auto]">
           <div>
             <div className="mb-4 flex flex-wrap items-center justify-between gap-2 font-mono text-[10px] text-gray-500">
               <span>
-                <span className="text-cyber-green">{profile.handle}</span> / README.md
+                <span className="text-cyber-green">{profile.handle}</span> /
+                README.md
               </span>
               <span className="flex items-center gap-2">
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-cyber-green" />
@@ -39,13 +42,20 @@ export function BioDashboard() {
               </span>
             </div>
             <h1 className="font-display text-4xl text-white md:text-5xl">
-              {profile.name}
+              <GlitchEffect intensity="low">{profile.name}</GlitchEffect>
               <span className="text-cyber-green animate-pulse">|</span>
             </h1>
-            <p className="mt-2 font-mono text-sm tracking-wider text-cyber-green">{profile.headline}</p>
-            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-gray-400">{profile.bio}</p>
+            <p className="mt-2 font-mono text-sm tracking-wider text-cyber-green">
+              {profile.headline}
+            </p>
+            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-gray-400">
+              {profile.bio}
+            </p>
             <div className="mt-4 flex flex-wrap gap-4 font-mono text-xs text-gray-500">
-              <a href={`mailto:${profile.email}`} className="hover:text-cyber-green">
+              <a
+                href={`mailto:${profile.email}`}
+                className="hover:text-cyber-green"
+              >
                 ✉ {profile.email}
               </a>
               {profile.phone && <span>📞 {profile.phone}</span>}
@@ -82,7 +92,9 @@ export function BioDashboard() {
         <div className="relative z-10 mt-8 grid gap-3 sm:grid-cols-3">
           <div className="rounded-lg border border-cyber-green/20 bg-black/50 p-3 font-mono text-[10px]">
             <p className="text-cyber-cyan">NMAP SCAN</p>
-            <p className="mt-1 text-cyber-green">22/tcp ssh · 80/tcp http · 443/tcp https</p>
+            <p className="mt-1 text-cyber-green">
+              22/tcp ssh · 80/tcp http · 443/tcp https
+            </p>
           </div>
           <div className="rounded-lg border border-cyber-amber/20 bg-black/50 p-3 font-mono text-[10px]">
             <p className="text-cyber-amber">BURP SUITE</p>
@@ -90,7 +102,9 @@ export function BioDashboard() {
           </div>
           <div className="rounded-lg border border-cyber-cyan/20 bg-black/50 p-3 font-mono text-[10px]">
             <p className="text-cyber-cyan">KALI LINUX</p>
-            <p className="mt-1 italic text-gray-600">&quot;The quieter you become...&quot;</p>
+            <p className="mt-1 italic text-gray-600">
+              &quot;The quieter you become...&quot;
+            </p>
           </div>
         </div>
       </section>
@@ -107,11 +121,26 @@ export function BioDashboard() {
           </ul>
         </GlassCard>
 
-        <GlassCard title="Skills & Expertise" glow="cyan" className="lg:col-span-2">
+        <GlassCard
+          title="Skills & Expertise"
+          glow="cyan"
+          className="lg:col-span-2"
+        >
           <div className="grid gap-4 sm:grid-cols-2">
             {skillGroups.map((g) => (
-              <div key={g.title}>
-                <p className={`mb-2 font-mono text-[10px] uppercase ${g.color.split(' ')[1]}`}>
+              <Holographic3DCard
+                key={g.title}
+                variant={
+                  g.color.includes("green")
+                    ? "green"
+                    : g.color.includes("cyan")
+                      ? "cyan"
+                      : "amber"
+                }
+              >
+                <p
+                  className={`mb-2 font-mono text-[10px] uppercase ${g.color.split(" ")[1]}`}
+                >
                   {g.title}
                 </p>
                 <div className="flex flex-wrap gap-1.5">
@@ -124,7 +153,7 @@ export function BioDashboard() {
                     </span>
                   ))}
                 </div>
-              </div>
+              </Holographic3DCard>
             ))}
           </div>
         </GlassCard>
@@ -134,7 +163,10 @@ export function BioDashboard() {
         <GlassCard title="Focus Areas">
           <ul className="grid gap-2 sm:grid-cols-2">
             {focusAreas.map((f) => (
-              <li key={f.label} className="flex items-center gap-2 text-sm text-gray-400">
+              <li
+                key={f.label}
+                className="flex items-center gap-2 text-sm text-gray-400"
+              >
                 <span>{f.icon}</span>
                 {f.label}
               </li>
@@ -145,16 +177,22 @@ export function BioDashboard() {
         <GlassCard title="GitHub Stats" glow="cyan">
           <div className="grid grid-cols-2 gap-3 font-mono text-sm">
             <p>
-              Repos: <span className="text-cyber-green">{githubStats.repositories}</span>
+              Repos:{" "}
+              <span className="text-cyber-green">
+                {githubStats.repositories}
+              </span>
             </p>
             <p>
-              Projects: <span className="text-cyber-green">{githubStats.projects}</span>
+              Projects:{" "}
+              <span className="text-cyber-green">{githubStats.projects}</span>
             </p>
             <p>
-              Commits: <span className="text-cyber-green">{githubStats.commits}</span>
+              Commits:{" "}
+              <span className="text-cyber-green">{githubStats.commits}</span>
             </p>
             <p>
-              Stars: <span className="text-cyber-green">{githubStats.stars}</span>
+              Stars:{" "}
+              <span className="text-cyber-green">{githubStats.stars}</span>
             </p>
           </div>
         </GlassCard>
@@ -175,13 +213,24 @@ export function BioDashboard() {
 
       <GlassCard title="Let's Connect">
         <div className="flex flex-wrap gap-4 font-mono text-sm">
-          <Link href={site.github} target="_blank" className="text-gray-400 hover:text-cyber-green">
+          <Link
+            href={site.github}
+            target="_blank"
+            className="text-gray-400 hover:text-cyber-green"
+          >
             GitHub →
           </Link>
-          <Link href={site.linkedin} target="_blank" className="text-gray-400 hover:text-cyber-cyan">
+          <Link
+            href={site.linkedin}
+            target="_blank"
+            className="text-gray-400 hover:text-cyber-cyan"
+          >
             LinkedIn →
           </Link>
-          <a href={`mailto:${profile.email}`} className="text-gray-400 hover:text-cyber-amber">
+          <a
+            href={`mailto:${profile.email}`}
+            className="text-gray-400 hover:text-cyber-amber"
+          >
             Email →
           </a>
         </div>
