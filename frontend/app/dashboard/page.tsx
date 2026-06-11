@@ -5,7 +5,10 @@ import { StatsPanel } from "./components/StatsPanel";
 import { ActivityFeed } from "./components/ActivityFeed";
 import { SkillRadar } from "./components/SkillRadar";
 import { SystemStatus } from "./components/SystemStatus";
-import { ThreatMap } from "./components/ThreatMap";
+import { AdvancedThreatMap } from "./components/AdvancedThreatMap";
+import { AttackTimeline } from "./components/AttackTimeline";
+import { RegionalThreatChart } from "./components/RegionalThreatChart";
+import { ThreatLevel } from "./components/ThreatLevel";
 import { Matrix3D } from "@/components/Effects/Matrix3D";
 
 async function getLabs() {
@@ -36,15 +39,35 @@ export default async function DashboardPage() {
 
         <StatsPanel />
 
+        {/* Main threat visualization */}
+        <div className="grid gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <AdvancedThreatMap />
+          </div>
+          <div>
+            <ThreatLevel />
+          </div>
+        </div>
+
+        {/* Charts and analytics */}
+        <div className="grid gap-6 lg:grid-cols-2">
+          <AttackTimeline />
+          <RegionalThreatChart />
+        </div>
+
+        {/* Skills and additional info */}
         <div className="grid gap-6 lg:grid-cols-3">
           <div className="lg:col-span-2 space-y-6">
             <SkillRadar />
-            <ThreatMap />
           </div>
           <div className="space-y-6">
             <SystemStatus />
-            <ActivityFeed labs={labs} />
           </div>
+        </div>
+
+        {/* Activity feed */}
+        <div>
+          <ActivityFeed labs={labs} />
         </div>
       </div>
     </div>
