@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { site } from "@/lib/site";
 import { motion } from "framer-motion";
 import { useSound } from "@/lib/hooks/useSound";
+import { HackerLogo } from "@/components/Logo/HackerLogo";
 
 const links = [
   { href: "/home", label: "Home", icon: "⌂" },
@@ -32,18 +33,17 @@ export function Navbar() {
         <Link
           href="/home"
           onClick={() => playSound("navigate", 0.4)}
-          className="relative"
+          className="relative flex items-center gap-2"
         >
+          <HackerLogo />
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="font-display text-lg tracking-widest text-cyber-green drop-shadow-lg"
+            className="hidden sm:block font-display text-lg tracking-widest text-cyber-green drop-shadow-lg"
             style={{
               textShadow: "0 0 20px rgba(0, 255, 136, 0.6)",
             }}
-          >
-            {site.brand}
-          </motion.div>
+          ></motion.div>
         </Link>
 
         {/* Desktop Navigation */}

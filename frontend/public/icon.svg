@@ -1,0 +1,17 @@
+<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer hexagon frame -->
+  <polygon points="18,2 34,10 34,26 18,34 2,26 2,10" stroke="#00ff9d" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Center circuit lines (X pattern) -->
+  <line x1="10" y1="10" x2="26" y2="26" stroke="#00ff9d" stroke-width="1.5" opacity="0.6"/>
+  <line x1="26" y1="10" x2="10" y2="26" stroke="#00ffff" stroke-width="1.5" opacity="0.6"/>
+  
+  <!-- Center circle (digital core) -->
+  <circle cx="18" cy="18" r="4" fill="#00ff9d"/>
+  
+  <!-- Corner dots (network nodes) -->
+  <circle cx="18" cy="6" r="1.5" fill="#00ffff"/>
+  <circle cx="30" cy="18" r="1.5" fill="#00ff9d"/>
+  <circle cx="18" cy="30" r="1.5" fill="#00ffff"/>
+  <circle cx="6" cy="18" r="1.5" fill="#00ff9d"/>
+</svg>

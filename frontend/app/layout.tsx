@@ -19,6 +19,9 @@ const orbitron = Orbitron({
 export const metadata: Metadata = {
   title: `${site.name} | ${site.title}`,
   description: site.tagline,
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
@@ -28,7 +31,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${jetbrains.variable} ${orbitron.variable}`}>
-      <body className="font-mono">
+      <body className="font-mono overflow-x-hidden">
         <ReduxProvider>
           <AppShell>{children}</AppShell>
         </ReduxProvider>

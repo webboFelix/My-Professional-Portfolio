@@ -150,16 +150,17 @@ export default function CheatsheetPage() {
   };
 
   return (
-    <div className="px-4 py-8 lg:px-10 lg:py-12 space-y-6">
+    <div className="px-2 py-6 sm:px-4 sm:py-8 md:px-6 lg:px-10 lg:py-12 space-y-6">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
+        className="mx-auto w-full max-w-full sm:max-w-4xl lg:max-w-6xl"
       >
-        <h1 className="text-4xl font-bold text-cyber-green tracking-wider mb-2">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-cyber-green tracking-wider mb-2">
           ⚡ Penetration Testing Cheatsheet
         </h1>
-        <p className="text-gray-400">
+        <p className="text-sm sm:text-base text-gray-400">
           Quick reference for VAPT & penetration testing procedures
         </p>
       </motion.div>
@@ -169,18 +170,19 @@ export default function CheatsheetPage() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="mx-auto max-w-6xl"
+        className="mx-auto w-full max-w-full sm:max-w-4xl lg:max-w-6xl"
       >
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1 sm:gap-2">
           {cheatsheetData.map((section) => (
             <motion.button
               key={section.id}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => toggleSection(section.id)}
-              className="px-3 py-2 text-sm font-mono border border-cyber-green/50 rounded-sm text-cyber-green hover:bg-cyber-green/10 transition-colors"
+              className="px-2 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm font-mono border border-cyber-green/50 rounded-sm text-cyber-green hover:bg-cyber-green/10 transition-colors whitespace-nowrap"
             >
-              {section.icon} {section.title}
+              <span className="hidden sm:inline">{section.icon} </span>
+              {section.title}
             </motion.button>
           ))}
         </div>
@@ -191,7 +193,7 @@ export default function CheatsheetPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
-        className="mx-auto max-w-6xl space-y-4"
+        className="mx-auto w-full max-w-full sm:max-w-4xl lg:max-w-6xl space-y-3 sm:space-y-4"
       >
         {cheatsheetData.map((section) => (
           <motion.div
@@ -202,16 +204,16 @@ export default function CheatsheetPage() {
           >
             <button
               onClick={() => toggleSection(section.id)}
-              className="w-full flex items-center justify-between p-4 hover:bg-cyber-green/5 transition-colors text-left"
+              className="w-full flex items-center justify-between p-3 sm:p-4 hover:bg-cyber-green/5 transition-colors text-left gap-2"
             >
-              <h2 className="text-xl font-bold text-cyber-green flex items-center gap-2">
-                <span>{section.icon}</span>
-                {section.title}
+              <h2 className="text-lg sm:text-xl font-bold text-cyber-green flex items-center gap-2 flex-1 min-w-0">
+                <span className="flex-shrink-0">{section.icon}</span>
+                <span className="truncate sm:truncate">{section.title}</span>
               </h2>
               <motion.span
                 animate={{ rotate: expandedSections.has(section.id) ? 180 : 0 }}
                 transition={{ duration: 0.3 }}
-                className="text-cyber-green"
+                className="text-cyber-green flex-shrink-0"
               >
                 ▼
               </motion.span>
@@ -223,19 +225,19 @@ export default function CheatsheetPage() {
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.3 }}
-                className="border-t border-cyber-green/30 p-4 bg-black/70 space-y-3"
+                className="border-t border-cyber-green/30 p-3 sm:p-4 bg-black/70 space-y-2 sm:space-y-3"
               >
                 {section.content.map((line, index) => (
                   <div
                     key={index}
-                    className={`font-mono text-sm ${
+                    className={`font-mono text-xs sm:text-sm break-words ${
                       line.startsWith("##")
-                        ? "text-cyan-400 font-bold mt-3 mb-2"
+                        ? "text-cyan-400 font-bold mt-2 sm:mt-3 mb-1 sm:mb-2"
                         : line.startsWith("`")
-                          ? "text-lime-400 bg-black/50 p-2 rounded border border-lime-400/20 overflow-x-auto"
+                          ? "text-lime-400 bg-black/50 p-2 rounded border border-lime-400/20 overflow-x-auto whitespace-pre-wrap"
                           : line.startsWith("**")
                             ? "text-amber-400 ml-2"
-                            : "text-gray-300 ml-4"
+                            : "text-gray-300 ml-3 sm:ml-4"
                     }`}
                   >
                     {line
@@ -255,12 +257,12 @@ export default function CheatsheetPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
-        className="mx-auto max-w-6xl"
+        className="mx-auto w-full max-w-full sm:max-w-4xl lg:max-w-6xl"
       >
         <GlassCard>
           <div className="space-y-2 text-sm">
             <p className="text-cyber-green font-mono">$ Disclaimer</p>
-            <p className="text-gray-400">
+            <p className="text-gray-400 text-xs sm:text-sm">
               This cheatsheet is for educational purposes and authorized
               penetration testing only. Unauthorized access to computer systems
               is illegal. Always obtain written permission before conducting

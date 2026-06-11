@@ -23,12 +23,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <GridBackground />
       <CyberFrame>
         <AccessGuard>
-          <div className="relative z-10 flex min-h-screen flex-col">
-            <div className="flex flex-1">
+          <div className="relative z-10 flex min-h-screen flex-col overflow-x-hidden">
+            <div className="flex flex-1 overflow-x-hidden">
               <Sidebar />
-              <div className="flex flex-1 flex-col">
+              <div className="flex flex-1 flex-col overflow-x-hidden">
                 <Navbar />
-                <main className="flex-1">{children}</main>
+                <main className="flex-1 overflow-x-hidden">{children}</main>
               </div>
             </div>
             <Footer />
