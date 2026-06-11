@@ -144,6 +144,7 @@ export default function ContactPage() {
                   placeholder="John Doe"
                   value={formData.name}
                   onChange={handleChange}
+                  required
                 />
 
                 <Cyber3DInput
@@ -153,6 +154,7 @@ export default function ContactPage() {
                   placeholder="john@example.com"
                   value={formData.email}
                   onChange={handleChange}
+                  required
                 />
 
                 <Cyber3DInput
@@ -163,6 +165,7 @@ export default function ContactPage() {
                   onChange={handleChange}
                   multiline
                   rows={5}
+                  required
                 />
 
                 {/* Status Messages */}

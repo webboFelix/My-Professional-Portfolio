@@ -7,7 +7,9 @@ interface Cyber3DInputProps {
   label: string;
   placeholder?: string;
   type?: string;
+  name?: string;
   value?: string;
+  required?: boolean;
   onChange?: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
@@ -19,7 +21,9 @@ export function Cyber3DInput({
   label,
   placeholder,
   type = "text",
+  name,
   value,
+  required = false,
   onChange,
   multiline = false,
   rows = 3,
@@ -53,18 +57,22 @@ export function Cyber3DInput({
 
         {multiline ? (
           <textarea
+            name={name}
             placeholder={placeholder}
             value={value}
             onChange={onChange}
+            required={required}
             rows={rows}
             className="relative z-10 w-full bg-transparent px-4 py-3 font-mono text-sm text-cyber-green placeholder-gray-600 focus:outline-none resize-none"
           />
         ) : (
           <input
             type={type}
+            name={name}
             placeholder={placeholder}
             value={value}
             onChange={onChange}
+            required={required}
             className="relative z-10 w-full bg-transparent px-4 py-3 font-mono text-sm text-cyber-green placeholder-gray-600 focus:outline-none"
           />
         )}
