@@ -1,12 +1,14 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { CommandLine } from '@/components/Terminal/CommandLine';
-import { GlassCard } from '@/components/UI/GlassCard';
-import { BioDashboard } from '@/components/Home/BioDashboard';
-import { CERTIFICATIONS, TIMELINE } from '@/lib/api';
-import { getAccessMode } from '@/lib/access';
-import { useEffect, useState } from 'react';
+import { motion } from "framer-motion";
+import { CommandLine } from "@/components/Terminal/CommandLine";
+import { GlassCard } from "@/components/UI/GlassCard";
+import { BioDashboard } from "@/components/Home/BioDashboard";
+import { TerminalCarousel } from "@/components/Home/TerminalCarousel";
+import { RecentPostsGrid } from "@/components/Home/RecentPostsGrid";
+import { CERTIFICATIONS, TIMELINE } from "@/lib/api";
+import { getAccessMode } from "@/lib/access";
+import { useEffect, useState } from "react";
 
 export default function HomePage() {
   const [mode, setMode] = useState<string | null>(null);
@@ -17,20 +19,20 @@ export default function HomePage() {
 
   return (
     <div className="px-4 py-8 lg:px-10 lg:py-12">
-      {mode === 'guest' && (
+      {mode === "guest" && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="mb-6 rounded-lg border border-dashed border-cyber-amber/50 bg-cyber-amber/5 px-4 py-2 font-mono text-xs text-cyber-amber"
         >
-          GUEST_SESSION — limited clearance.{' '}
+          GUEST_SESSION — limited clearance.{" "}
           <a href="/gate" className="underline hover:text-white">
             Pass the challenge to unlock operative access
           </a>
         </motion.div>
       )}
 
-      {mode === 'operative' && (
+      {mode === "operative" && (
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -42,6 +44,19 @@ export default function HomePage() {
 
       <BioDashboard />
 
+      {/* Terminal Carousel Section */}
+      <div className="mx-auto mt-10 max-w-6xl">
+        <h2 className="mb-4 text-2xl font-bold text-cyber-green tracking-wider">
+          $ cat recent_activity.log
+        </h2>
+        <TerminalCarousel />
+      </div>
+
+      {/* Recent Posts Grid */}
+      <div className="mx-auto mt-12 max-w-6xl">
+        <RecentPostsGrid />
+      </div>
+
       <div className="mx-auto mt-10 grid max-w-6xl gap-6 lg:grid-cols-2">
         <GlassCard title="Interactive Terminal">
           <CommandLine />
@@ -49,7 +64,10 @@ export default function HomePage() {
         <GlassCard title="Certifications" glow="cyan">
           <ul className="space-y-3">
             {CERTIFICATIONS.map((c) => (
-              <li key={c.name} className="flex justify-between font-mono text-sm">
+              <li
+                key={c.name}
+                className="flex justify-between font-mono text-sm"
+              >
                 <span className="text-cyber-cyan">{c.name}</span>
                 <span className="text-gray-500">
                   {c.status} · {c.year}

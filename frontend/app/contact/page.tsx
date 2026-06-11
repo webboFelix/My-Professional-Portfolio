@@ -1,139 +1,240 @@
-'use client';
+"use client";
 
-import { useState, FormEvent } from 'react';
-import { GlassCard } from '@/components/UI/GlassCard';
-import { NeonButton } from '@/components/UI/NeonButton';
-import { site, githubLabel, linkedinLabel } from '@/lib/site';
-
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { api } from "@/lib/api";
+import { GlassCard } from "@/components/UI/GlassCard";
 
 export default function ContactPage() {
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [errorMsg, setErrorMsg] = useState('');
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus('loading');
-    setErrorMsg('');
-
-    const fd = new FormData(e.currentTarget);
+    setStatus("loading");
+    setErrorMessage("");
 
     try {
-      const res = await fetch(`${API}/api/contact`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: fd.get('name'),
-          email: fd.get('email'),
-          message: fd.get('message'),
-          website: fd.get('website'),
-        }),
-      });
-
-      const data = await res.json().catch(() => ({}));
-
-      if (!res.ok) {
-        throw new Error((data as { error?: string }).error || 'Failed to send message');
-      }
-
-      setStatus('success');
-      e.currentTarget.reset();
-    } catch (err) {
-      setStatus('error');
-      setErrorMsg((err as Error).message);
+      await api.contact.submit(formData);
+      setStatus("success");
+      setFormData({ name: "", email: "", message: "" });
+      setTimeout(() => setStatus("idle"), 3000);
+    } catch (error) {
+      setStatus("error");
+      setErrorMessage((error as Error).message || "Failed to send message");
+      setTimeout(() => setStatus("idle"), 3000);
     }
   };
 
   return (
-    <div className="mx-auto max-w-xl space-y-8 p-4 lg:p-8">
-      <header>
-        <p className="font-mono text-xs text-cyber-cyan">SECURE_CHANNEL</p>
-        <h1 className="font-display text-3xl text-white">Contact {site.name}</h1>
-        <p className="text-sm text-gray-500">
-          Messages are stored securely and emailed when Resend is configured on the API.
+    <div className="px-4 py-8 lg:px-10 lg:py-12 space-y-8">
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
+        <h1 className="text-4xl font-bold text-cyber-green tracking-wider mb-2">
+          $ get_in_touch()
+        </h1>
+        <p className="text-gray-400">
+          Reach out for collaborations, opportunities, or just to chat
         </p>
-      </header>
+      </motion.div>
 
-      <GlassCard title="transmit_message">
-        {status === 'success' ? (
-          <p className="font-mono text-cyber-green">
-            [OK] Transmission received. I&apos;ll get back to you soon.
-          </p>
-        ) : (
-          <form onSubmit={onSubmit} className="relative space-y-4">
-            <input
-              type="text"
-              name="website"
-              tabIndex={-1}
-              autoComplete="off"
-              className="absolute -left-[9999px] h-0 w-0 opacity-0"
-              aria-hidden
-            />
-            <div>
-              <label className="font-mono text-[10px] uppercase text-gray-500">Identity</label>
-              <input
-                required
-                name="name"
-                disabled={status === 'loading'}
-                className="mt-1 w-full rounded border border-cyber-border bg-black/50 px-3 py-2 text-sm outline-none focus:border-cyber-green disabled:opacity-50"
-                placeholder="Your name"
-              />
+      <div className="mx-auto max-w-2xl grid gap-8 md:grid-cols-2">
+        {/* Contact Info */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1 }}
+          className="space-y-4"
+        >
+          <GlassCard title="Contact Info">
+            <div className="space-y-6">
+              <div>
+                <p className="text-cyber-green font-mono text-sm mb-1">Email</p>
+                <a
+                  href="mailto:felixwebbo.fw@gmail.com"
+                  className="text-gray-400 hover:text-cyber-green transition-colors break-all"
+                >
+                  felixwebbo.fw@gmail.com
+                </a>
+              </div>
+              <div>
+                <p className="text-cyber-green font-mono text-sm mb-1">Phone</p>
+                <a
+                  href="tel:+254702803400"
+                  className="text-gray-400 hover:text-cyber-green transition-colors"
+                >
+                  +254 702 803 400
+                </a>
+              </div>
+              <div>
+                <p className="text-cyber-green font-mono text-sm mb-1">
+                  Location
+                </p>
+                <p className="text-gray-400">Nairobi, Kenya</p>
+              </div>
+              <div>
+                <p className="text-cyber-green font-mono text-sm mb-1">
+                  Social
+                </p>
+                <div className="space-y-2">
+                  <a
+                    href="https://github.com/webbofelix"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-gray-400 hover:text-cyber-green transition-colors text-sm"
+                  >
+                    → GitHub
+                  </a>
+                  <a
+                    href="https://linkedin.com/in/webbofelix"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-gray-400 hover:text-cyber-green transition-colors text-sm"
+                  >
+                    → LinkedIn
+                  </a>
+                </div>
+              </div>
             </div>
-            <div>
-              <label className="font-mono text-[10px] uppercase text-gray-500">Email</label>
-              <input
-                required
-                type="email"
-                name="email"
-                disabled={status === 'loading'}
-                className="mt-1 w-full rounded border border-cyber-border bg-black/50 px-3 py-2 text-sm outline-none focus:border-cyber-green disabled:opacity-50"
-                placeholder="you@domain.com"
-              />
-            </div>
-            <div>
-              <label className="font-mono text-[10px] uppercase text-gray-500">Payload</label>
-              <textarea
-                required
-                name="message"
-                rows={5}
-                disabled={status === 'loading'}
-                className="mt-1 w-full rounded border border-cyber-border bg-black/50 px-3 py-2 text-sm outline-none focus:border-cyber-green disabled:opacity-50"
-                placeholder="Your message..."
-              />
-            </div>
-            {status === 'error' && (
-              <p className="font-mono text-sm text-cyber-red">[ERR] {errorMsg}</p>
-            )}
-            <NeonButton type="submit" disabled={status === 'loading'}>
-              {status === 'loading' ? 'Transmitting...' : 'Transmit'}
-            </NeonButton>
-          </form>
-        )}
-      </GlassCard>
+          </GlassCard>
+        </motion.div>
 
-      <div className="grid gap-4 font-mono text-sm">
-        <a
-          href={site.github}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-gray-500 hover:text-cyber-green transition-colors"
+        {/* Contact Form */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1 }}
         >
-          <span className="text-cyber-green">GitHub:</span> {githubLabel()}
-        </a>
-        <a
-          href={site.linkedin}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-gray-500 hover:text-cyber-cyan transition-colors"
-        >
-          <span className="text-cyber-cyan">LinkedIn:</span> {linkedinLabel()}
-        </a>
-        {site.email && (
-          <a href={`mailto:${site.email}`} className="text-gray-500 hover:text-cyber-amber">
-            <span className="text-cyber-amber">Email:</span> {site.email}
-          </a>
-        )}
+          <GlassCard title="Send Message">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label
+                  htmlFor="name"
+                  className="block text-sm text-cyber-green font-mono mb-2"
+                >
+                  $ your_name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-3 py-2 bg-black/50 border border-cyber-green/30 rounded-sm text-white placeholder-gray-600 focus:border-cyber-green focus:outline-none transition-colors font-mono text-sm"
+                  placeholder="John Doe"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-sm text-cyber-green font-mono mb-2"
+                >
+                  $ your_email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-3 py-2 bg-black/50 border border-cyber-green/30 rounded-sm text-white placeholder-gray-600 focus:border-cyber-green focus:outline-none transition-colors font-mono text-sm"
+                  placeholder="john@example.com"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="message"
+                  className="block text-sm text-cyber-green font-mono mb-2"
+                >
+                  $ message
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                  rows={5}
+                  className="w-full px-3 py-2 bg-black/50 border border-cyber-green/30 rounded-sm text-white placeholder-gray-600 focus:border-cyber-green focus:outline-none transition-colors font-mono text-sm resize-none"
+                  placeholder="Your message here..."
+                />
+              </div>
+
+              {/* Status Messages */}
+              {status === "success" && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-3 bg-green-500/20 border border-green-500/50 rounded-sm text-green-400 text-sm font-mono"
+                >
+                  ✓ Message sent successfully!
+                </motion.div>
+              )}
+              {status === "error" && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-3 bg-red-500/20 border border-red-500/50 rounded-sm text-red-400 text-sm font-mono"
+                >
+                  ✗ Error: {errorMessage}
+                </motion.div>
+              )}
+
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                disabled={status === "loading"}
+                type="submit"
+                className="w-full px-4 py-2 bg-cyber-green/20 border-2 border-cyber-green text-cyber-green font-mono text-sm rounded-sm hover:bg-cyber-green/30 disabled:opacity-50 transition-all duration-300"
+              >
+                {status === "loading" ? "[ SENDING... ]" : "[ SEND MESSAGE ]"}
+              </motion.button>
+            </form>
+          </GlassCard>
+        </motion.div>
       </div>
+
+      {/* Response Time Info */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="mx-auto max-w-2xl"
+      >
+        <GlassCard>
+          <div className="font-mono text-sm text-gray-400 space-y-2">
+            <p className="text-cyber-green">$ cat response_time.txt</p>
+            <p>I typically respond to messages within 24 hours.</p>
+            <p>
+              For urgent matters, feel free to reach out directly via phone.
+            </p>
+          </div>
+        </GlassCard>
+      </motion.div>
     </div>
   );
 }

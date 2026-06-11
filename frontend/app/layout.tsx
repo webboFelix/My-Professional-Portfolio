@@ -3,6 +3,7 @@ import { JetBrains_Mono, Orbitron } from "next/font/google";
 import "@/styles/globals.css";
 import "@/styles/cyber-theme.css";
 import { AppShell } from "@/components/Layout/AppShell";
+import { ReduxProvider } from "@/components/providers/ReduxProvider";
 import { site } from "@/lib/site";
 
 const jetbrains = JetBrains_Mono({
@@ -28,7 +29,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${jetbrains.variable} ${orbitron.variable}`}>
       <body className="font-mono">
-        <AppShell>{children}</AppShell>
+        <ReduxProvider>
+          <AppShell>{children}</AppShell>
+        </ReduxProvider>
       </body>
     </html>
   );

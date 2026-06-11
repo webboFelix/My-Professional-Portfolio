@@ -16,6 +16,22 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Request timeout middleware
+app.use((req, res, next) => {
+  const timeout = setTimeout(() => {
+    console.log(`⏱️ Request timeout: ${req.method} ${req.path}`);
+    if (!res.headersSent) {
+      res
+        .status(504)
+        .json({ error: "Gateway Timeout - Appwrite connection timed out" });
+    }
+  }, 10000); // 10 second timeout
+
+  res.on("finish", () => clearTimeout(timeout));
+  res.on("close", () => clearTimeout(timeout));
+  next();
+});
+
 // Routes
 app.use("/api/posts", postRoutes);
 app.use("/api/labs", labRoutes);
