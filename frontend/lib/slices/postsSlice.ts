@@ -69,6 +69,18 @@ export const fetchPostById = createAsyncThunk(
   },
 );
 
+export const fetchPostBySlug = createAsyncThunk(
+  "posts/fetchPostBySlug",
+  async (slug: string, { rejectWithValue }) => {
+    try {
+      const response = await api.get<any>(`/api/posts/${slug}`);
+      return normalizePost(response.data);
+    } catch (error) {
+      return rejectWithValue((error as Error).message);
+    }
+  },
+);
+
 const postsSlice = createSlice({
   name: "posts",
   initialState,
@@ -106,6 +118,23 @@ const postsSlice = createSlice({
         }
       })
       .addCase(fetchPostById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(fetchPostBySlug.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchPostBySlug.fulfilled, (state, action) => {
+        state.loading = false;
+        const index = state.items.findIndex((p) => p.id === action.payload.id);
+        if (index >= 0) {
+          state.items[index] = action.payload;
+        } else {
+          state.items.push(action.payload);
+        }
+      })
+      .addCase(fetchPostBySlug.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

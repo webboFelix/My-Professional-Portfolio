@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "./useRedux";
-import { fetchPosts, fetchPostById } from "@/lib/slices/postsSlice";
+import { fetchPosts, fetchPostById, fetchPostBySlug } from "@/lib/slices/postsSlice";
 
 export function usePosts() {
   const dispatch = useAppDispatch();
@@ -26,6 +26,21 @@ export function usePostById(id: string) {
       dispatch(fetchPostById(id));
     }
   }, [id, post, dispatch]);
+
+  return { post, loading, error };
+}
+
+export function usePostBySlug(slug: string) {
+  const dispatch = useAppDispatch();
+  const { items, loading, error } = useAppSelector((state) => state.posts);
+
+  const post = items.find((p) => p.slug === slug);
+
+  useEffect(() => {
+    if (!post) {
+      dispatch(fetchPostBySlug(slug));
+    }
+  }, [slug, post, dispatch]);
 
   return { post, loading, error };
 }

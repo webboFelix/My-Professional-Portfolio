@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { useLabs } from "@/lib/hooks/useLabs";
 import { GlassCard } from "@/components/UI/GlassCard";
 import { Matrix3D } from "@/components/Effects/Matrix3D";
@@ -105,81 +106,97 @@ export default function LabsPage() {
                   >
                     {categoryLabs.map((lab, index) => (
                       <motion.div key={lab.id} variants={item}>
-                        <Lab3DCube
-                          difficulty={
-                            (lab.difficulty?.toLowerCase() as
-                              | "easy"
-                              | "medium"
-                              | "hard"
-                              | "insane") || "medium"
-                          }
-                          index={index}
-                        >
-                          <div className="space-y-3">
-                            {/* Image */}
-                            {lab.coverImage && (
-                              <div className="relative w-full h-32 rounded-lg overflow-hidden border border-white/30">
-                                <img
-                                  src={lab.coverImage}
-                                  alt={lab.title}
-                                  className="w-full h-full object-cover"
-                                />
-                              </div>
-                            )}
-
-                            {/* Badges */}
-                            <div className="flex gap-2 flex-wrap">
-                              <span className="px-2 py-1 text-xs rounded-sm border font-mono uppercase">
-                                {lab.difficulty || "Medium"}
-                              </span>
-                              {lab.status && (
-                                <span className="px-2 py-1 text-xs bg-blue-500/20 text-blue-400 rounded-sm border border-blue-500/30 font-mono">
-                                  {lab.status}
-                                </span>
+                        <Link href={`/labs/${lab.id}`}>
+                          <Lab3DCube
+                            difficulty={
+                              (lab.difficulty?.toLowerCase() as
+                                | "easy"
+                                | "medium"
+                                | "hard"
+                                | "insane") || "medium"
+                            }
+                            index={index}
+                          >
+                            <div className="space-y-3 cursor-pointer">
+                              {/* Image */}
+                              {lab.coverImage && (
+                                <div className="relative w-full h-32 rounded-lg overflow-hidden border border-white/30">
+                                  <img
+                                    src={lab.coverImage}
+                                    alt={lab.title}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
                               )}
-                            </div>
 
-                            {/* Title */}
-                            <h3 className="text-lg font-bold transition-colors">
-                              {lab.title}
-                            </h3>
-
-                            {/* Description */}
-                            <p className="text-sm text-gray-400 hover:text-gray-300 line-clamp-2">
-                              {truncateToWords(lab.description, 10)}
-                            </p>
-
-                            {/* Tools */}
-                            {lab.tools && lab.tools.length > 0 && (
-                              <div className="flex flex-wrap gap-1.5 pt-2">
-                                {lab.tools.slice(0, 4).map((tool) => (
-                                  <span
-                                    key={tool}
-                                    className="px-1.5 py-0.5 text-xs bg-white/10 rounded-sm border border-white/20 font-mono"
-                                  >
-                                    {tool}
-                                  </span>
-                                ))}
-                                {lab.tools.length > 4 && (
-                                  <span className="px-1.5 py-0.5 text-xs text-gray-500">
-                                    +{lab.tools.length - 4}
+                              {/* Badges */}
+                              <div className="flex gap-2 flex-wrap">
+                                <span className="px-2 py-1 text-xs rounded-sm border font-mono uppercase">
+                                  {lab.difficulty || "Medium"}
+                                </span>
+                                {lab.status && (
+                                  <span className="px-2 py-1 text-xs bg-blue-500/20 text-blue-400 rounded-sm border border-blue-500/30 font-mono">
+                                    {lab.status}
                                   </span>
                                 )}
                               </div>
-                            )}
 
-                            {/* Footer */}
-                            {lab.url && (
-                              <div className="pt-3 border-t border-white/10 flex justify-between items-center">
-                                <a
-                                  href={lab.url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="text-xs hover:opacity-80 transition-opacity font-mono"
-                                >
-                                  $ start_lab →
-                                </a>
-                                {lab.createdAt && (
+                              {/* Title */}
+                              <h3 className="text-lg font-bold transition-colors">
+                                {lab.title}
+                              </h3>
+
+                              {/* Description */}
+                              <p className="text-sm text-gray-400 hover:text-gray-300 line-clamp-2">
+                                {truncateToWords(lab.description, 10)}
+                              </p>
+
+                              {/* Tools */}
+                              {lab.tools && lab.tools.length > 0 && (
+                                <div className="flex flex-wrap gap-1.5 pt-2">
+                                  {lab.tools.slice(0, 4).map((tool) => (
+                                    <span
+                                      key={tool}
+                                      className="px-1.5 py-0.5 text-xs bg-white/10 rounded-sm border border-white/20 font-mono"
+                                    >
+                                      {tool}
+                                    </span>
+                                  ))}
+                                  {lab.tools.length > 4 && (
+                                    <span className="px-1.5 py-0.5 text-xs text-gray-500">
+                                      +{lab.tools.length - 4}
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+
+                              {/* Footer */}
+                              {lab.url && (
+                                <div className="pt-3 border-t border-white/10 flex justify-between items-center">
+                                  <a
+                                    href={lab.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={(e) => e.stopPropagation()}
+                                    className="text-xs hover:opacity-80 transition-opacity font-mono"
+                                  >
+                                    $ start_lab →
+                                  </a>
+                                  {lab.createdAt && (
+                                    <span className="text-xs text-gray-500 font-mono">
+                                      {new Date(lab.createdAt).toLocaleDateString(
+                                        "en-US",
+                                        {
+                                          year: "numeric",
+                                          month: "short",
+                                        },
+                                      )}
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+                              {!lab.url && lab.createdAt && (
+                                <div className="pt-3 border-t border-white/10 flex justify-end">
                                   <span className="text-xs text-gray-500 font-mono">
                                     {new Date(lab.createdAt).toLocaleDateString(
                                       "en-US",
@@ -189,24 +206,11 @@ export default function LabsPage() {
                                       },
                                     )}
                                   </span>
-                                )}
-                              </div>
-                            )}
-                            {!lab.url && lab.createdAt && (
-                              <div className="pt-3 border-t border-white/10 flex justify-end">
-                                <span className="text-xs text-gray-500 font-mono">
-                                  {new Date(lab.createdAt).toLocaleDateString(
-                                    "en-US",
-                                    {
-                                      year: "numeric",
-                                      month: "short",
-                                    },
-                                  )}
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        </Lab3DCube>
+                                </div>
+                              )}
+                            </div>
+                          </Lab3DCube>
+                        </Link>
                       </motion.div>
                     ))}
                   </motion.div>

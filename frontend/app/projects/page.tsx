@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { useProjects } from "@/lib/hooks/useProjects";
 import { GlassCard } from "@/components/UI/GlassCard";
 import { Matrix3D } from "@/components/Effects/Matrix3D";
@@ -30,90 +31,94 @@ interface ProjectCardProps {
 
 function ProjectCard({ project, index }: ProjectCardProps) {
   return (
-    <Project3DCard title={project.title} index={index}>
-      <div className="space-y-4">
-        {/* Image */}
-        {project.coverImage && (
-          <div className="relative w-full h-32 rounded-lg overflow-hidden border border-cyan-500/30">
-            <img
-              src={project.coverImage}
-              alt={project.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        )}
-
-        {/* Badges */}
-        <div className="flex gap-2 flex-wrap items-center">
-          {project.featured && (
-            <div className="inline-block px-2 py-1 bg-amber-500/20 text-amber-400 rounded-sm border border-amber-500/50 text-xs font-mono">
-              ★ FEATURED
+    <Link href={`/projects/${project.id}`}>
+      <Project3DCard title={project.title} index={index}>
+        <div className="space-y-4 cursor-pointer">
+          {/* Image */}
+          {project.coverImage && (
+            <div className="relative w-full h-32 rounded-lg overflow-hidden border border-cyan-500/30">
+              <img
+                src={project.coverImage}
+                alt={project.title}
+                className="w-full h-full object-cover"
+              />
             </div>
           )}
-          <div className="inline-block px-2 py-1 bg-cyan-500/20 text-cyan-400 rounded-sm border border-cyan-500/50 text-xs font-mono">
-            {project.category || "Project"}
+
+          {/* Badges */}
+          <div className="flex gap-2 flex-wrap items-center">
+            {project.featured && (
+              <div className="inline-block px-2 py-1 bg-amber-500/20 text-amber-400 rounded-sm border border-amber-500/50 text-xs font-mono">
+                ★ FEATURED
+              </div>
+            )}
+            <div className="inline-block px-2 py-1 bg-cyan-500/20 text-cyan-400 rounded-sm border border-cyan-500/50 text-xs font-mono">
+              {project.category || "Project"}
+            </div>
           </div>
-        </div>
 
-        {/* Title */}
-        <h3 className="text-xl font-bold text-cyan-400 hover:text-blue-300 transition-colors">
-          {project.title}
-        </h3>
+          {/* Title */}
+          <h3 className="text-xl font-bold text-cyan-400 hover:text-blue-300 transition-colors">
+            {project.title}
+          </h3>
 
-        {/* Description */}
-        <p className="text-sm text-gray-400 hover:text-gray-300 line-clamp-3">
-          {truncateToWords(project.description, 10)}
-        </p>
+          {/* Description */}
+          <p className="text-sm text-gray-400 hover:text-gray-300 line-clamp-3">
+            {truncateToWords(project.description, 10)}
+          </p>
 
-        {/* Tech Stack */}
-        {project.techStack && project.techStack.length > 0 && (
-          <div className="flex flex-wrap gap-2 pt-2">
-            {project.techStack.slice(0, 4).map((tech: string) => (
-              <span
-                key={tech}
-                className="px-2 py-1 text-xs bg-cyan-500/20 text-cyan-400 rounded-sm border border-cyan-500/30 hover:bg-cyan-500/30 transition-colors"
+          {/* Tech Stack */}
+          {project.techStack && project.techStack.length > 0 && (
+            <div className="flex flex-wrap gap-2 pt-2">
+              {project.techStack.slice(0, 4).map((tech: string) => (
+                <span
+                  key={tech}
+                  className="px-2 py-1 text-xs bg-cyan-500/20 text-cyan-400 rounded-sm border border-cyan-500/30 hover:bg-cyan-500/30 transition-colors"
+                >
+                  {tech}
+                </span>
+              ))}
+              {project.techStack.length > 4 && (
+                <span className="px-2 py-1 text-xs text-gray-500">
+                  +{project.techStack.length - 4}
+                </span>
+              )}
+            </div>
+          )}
+
+          {/* Links */}
+          <div className="pt-4 flex gap-3 border-t border-cyan-500/20">
+            {project.githubUrl && (
+              <a
+                href={project.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="text-xs text-cyan-400 hover:text-blue-300 transition-colors font-mono"
               >
-                {tech}
-              </span>
-            ))}
-            {project.techStack.length > 4 && (
-              <span className="px-2 py-1 text-xs text-gray-500">
-                +{project.techStack.length - 4}
+                $ github
+              </a>
+            )}
+            {project.liveUrl && (
+              <a
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="text-xs text-cyan-400 hover:text-blue-300 transition-colors font-mono"
+              >
+                $ live
+              </a>
+            )}
+            {project.createdAt && (
+              <span className="ml-auto text-xs text-gray-500 font-mono">
+                {new Date(project.createdAt).toLocaleDateString()}
               </span>
             )}
           </div>
-        )}
-
-        {/* Links */}
-        <div className="pt-4 flex gap-3 border-t border-cyan-500/20">
-          {project.githubUrl && (
-            <a
-              href={project.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-cyan-400 hover:text-blue-300 transition-colors font-mono"
-            >
-              $ github
-            </a>
-          )}
-          {project.liveUrl && (
-            <a
-              href={project.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-cyan-400 hover:text-blue-300 transition-colors font-mono"
-            >
-              $ live
-            </a>
-          )}
-          {project.createdAt && (
-            <span className="ml-auto text-xs text-gray-500 font-mono">
-              {new Date(project.createdAt).toLocaleDateString()}
-            </span>
-          )}
         </div>
-      </div>
-    </Project3DCard>
+      </Project3DCard>
+    </Link>
   );
 }
 
