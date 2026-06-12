@@ -27,6 +27,7 @@ function normalizeProject(raw: any): Project {
     techStack: raw.technologies || raw.techStack || [],
     githubUrl: raw.githubLink || raw.githubUrl,
     liveUrl: raw.liveLink || raw.liveUrl,
+    coverImage: raw.coverImage,
     category: raw.category || "General",
     featured: raw.featured || false,
     createdAt: raw.date || raw.createdAt || new Date().toISOString(),

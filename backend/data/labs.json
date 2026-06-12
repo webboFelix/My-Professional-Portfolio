@@ -8,6 +8,7 @@
     "status": "active",
     "tools": ["Burp Suite", "SQLMap", "Python"],
     "url": "https://github.com",
+    "coverImage": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=300&fit=crop",
     "createdAt": "2026-03-01T09:00:00.000Z"
   },
   {
@@ -18,6 +19,7 @@
     "category": "Red Team",
     "status": "active",
     "tools": ["BloodHound", "Impacket", "CrackMapExec"],
+    "coverImage": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=300&fit=crop",
     "createdAt": "2026-02-10T11:00:00.000Z"
   },
   {
@@ -28,6 +30,7 @@
     "category": "Cloud Security",
     "status": "completed",
     "tools": ["ScoutSuite", "Prowler", "AWS CLI"],
+    "coverImage": "https://images.unsplash.com/photo-1526374965328-7f5ae4e8be11?w=600&h=300&fit=crop",
     "createdAt": "2026-01-20T08:00:00.000Z"
   }
 ]

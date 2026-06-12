@@ -7,6 +7,7 @@ import { GlassCard } from "@/components/UI/GlassCard";
 import { Matrix3D } from "@/components/Effects/Matrix3D";
 import { GlitchEffect } from "@/components/Effects/GlitchEffect";
 import { Post3DCard } from "@/components/Effects/Post3DCard";
+import { truncateToWords } from "@/lib/utils/textTruncate";
 
 const container = {
   hidden: { opacity: 0 },
@@ -113,7 +114,7 @@ export default function PostsPage() {
 
                         {/* Excerpt */}
                         <p className="text-sm text-gray-400 group-hover:text-gray-300 line-clamp-3">
-                          {post.excerpt}
+                          {truncateToWords(post.excerpt, 10)}
                         </p>
 
                         {/* Tags */}

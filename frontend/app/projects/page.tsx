@@ -6,6 +6,7 @@ import { GlassCard } from "@/components/UI/GlassCard";
 import { Matrix3D } from "@/components/Effects/Matrix3D";
 import { GlitchEffect } from "@/components/Effects/GlitchEffect";
 import { Project3DCard } from "@/components/Effects/Project3DCard";
+import { truncateToWords } from "@/lib/utils/textTruncate";
 
 const container = {
   hidden: { opacity: 0 },
@@ -31,6 +32,17 @@ function ProjectCard({ project, index }: ProjectCardProps) {
   return (
     <Project3DCard title={project.title} index={index}>
       <div className="space-y-4">
+        {/* Image */}
+        {project.coverImage && (
+          <div className="relative w-full h-32 rounded-lg overflow-hidden border border-cyan-500/30">
+            <img
+              src={project.coverImage}
+              alt={project.title}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
+
         {/* Badges */}
         <div className="flex gap-2 flex-wrap items-center">
           {project.featured && (
@@ -50,7 +62,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
 
         {/* Description */}
         <p className="text-sm text-gray-400 hover:text-gray-300 line-clamp-3">
-          {project.description}
+          {truncateToWords(project.description, 10)}
         </p>
 
         {/* Tech Stack */}

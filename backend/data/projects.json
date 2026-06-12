@@ -5,6 +5,7 @@
     "description": "Real-time IOC feed aggregator with MITRE ATT&CK mapping.",
     "techStack": ["Next.js", "Python", "PostgreSQL", "Redis"],
     "githubUrl": "https://github.com",
+    "coverImage": "https://images.unsplash.com/photo-1460925895917-aae19106c5be?w=600&h=300&fit=crop",
     "category": "Blue Team",
     "featured": true,
     "createdAt": "2026-04-01T12:00:00.000Z"
@@ -15,6 +16,7 @@
     "description": "Modular network scanner with CVE correlation and PDF reporting.",
     "techStack": ["Python", "Nmap", "SQLite"],
     "githubUrl": "https://github.com",
+    "coverImage": "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600&h=300&fit=crop",
     "liveUrl": "",
     "category": "Offensive Security",
     "featured": true,
@@ -26,8 +28,4 @@
     "description": "JWT + refresh rotation, rate limiting, and audit logging.",
     "techStack": ["Node.js", "Express", "MongoDB"],
     "githubUrl": "https://github.com",
-    "category": "AppSec",
-    "featured": false,
-    "createdAt": "2026-02-28T10:00:00.000Z"
-  }
-]
+    "coverImage": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=300&fit=crop",

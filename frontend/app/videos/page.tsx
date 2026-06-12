@@ -6,6 +6,7 @@ import { GlassCard } from "@/components/UI/GlassCard";
 import { Matrix3D } from "@/components/Effects/Matrix3D";
 import { GlitchEffect } from "@/components/Effects/GlitchEffect";
 import { Video3DCard } from "@/components/Effects/Video3DCard";
+import { truncateToWords } from "@/lib/utils/textTruncate";
 
 const container = {
   hidden: { opacity: 0 },
@@ -125,7 +126,7 @@ export default function VideosPage() {
                                 {video.title}
                               </h3>
                               <p className="text-xs text-gray-400 hover:text-gray-300 line-clamp-2">
-                                {video.description}
+                                {truncateToWords(video.description, 10)}
                               </p>
                               <div className="text-xs text-gray-500 flex justify-between items-center pt-2 border-t border-white/10">
                                 <span className="font-mono">

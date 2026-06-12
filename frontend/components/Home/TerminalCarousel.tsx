@@ -25,24 +25,18 @@ export function TerminalCarousel() {
     if (!currentPost) return;
 
     const lines: TerminalLine[] = [
-      { id: "1", text: "$ whoami", delay: 0 },
+      { id: "1", text: "$ cat recent_activity.log", delay: 0 },
       {
         id: "2",
-        text: `connected_to@${currentPost.title.replace(/\s+/g, "_")}`,
-        delay: 0.3,
-      },
-      { id: "3", text: "$ cat recent_activity.log", delay: 0.8 },
-      {
-        id: "4",
         text: `[${new Date(currentPost.publishedAt).toLocaleString()}] Loaded: ${currentPost.title}`,
-        delay: 1.2,
+        delay: 0.5,
       },
       {
-        id: "5",
+        id: "3",
         text: `✓ Tags: ${currentPost.tags?.join(", ") || "N/A"}`,
-        delay: 1.8,
+        delay: 1.1,
       },
-      { id: "6", text: "$ _", delay: 2.3 },
+      { id: "4", text: "$ _", delay: 1.6 },
     ];
 
     setTerminalLines(lines);
@@ -53,7 +47,7 @@ export function TerminalCarousel() {
 
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % recentPostsLength);
-    }, 8000); // Auto-rotate every 8 seconds
+    }, 12000); // Auto-rotate every 12 seconds
 
     return () => clearInterval(timer);
   }, [timerKey, recentPostsLength]);
@@ -146,14 +140,28 @@ export function TerminalCarousel() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -10 }}
-        className="p-6 bg-cyber-green/5 border-t border-cyber-green/30"
+        className="p-6 bg-cyber-green/5 border-t border-cyber-green/30 space-y-4"
       >
-        <h3 className="text-lg font-bold text-cyber-green mb-2">
-          {currentPost.title}
-        </h3>
-        <p className="text-gray-400 text-sm line-clamp-2">
-          {currentPost.excerpt}
-        </p>
+        {/* Image Display */}
+        {currentPost.coverImage && (
+          <div className="relative w-full h-40 rounded-lg overflow-hidden border border-cyber-green/30">
+            <img
+              src={currentPost.coverImage}
+              alt={currentPost.title}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
+
+        {/* Content */}
+        <div>
+          <h3 className="text-lg font-bold text-cyber-green mb-2">
+            {currentPost.title}
+          </h3>
+          <p className="text-gray-400 text-sm line-clamp-2">
+            {currentPost.excerpt}
+          </p>
+        </div>
       </motion.div>
     </motion.div>
   );

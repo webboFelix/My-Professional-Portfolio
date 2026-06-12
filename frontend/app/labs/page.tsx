@@ -6,6 +6,7 @@ import { GlassCard } from "@/components/UI/GlassCard";
 import { Matrix3D } from "@/components/Effects/Matrix3D";
 import { GlitchEffect } from "@/components/Effects/GlitchEffect";
 import { Lab3DCube } from "@/components/Effects/Lab3DCube";
+import { truncateToWords } from "@/lib/utils/textTruncate";
 
 const container = {
   hidden: { opacity: 0 },
@@ -115,6 +116,17 @@ export default function LabsPage() {
                           index={index}
                         >
                           <div className="space-y-3">
+                            {/* Image */}
+                            {lab.coverImage && (
+                              <div className="relative w-full h-32 rounded-lg overflow-hidden border border-white/30">
+                                <img
+                                  src={lab.coverImage}
+                                  alt={lab.title}
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                            )}
+
                             {/* Badges */}
                             <div className="flex gap-2 flex-wrap">
                               <span className="px-2 py-1 text-xs rounded-sm border font-mono uppercase">
@@ -134,7 +146,7 @@ export default function LabsPage() {
 
                             {/* Description */}
                             <p className="text-sm text-gray-400 hover:text-gray-300 line-clamp-2">
-                              {lab.description}
+                              {truncateToWords(lab.description, 10)}
                             </p>
 
                             {/* Tools */}

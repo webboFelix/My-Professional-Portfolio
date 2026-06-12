@@ -8,6 +8,7 @@ import contactRoutes from "./routes/contactRoutes.js";
 import videoRoutes from "./routes/videoRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import statsRoutes from "./routes/statsRoutes.js";
+import migrationRoutes from "./routes/migrationRoutes.js";
 
 dotenv.config();
 
@@ -40,6 +41,7 @@ app.use("/api/contacts", contactRoutes);
 app.use("/api/videos", videoRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/stats", statsRoutes);
+app.use("/api/migrate", migrationRoutes);
 
 // Health check
 app.get("/health", (req, res) => res.send("OK"));

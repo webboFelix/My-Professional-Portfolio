@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { usePosts } from "@/lib/hooks/usePosts";
+import { truncateToWords } from "@/lib/utils/textTruncate";
 
 const container = {
   hidden: { opacity: 0 },
@@ -55,6 +56,17 @@ export function RecentPostsGrid() {
 
                 {/* Content */}
                 <div className="relative z-10 space-y-3">
+                  {/* Cover Image */}
+                  {post.coverImage && (
+                    <div className="w-full h-32 rounded-md overflow-hidden -m-4 mb-2 border border-cyber-green/30">
+                      <img
+                        src={post.coverImage}
+                        alt={post.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                  )}
+
                   {/* Title */}
                   <h3 className="text-lg font-bold text-cyber-green group-hover:text-lime-300 transition-colors line-clamp-2">
                     {post.title}
@@ -62,7 +74,7 @@ export function RecentPostsGrid() {
 
                   {/* Excerpt */}
                   <p className="text-sm text-gray-400 group-hover:text-gray-300 line-clamp-3">
-                    {post.excerpt}
+                    {truncateToWords(post.excerpt, 10)}
                   </p>
 
                   {/* Tags */}

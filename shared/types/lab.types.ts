@@ -8,4 +8,5 @@ export interface Lab {
   tools: string[];
   url?: string;
   createdAt: string;
+  coverImage?: string;
 }

@@ -6,6 +6,7 @@
     "excerpt": "How I designed an interactive cybersecurity portfolio with live feeds and terminal UX.",
     "content": "Full write-up on architecture, threat modeling the public surface, and API design.",
     "tags": ["portfolio", "nextjs", "security"],
+    "coverImage": "https://images.unsplash.com/photo-1633356122544-f134324ef6db?w=600&h=300&fit=crop",
     "publishedAt": "2026-05-01T10:00:00.000Z",
     "featured": true
   },
@@ -16,6 +17,7 @@
     "excerpt": "Hands-on notes from testing web apps against OWASP Top 10 vulnerabilities.",
     "content": "Injection, broken access control, SSRF, and secure design patterns.",
     "tags": ["owasp", "vapt", "web"],
+    "coverImage": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=300&fit=crop",
     "publishedAt": "2026-04-15T14:30:00.000Z",
     "featured": false
   }

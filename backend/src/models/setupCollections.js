@@ -56,6 +56,7 @@ async function setupDatabase() {
         { key: "platform", type: "string", size: 50, required: true },
         { key: "tags", type: "array", arrayType: "string", required: false },
         { key: "published", type: "boolean", required: true },
+        { key: "coverImage", type: "string", size: 500, required: false },
       ],
     },
     {
@@ -73,6 +74,7 @@ async function setupDatabase() {
           required: true,
         },
         { key: "date", type: "datetime", required: true },
+        { key: "coverImage", type: "string", size: 500, required: false },
       ],
     },
     {

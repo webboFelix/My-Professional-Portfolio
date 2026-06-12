@@ -33,6 +33,7 @@ export interface Lab {
   status: string;
   tools: string[];
   url?: string;
+  coverImage?: string;
   createdAt: string;
 }
 
@@ -43,6 +44,7 @@ export interface Project {
   techStack: string[];
   githubUrl?: string;
   liveUrl?: string;
+  coverImage?: string;
   category: string;
   featured?: boolean;
   createdAt: string;

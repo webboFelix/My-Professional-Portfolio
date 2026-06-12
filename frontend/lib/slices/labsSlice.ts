@@ -29,6 +29,7 @@ function normalizeLab(raw: any): Lab {
     status: raw.status || (raw.published ? "active" : "draft"),
     tools: raw.tools || [],
     url: raw.url || raw.link,
+    coverImage: raw.coverImage,
     createdAt: raw.date || raw.createdAt || new Date().toISOString(),
   };
 }
