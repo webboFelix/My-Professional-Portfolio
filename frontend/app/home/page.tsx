@@ -29,10 +29,8 @@ export default function HomePage() {
             animate={{ opacity: 1 }}
             className="mb-6 rounded-lg border border-dashed border-cyber-amber/50 bg-cyber-amber/5 px-4 py-2 font-mono text-xs text-cyber-amber"
           >
-            GUEST_SESSION — limited clearance.{" "}
-            <a href="/gate" className="underline hover:text-white">
-              Pass the challenge to unlock operative access
-            </a>
+            Welcome Dear Guest, looking forward to having you join our
+            community!
           </motion.div>
         )}
 

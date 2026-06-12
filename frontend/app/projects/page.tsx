@@ -219,7 +219,7 @@ export default function ProjectsPage() {
           <div className="mx-auto max-w-6xl text-center py-12">
             <GlassCard>
               <p className="font-mono text-sm text-gray-500">
-                No labs found. Check back later.
+                No projects found. Check back later.
               </p>
             </GlassCard>
           </div>
