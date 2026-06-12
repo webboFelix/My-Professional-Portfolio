@@ -29,8 +29,7 @@ export default function HomePage() {
             animate={{ opacity: 1 }}
             className="mb-6 rounded-lg border border-dashed border-cyber-amber/50 bg-cyber-amber/5 px-4 py-2 font-mono text-xs text-cyber-amber"
           >
-            Welcome Dear Guest, looking forward to having you join our
-            community!
+            Welcome Dear Guest, let's <code>Connect!</code>
           </motion.div>
         )}
 
