@@ -4,10 +4,13 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/lib/api";
 import { slugify } from "@/lib/utils";
+import CloudinaryUpload from "./CloudinaryUpload";
 import { Input, Textarea, Select, Checkbox } from "./ui/Input";
 import { Button } from "./ui/Button";
+import { FormSection } from "./ui/FormSection";
 import { useToast } from "./providers/ToastProvider";
 import { useStats } from "./providers/StatsProvider";
+import { BookOpen, Calendar, Zap, FileText, ImageIcon } from "lucide-react";
 
 interface LabFormProps {
   initialData?: Record<string, unknown>;
@@ -30,6 +33,7 @@ export default function LabForm({ initialData, id }: LabFormProps) {
     difficulty: (initialData?.difficulty as string) || "Easy",
     platform: (initialData?.platform as string) || "HTB",
     tags: initialData?.tags ? (initialData.tags as string[]).join(", ") : "",
+    coverImage: (initialData?.coverImage as string) || "",
     published: (initialData?.published as boolean) || false,
   });
 
@@ -87,87 +91,120 @@ export default function LabForm({ initialData, id }: LabFormProps) {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-2xl space-y-5 rounded-xl border border-white/5 bg-white/[0.02] p-6"
-    >
+    <form onSubmit={handleSubmit} className="max-w-3xl space-y-6">
       {error && (
-        <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+        <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
           {error}
         </div>
       )}
 
-      <Input
-        label="Title"
-        name="title"
-        value={formData.title}
-        onChange={handleChange}
-        required
-      />
-      <Input
-        label="Slug"
-        name="slug"
-        value={formData.slug}
-        readOnly
-        className="text-gray-500"
-        hint="Auto-generated from title"
-      />
-      <Input
-        label="Date"
-        type="date"
-        name="date"
-        value={formData.date}
-        onChange={handleChange}
-        required
-      />
-      <div className="grid grid-cols-2 gap-4">
-        <Select
-          label="Difficulty"
-          name="difficulty"
-          value={formData.difficulty}
+      <FormSection
+        title="Basic Info"
+        description="Title, slug, and date"
+        icon={BookOpen}
+      >
+        <Input
+          label="Title"
+          name="title"
+          value={formData.title}
           onChange={handleChange}
-        >
-          <option>Easy</option>
-          <option>Medium</option>
-          <option>Hard</option>
-          <option>Insane</option>
-        </Select>
-        <Select
-          label="Platform"
-          name="platform"
-          value={formData.platform}
+          required
+          placeholder="My lab writeup..."
+        />
+        <Input
+          label="Slug"
+          name="slug"
+          value={formData.slug}
+          readOnly
+          className="text-gray-500"
+          hint="Auto-generated from title"
+        />
+        <Input
+          label="Date"
+          type="date"
+          name="date"
+          value={formData.date}
           onChange={handleChange}
-        >
-          <option>HTB</option>
-          <option>THM</option>
-          <option>VulnHub</option>
-          <option>Other</option>
-        </Select>
-      </div>
-      <Textarea
-        label="Content"
-        name="content"
-        rows={10}
-        value={formData.content}
-        onChange={handleChange}
-        required
-        className="font-mono text-sm"
-        hint="Markdown supported"
-      />
-      <Input
-        label="Tags"
-        name="tags"
-        value={formData.tags}
-        onChange={handleChange}
-        placeholder="linux, web, privilege-escalation"
-        hint="Comma-separated"
-      />
-      <Checkbox
-        label="Published"
-        name="published"
-        checked={formData.published}
-        onChange={handleChange}
-      />
+          required
+        />
+      </FormSection>
+
+      <FormSection
+        title="Lab Details"
+        description="Difficulty, platform, and tags"
+        icon={Zap}
+      >
+        <div className="grid grid-cols-2 gap-4">
+          <Select
+            label="Difficulty"
+            name="difficulty"
+            value={formData.difficulty}
+            onChange={handleChange}
+          >
+            <option>Easy</option>
+            <option>Medium</option>
+            <option>Hard</option>
+            <option>Insane</option>
+          </Select>
+          <Select
+            label="Platform"
+            name="platform"
+            value={formData.platform}
+            onChange={handleChange}
+          >
+            <option>HTB</option>
+            <option>THM</option>
+            <option>VulnHub</option>
+            <option>Other</option>
+          </Select>
+        </div>
+        <Input
+          label="Tags"
+          name="tags"
+          value={formData.tags}
+          onChange={handleChange}
+          placeholder="linux, web, privilege-escalation"
+          hint="Comma-separated"
+        />
+      </FormSection>
+
+      <FormSection
+        title="Content"
+        description="Markdown writeup"
+        icon={FileText}
+      >
+        <Textarea
+          label="Content"
+          name="content"
+          rows={10}
+          value={formData.content}
+          onChange={handleChange}
+          required
+          className="font-mono text-sm"
+          hint="Markdown supported"
+        />
+      </FormSection>
+
+      <FormSection
+        title="Media & Publishing"
+        description="Cover image and visibility"
+        icon={ImageIcon}
+      >
+        <CloudinaryUpload
+          resourceType="image"
+          initialPreview={formData.coverImage || undefined}
+          onUpload={(url) =>
+            setFormData((prev) => ({ ...prev, coverImage: url }))
+          }
+          label="Cover Image"
+        />
+        <Checkbox
+          label="Published"
+          name="published"
+          checked={formData.published}
+          onChange={handleChange}
+        />
+      </FormSection>
 
       <div className="flex gap-3 pt-2">
         <Button type="submit" disabled={loading}>

@@ -3,10 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/lib/api";
+import CloudinaryUpload from "./CloudinaryUpload";
 import { Input, Textarea } from "./ui/Input";
 import { Button } from "./ui/Button";
+import { FormSection } from "./ui/FormSection";
 import { useToast } from "./providers/ToastProvider";
 import { useStats } from "./providers/StatsProvider";
+import { Briefcase, Code2, Link2, ImageIcon } from "lucide-react";
 
 interface ProjectFormProps {
   initialData?: Record<string, unknown>;
@@ -27,6 +30,7 @@ export default function ProjectForm({ initialData, id }: ProjectFormProps) {
     technologies: initialData?.technologies
       ? (initialData.technologies as string[]).join(", ")
       : "",
+    coverImage: (initialData?.coverImage as string) || "",
     date:
       (initialData?.date as string)?.split("T")[0] ||
       new Date().toISOString().split("T")[0],
@@ -77,62 +81,89 @@ export default function ProjectForm({ initialData, id }: ProjectFormProps) {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-2xl space-y-5 rounded-xl border border-white/5 bg-white/[0.02] p-6"
-    >
+    <form onSubmit={handleSubmit} className="max-w-3xl space-y-6">
       {error && (
-        <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+        <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
           {error}
         </div>
       )}
 
-      <Input
-        label="Title"
-        name="title"
-        value={formData.title}
-        onChange={handleChange}
-        required
-      />
-      <Textarea
-        label="Description"
-        name="description"
-        rows={3}
-        value={formData.description}
-        onChange={handleChange}
-        required
-      />
-      <Input
-        label="GitHub Link"
-        name="githubLink"
-        value={formData.githubLink}
-        onChange={handleChange}
-        placeholder="https://github.com/..."
-      />
-      <Input
-        label="Live Link"
-        name="liveLink"
-        value={formData.liveLink}
-        onChange={handleChange}
-        placeholder="https://..."
-      />
-      <Input
-        label="Technologies"
-        name="technologies"
-        value={formData.technologies}
-        onChange={handleChange}
-        placeholder="React, Node.js, TypeScript"
-        hint="Comma-separated"
-        required
-      />
-      <Input
-        label="Date"
-        type="date"
-        name="date"
-        value={formData.date}
-        onChange={handleChange}
-        required
-      />
+      <FormSection
+        title="Project Overview"
+        description="Title, description, and date"
+        icon={Briefcase}
+      >
+        <Input
+          label="Title"
+          name="title"
+          value={formData.title}
+          onChange={handleChange}
+          required
+          placeholder="My awesome project"
+        />
+        <Textarea
+          label="Description"
+          name="description"
+          rows={3}
+          value={formData.description}
+          onChange={handleChange}
+          required
+          placeholder="Brief summary of the project..."
+        />
+        <Input
+          label="Date"
+          type="date"
+          name="date"
+          value={formData.date}
+          onChange={handleChange}
+          required
+        />
+      </FormSection>
+
+      <FormSection
+        title="Links & Technology"
+        description="GitHub, live link, and tech stack"
+        icon={Link2}
+      >
+        <Input
+          label="GitHub Link"
+          name="githubLink"
+          value={formData.githubLink}
+          onChange={handleChange}
+          placeholder="https://github.com/..."
+        />
+        <Input
+          label="Live Link"
+          name="liveLink"
+          value={formData.liveLink}
+          onChange={handleChange}
+          placeholder="https://..."
+        />
+        <Input
+          label="Technologies"
+          name="technologies"
+          value={formData.technologies}
+          onChange={handleChange}
+          placeholder="React, Node.js, TypeScript"
+          hint="Comma-separated"
+          required
+        />
+      </FormSection>
+
+      <FormSection
+        title="Cover Image"
+        description="Project showcase image"
+        icon={ImageIcon}
+      >
+        <CloudinaryUpload
+          resourceType="image"
+          initialPreview={formData.coverImage || undefined}
+          onUpload={(url) =>
+            setFormData((prev) => ({ ...prev, coverImage: url }))
+          }
+          label="Cover Image"
+        />
+      </FormSection>
 
       <div className="flex gap-3 pt-2">
         <Button type="submit" disabled={loading}>
