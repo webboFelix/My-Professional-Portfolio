@@ -1,17 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api, { type Lab } from "../api";
+import { getFromCache, saveToCache } from "../cacheUtils";
 
 interface LabsState {
   items: Lab[];
   loading: boolean;
   error: string | null;
+  lastFetched: number | null;
 }
 
 const initialState: LabsState = {
   items: [],
   loading: false,
   error: null,
+  lastFetched: null,
 };
+
+const CACHE_KEY = "portfolio_cache_labs";
 
 // Normalize backend lab to frontend interface
 function normalizeLab(raw: any): Lab {
@@ -32,8 +37,20 @@ export const fetchLabs = createAsyncThunk(
   "labs/fetchLabs",
   async (_, { rejectWithValue }) => {
     try {
+      // Try to get from cache first
+      const cached = getFromCache<Lab[]>(CACHE_KEY);
+      if (cached) {
+        return cached;
+      }
+
+      // If not in cache, fetch from backend
       const response = await api.get<any[]>("/api/labs?all=true");
-      return response.data.map(normalizeLab);
+      const normalized = response.data.map(normalizeLab);
+
+      // Save to cache
+      saveToCache(CACHE_KEY, normalized);
+
+      return normalized;
     } catch (error) {
       return rejectWithValue((error as Error).message);
     }
@@ -69,6 +86,7 @@ const labsSlice = createSlice({
       .addCase(fetchLabs.fulfilled, (state, action) => {
         state.loading = false;
         state.items = action.payload;
+        state.lastFetched = Date.now();
       })
       .addCase(fetchLabs.rejected, (state, action) => {
         state.loading = false;

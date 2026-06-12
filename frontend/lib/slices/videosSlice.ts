@@ -1,17 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api, { type Video } from "../api";
+import { getFromCache, saveToCache } from "../cacheUtils";
 
 interface VideosState {
   items: Video[];
   loading: boolean;
   error: string | null;
+  lastFetched: number | null;
 }
 
 const initialState: VideosState = {
   items: [],
   loading: false,
   error: null,
+  lastFetched: null,
 };
+
+const CACHE_KEY = "portfolio_cache_videos";
 
 // Normalize backend video to frontend interface
 function normalizeVideo(raw: any): Video {
@@ -32,8 +37,20 @@ export const fetchVideos = createAsyncThunk(
   "videos/fetchVideos",
   async (_, { rejectWithValue }) => {
     try {
+      // Try to get from cache first
+      const cached = getFromCache<Video[]>(CACHE_KEY);
+      if (cached) {
+        return cached;
+      }
+
+      // If not in cache, fetch from backend
       const response = await api.get<any[]>("/api/videos?all=true");
-      return response.data.map(normalizeVideo);
+      const normalized = response.data.map(normalizeVideo);
+
+      // Save to cache
+      saveToCache(CACHE_KEY, normalized);
+
+      return normalized;
     } catch (error) {
       return rejectWithValue((error as Error).message);
     }
@@ -69,6 +86,7 @@ const videosSlice = createSlice({
       .addCase(fetchVideos.fulfilled, (state, action) => {
         state.loading = false;
         state.items = action.payload;
+        state.lastFetched = Date.now();
       })
       .addCase(fetchVideos.rejected, (state, action) => {
         state.loading = false;

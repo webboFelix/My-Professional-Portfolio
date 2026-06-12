@@ -81,98 +81,108 @@ export default function ProjectForm({ initialData, id }: ProjectFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-3xl space-y-6">
-      {error && (
-        <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
-          {error}
+    <div className="mx-auto max-w-4xl">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {error && (
+          <div className="rounded-xl border-2 border-red-500/30 bg-gradient-to-r from-red-500/10 to-red-600/5 px-5 py-4 text-sm font-medium text-red-300 shadow-lg shadow-red-500/10">
+            {error}
+          </div>
+        )}
+
+        <FormSection
+          title="Project Overview"
+          description="Title, description, and date"
+          icon={Briefcase}
+        >
+          <Input
+            label="Title"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            required
+            placeholder="My awesome project"
+          />
+          <Textarea
+            label="Description"
+            name="description"
+            rows={4}
+            value={formData.description}
+            onChange={handleChange}
+            required
+            placeholder="Brief summary of the project..."
+          />
+          <Input
+            label="Date"
+            type="date"
+            name="date"
+            value={formData.date}
+            onChange={handleChange}
+            required
+          />
+        </FormSection>
+
+        <FormSection
+          title="Links & Technology"
+          description="GitHub, live link, and tech stack"
+          icon={Link2}
+        >
+          <Input
+            label="GitHub Link"
+            name="githubLink"
+            value={formData.githubLink}
+            onChange={handleChange}
+            placeholder="https://github.com/..."
+          />
+          <Input
+            label="Live Link"
+            name="liveLink"
+            value={formData.liveLink}
+            onChange={handleChange}
+            placeholder="https://..."
+          />
+          <Input
+            label="Technologies"
+            name="technologies"
+            value={formData.technologies}
+            onChange={handleChange}
+            placeholder="React, Node.js, TypeScript"
+            hint="Comma-separated"
+            required
+          />
+        </FormSection>
+
+        <FormSection
+          title="Cover Image"
+          description="Project showcase image"
+          icon={ImageIcon}
+        >
+          <CloudinaryUpload
+            resourceType="image"
+            initialPreview={formData.coverImage || undefined}
+            onUpload={(url) =>
+              setFormData((prev) => ({ ...prev, coverImage: url }))
+            }
+            label="Cover Image"
+          />
+        </FormSection>
+
+        <div className="flex gap-3 pt-4">
+          <button
+            type="submit"
+            disabled={loading}
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 transition hover:from-cyan-500 hover:to-blue-500 disabled:opacity-50"
+          >
+            {loading ? "Saving..." : id ? "Update Project" : "Create Project"}
+          </button>
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="inline-flex items-center justify-center gap-2 rounded-lg border-2 border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-gray-300 transition hover:border-white/20 hover:bg-white/10 hover:text-white"
+          >
+            Cancel
+          </button>
         </div>
-      )}
-
-      <FormSection
-        title="Project Overview"
-        description="Title, description, and date"
-        icon={Briefcase}
-      >
-        <Input
-          label="Title"
-          name="title"
-          value={formData.title}
-          onChange={handleChange}
-          required
-          placeholder="My awesome project"
-        />
-        <Textarea
-          label="Description"
-          name="description"
-          rows={3}
-          value={formData.description}
-          onChange={handleChange}
-          required
-          placeholder="Brief summary of the project..."
-        />
-        <Input
-          label="Date"
-          type="date"
-          name="date"
-          value={formData.date}
-          onChange={handleChange}
-          required
-        />
-      </FormSection>
-
-      <FormSection
-        title="Links & Technology"
-        description="GitHub, live link, and tech stack"
-        icon={Link2}
-      >
-        <Input
-          label="GitHub Link"
-          name="githubLink"
-          value={formData.githubLink}
-          onChange={handleChange}
-          placeholder="https://github.com/..."
-        />
-        <Input
-          label="Live Link"
-          name="liveLink"
-          value={formData.liveLink}
-          onChange={handleChange}
-          placeholder="https://..."
-        />
-        <Input
-          label="Technologies"
-          name="technologies"
-          value={formData.technologies}
-          onChange={handleChange}
-          placeholder="React, Node.js, TypeScript"
-          hint="Comma-separated"
-          required
-        />
-      </FormSection>
-
-      <FormSection
-        title="Cover Image"
-        description="Project showcase image"
-        icon={ImageIcon}
-      >
-        <CloudinaryUpload
-          resourceType="image"
-          initialPreview={formData.coverImage || undefined}
-          onUpload={(url) =>
-            setFormData((prev) => ({ ...prev, coverImage: url }))
-          }
-          label="Cover Image"
-        />
-      </FormSection>
-
-      <div className="flex gap-3 pt-2">
-        <Button type="submit" disabled={loading}>
-          {loading ? "Saving..." : id ? "Update Project" : "Create Project"}
-        </Button>
-        <Button type="button" variant="secondary" onClick={() => router.back()}>
-          Cancel
-        </Button>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 }

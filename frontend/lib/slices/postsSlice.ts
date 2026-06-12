@@ -1,17 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api, { type Post } from "../api";
+import { getFromCache, saveToCache } from "../cacheUtils";
 
 interface PostsState {
   items: Post[];
   loading: boolean;
   error: string | null;
+  lastFetched: number | null;
 }
 
 const initialState: PostsState = {
   items: [],
   loading: false,
   error: null,
+  lastFetched: null,
 };
+
+const CACHE_KEY = "portfolio_cache_posts";
 
 // Normalize backend post to frontend interface
 function normalizePost(raw: any): Post {
@@ -32,8 +37,20 @@ export const fetchPosts = createAsyncThunk(
   "posts/fetchPosts",
   async (_, { rejectWithValue }) => {
     try {
+      // Try to get from cache first
+      const cached = getFromCache<Post[]>(CACHE_KEY);
+      if (cached) {
+        return cached;
+      }
+
+      // If not in cache, fetch from backend
       const response = await api.get<any[]>("/api/posts?all=true");
-      return response.data.map(normalizePost);
+      const normalized = response.data.map(normalizePost);
+
+      // Save to cache
+      saveToCache(CACHE_KEY, normalized);
+
+      return normalized;
     } catch (error) {
       return rejectWithValue((error as Error).message);
     }
@@ -69,6 +86,7 @@ const postsSlice = createSlice({
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.loading = false;
         state.items = action.payload;
+        state.lastFetched = Date.now();
       })
       .addCase(fetchPosts.rejected, (state, action) => {
         state.loading = false;

@@ -91,129 +91,139 @@ export default function LabForm({ initialData, id }: LabFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-3xl space-y-6">
-      {error && (
-        <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
-          {error}
-        </div>
-      )}
+    <div className="mx-auto max-w-4xl">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {error && (
+          <div className="rounded-xl border-2 border-red-500/30 bg-gradient-to-r from-red-500/10 to-red-600/5 px-5 py-4 text-sm font-medium text-red-300 shadow-lg shadow-red-500/10">
+            {error}
+          </div>
+        )}
 
-      <FormSection
-        title="Basic Info"
-        description="Title, slug, and date"
-        icon={BookOpen}
-      >
-        <Input
-          label="Title"
-          name="title"
-          value={formData.title}
-          onChange={handleChange}
-          required
-          placeholder="My lab writeup..."
-        />
-        <Input
-          label="Slug"
-          name="slug"
-          value={formData.slug}
-          readOnly
-          className="text-gray-500"
-          hint="Auto-generated from title"
-        />
-        <Input
-          label="Date"
-          type="date"
-          name="date"
-          value={formData.date}
-          onChange={handleChange}
-          required
-        />
-      </FormSection>
-
-      <FormSection
-        title="Lab Details"
-        description="Difficulty, platform, and tags"
-        icon={Zap}
-      >
-        <div className="grid grid-cols-2 gap-4">
-          <Select
-            label="Difficulty"
-            name="difficulty"
-            value={formData.difficulty}
+        <FormSection
+          title="Basic Info"
+          description="Title, slug, and date"
+          icon={BookOpen}
+        >
+          <Input
+            label="Title"
+            name="title"
+            value={formData.title}
             onChange={handleChange}
-          >
-            <option>Easy</option>
-            <option>Medium</option>
-            <option>Hard</option>
-            <option>Insane</option>
-          </Select>
-          <Select
-            label="Platform"
-            name="platform"
-            value={formData.platform}
+            required
+            placeholder="My lab writeup..."
+          />
+          <Input
+            label="Slug"
+            name="slug"
+            value={formData.slug}
+            readOnly
+            className="text-gray-500"
+            hint="Auto-generated from title"
+          />
+          <Input
+            label="Date"
+            type="date"
+            name="date"
+            value={formData.date}
             onChange={handleChange}
+            required
+          />
+        </FormSection>
+
+        <FormSection
+          title="Lab Details"
+          description="Difficulty, platform, and tags"
+          icon={Zap}
+        >
+          <div className="grid grid-cols-2 gap-5">
+            <Select
+              label="Difficulty"
+              name="difficulty"
+              value={formData.difficulty}
+              onChange={handleChange}
+            >
+              <option>Easy</option>
+              <option>Medium</option>
+              <option>Hard</option>
+              <option>Insane</option>
+            </Select>
+            <Select
+              label="Platform"
+              name="platform"
+              value={formData.platform}
+              onChange={handleChange}
+            >
+              <option>HTB</option>
+              <option>THM</option>
+              <option>VulnHub</option>
+              <option>Other</option>
+            </Select>
+          </div>
+          <Input
+            label="Tags"
+            name="tags"
+            value={formData.tags}
+            onChange={handleChange}
+            placeholder="linux, web, privilege-escalation"
+            hint="Comma-separated"
+          />
+        </FormSection>
+
+        <FormSection
+          title="Content"
+          description="Markdown writeup"
+          icon={FileText}
+        >
+          <Textarea
+            label="Content"
+            name="content"
+            rows={12}
+            value={formData.content}
+            onChange={handleChange}
+            required
+            className="font-mono text-sm"
+            hint="Markdown supported"
+          />
+        </FormSection>
+
+        <FormSection
+          title="Media & Publishing"
+          description="Cover image and visibility"
+          icon={ImageIcon}
+        >
+          <CloudinaryUpload
+            resourceType="image"
+            initialPreview={formData.coverImage || undefined}
+            onUpload={(url) =>
+              setFormData((prev) => ({ ...prev, coverImage: url }))
+            }
+            label="Cover Image"
+          />
+          <Checkbox
+            label="Published"
+            name="published"
+            checked={formData.published}
+            onChange={handleChange}
+          />
+        </FormSection>
+
+        <div className="flex gap-3 pt-4">
+          <button
+            type="submit"
+            disabled={loading}
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-cyan-500/20 transition hover:from-cyan-500 hover:to-blue-500 disabled:opacity-50"
           >
-            <option>HTB</option>
-            <option>THM</option>
-            <option>VulnHub</option>
-            <option>Other</option>
-          </Select>
+            {loading ? "Saving..." : id ? "Update Lab" : "Create Lab"}
+          </button>
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="inline-flex items-center justify-center gap-2 rounded-lg border-2 border-white/10 bg-white/5 px-6 py-3 text-sm font-semibold text-gray-300 transition hover:border-white/20 hover:bg-white/10 hover:text-white"
+          >
+            Cancel
+          </button>
         </div>
-        <Input
-          label="Tags"
-          name="tags"
-          value={formData.tags}
-          onChange={handleChange}
-          placeholder="linux, web, privilege-escalation"
-          hint="Comma-separated"
-        />
-      </FormSection>
-
-      <FormSection
-        title="Content"
-        description="Markdown writeup"
-        icon={FileText}
-      >
-        <Textarea
-          label="Content"
-          name="content"
-          rows={10}
-          value={formData.content}
-          onChange={handleChange}
-          required
-          className="font-mono text-sm"
-          hint="Markdown supported"
-        />
-      </FormSection>
-
-      <FormSection
-        title="Media & Publishing"
-        description="Cover image and visibility"
-        icon={ImageIcon}
-      >
-        <CloudinaryUpload
-          resourceType="image"
-          initialPreview={formData.coverImage || undefined}
-          onUpload={(url) =>
-            setFormData((prev) => ({ ...prev, coverImage: url }))
-          }
-          label="Cover Image"
-        />
-        <Checkbox
-          label="Published"
-          name="published"
-          checked={formData.published}
-          onChange={handleChange}
-        />
-      </FormSection>
-
-      <div className="flex gap-3 pt-2">
-        <Button type="submit" disabled={loading}>
-          {loading ? "Saving..." : id ? "Update Lab" : "Create Lab"}
-        </Button>
-        <Button type="button" variant="secondary" onClick={() => router.back()}>
-          Cancel
-        </Button>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 }

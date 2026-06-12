@@ -1,17 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api, { type Project } from "../api";
+import { getFromCache, saveToCache } from "../cacheUtils";
 
 interface ProjectsState {
   items: Project[];
   loading: boolean;
   error: string | null;
+  lastFetched: number | null;
 }
 
 const initialState: ProjectsState = {
   items: [],
   loading: false,
   error: null,
+  lastFetched: null,
 };
+
+const CACHE_KEY = "portfolio_cache_projects";
 
 // Normalize backend project to frontend interface
 function normalizeProject(raw: any): Project {
@@ -32,8 +37,20 @@ export const fetchProjects = createAsyncThunk(
   "projects/fetchProjects",
   async (_, { rejectWithValue }) => {
     try {
+      // Try to get from cache first
+      const cached = getFromCache<Project[]>(CACHE_KEY);
+      if (cached) {
+        return cached;
+      }
+
+      // If not in cache, fetch from backend
       const response = await api.get<any[]>("/api/projects?all=true");
-      return response.data.map(normalizeProject);
+      const normalized = response.data.map(normalizeProject);
+
+      // Save to cache
+      saveToCache(CACHE_KEY, normalized);
+
+      return normalized;
     } catch (error) {
       return rejectWithValue((error as Error).message);
     }
@@ -69,6 +86,7 @@ const projectsSlice = createSlice({
       .addCase(fetchProjects.fulfilled, (state, action) => {
         state.loading = false;
         state.items = action.payload;
+        state.lastFetched = Date.now();
       })
       .addCase(fetchProjects.rejected, (state, action) => {
         state.loading = false;

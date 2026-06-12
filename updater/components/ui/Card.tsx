@@ -21,7 +21,7 @@ export function Card({
   return (
     <Link
       href={href}
-      className="group relative overflow-hidden rounded-xl border border-white/5 bg-white/[0.03] p-5 transition hover:border-white/10 hover:bg-white/[0.05]"
+      className="group relative overflow-hidden rounded-xl border-2 border-white/5 bg-gradient-to-br from-white/[0.06] to-white/[0.02] p-6 shadow-lg transition hover:border-white/15 hover:from-white/[0.09] hover:to-white/[0.03]"
     >
       <div
         className="absolute -right-4 -top-4 h-24 w-24 rounded-full opacity-20 blur-2xl transition group-hover:opacity-30"
@@ -29,20 +29,20 @@ export function Card({
       />
       <div className="relative">
         <div className="flex items-center justify-between">
-          <p className="text-xs font-medium uppercase tracking-wider text-gray-500">
+          <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
             {title}
           </p>
           <div
-            className="flex h-8 w-8 items-center justify-center rounded-lg"
+            className="flex h-9 w-9 items-center justify-center rounded-lg shadow-lg"
             style={{ background: `${color}20`, color }}
           >
-            <Icon size={16} />
+            <Icon size={18} />
           </div>
         </div>
         {value === 0 ? (
           <p className="mt-3 text-sm text-gray-600">{emptyMessage}</p>
         ) : (
-          <p className="mt-2 text-3xl font-bold text-white">{value}</p>
+          <p className="mt-3 text-4xl font-bold text-white">{value}</p>
         )}
       </div>
     </Link>
