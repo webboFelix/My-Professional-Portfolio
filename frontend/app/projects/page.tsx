@@ -219,7 +219,7 @@ export default function ProjectsPage() {
           <div className="mx-auto max-w-6xl text-center py-12">
             <GlassCard>
               <p className="font-mono text-sm text-gray-500">
-                Start the backend API on port 5000 to load projects dynamically.
+                No labs found. Check back later.
               </p>
             </GlassCard>
           </div>
