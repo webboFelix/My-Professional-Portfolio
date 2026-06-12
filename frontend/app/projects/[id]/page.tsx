@@ -38,7 +38,9 @@ export default function ProjectDetailPage({
                 <h1 className="text-2xl font-bold text-red-400">
                   ❌ Project Not Found
                 </h1>
-                <p className="text-gray-400">{error || "Could not load project"}</p>
+                <p className="text-gray-400">
+                  {error || "Could not load project"}
+                </p>
                 <Link
                   href="/projects"
                   className="inline-block mt-4 px-4 py-2 bg-cyan-500/20 text-cyan-400 rounded border border-cyan-500/50 hover:bg-cyan-500/30 transition-colors"

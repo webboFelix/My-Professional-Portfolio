@@ -1,6 +1,10 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "./useRedux";
-import { fetchPosts, fetchPostById, fetchPostBySlug } from "@/lib/slices/postsSlice";
+import {
+  fetchPosts,
+  fetchPostById,
+  fetchPostBySlug,
+} from "@/lib/slices/postsSlice";
 
 export function usePosts() {
   const dispatch = useAppDispatch();

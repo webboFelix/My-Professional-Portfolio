@@ -38,7 +38,9 @@ export default function PostDetailPage({
                 <h1 className="text-2xl font-bold text-red-400">
                   ❌ Post Not Found
                 </h1>
-                <p className="text-gray-400">{error || "Could not load post"}</p>
+                <p className="text-gray-400">
+                  {error || "Could not load post"}
+                </p>
                 <Link
                   href="/posts"
                   className="inline-block mt-4 px-4 py-2 bg-cyber-green/20 text-cyber-green rounded border border-cyber-green/50 hover:bg-cyber-green/30 transition-colors"
@@ -98,7 +100,8 @@ export default function PostDetailPage({
               </span>
               <span>•</span>
               <span className="text-gray-400">
-                {Math.ceil((post.content || "").split(" ").length / 200)} min read
+                {Math.ceil((post.content || "").split(" ").length / 200)} min
+                read
               </span>
             </div>
           </motion.div>

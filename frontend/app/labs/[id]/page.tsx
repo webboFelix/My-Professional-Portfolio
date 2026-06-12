@@ -14,11 +14,7 @@ const difficultyColors: Record<string, { bg: string; text: string }> = {
   insane: { bg: "bg-purple-500/20", text: "text-purple-400" },
 };
 
-export default function LabDetailPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default function LabDetailPage({ params }: { params: { id: string } }) {
   const { lab, loading, error } = useLabById(params.id);
 
   if (loading) {
@@ -94,7 +90,9 @@ export default function LabDetailPage({
             </GlitchEffect>
             <p className="text-gray-400 mb-4">{lab.description}</p>
             <div className="flex items-center gap-4 text-sm text-gray-500 flex-wrap">
-              <span className={`px-2 py-1 ${colors.bg} ${colors.text} rounded-sm border font-mono uppercase`}>
+              <span
+                className={`px-2 py-1 ${colors.bg} ${colors.text} rounded-sm border font-mono uppercase`}
+              >
                 {lab.difficulty}
               </span>
               <span className="px-2 py-1 bg-blue-500/20 text-blue-400 rounded-sm border border-blue-500/30 font-mono">

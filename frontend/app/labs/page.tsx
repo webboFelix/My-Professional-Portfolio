@@ -184,13 +184,12 @@ export default function LabsPage() {
                                   </a>
                                   {lab.createdAt && (
                                     <span className="text-xs text-gray-500 font-mono">
-                                      {new Date(lab.createdAt).toLocaleDateString(
-                                        "en-US",
-                                        {
-                                          year: "numeric",
-                                          month: "short",
-                                        },
-                                      )}
+                                      {new Date(
+                                        lab.createdAt,
+                                      ).toLocaleDateString("en-US", {
+                                        year: "numeric",
+                                        month: "short",
+                                      })}
                                     </span>
                                   )}
                                 </div>
