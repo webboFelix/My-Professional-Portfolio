@@ -109,7 +109,7 @@ export default function ContactPage() {
                   </p>
                   <div className="space-y-2">
                     <a
-                      href="https://github.com/webbofelix"
+                      href="https://github.com/webboFelix"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="block text-gray-400 hover:text-cyber-green transition-colors text-sm"

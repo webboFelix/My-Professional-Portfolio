@@ -87,16 +87,20 @@ export const SKILLS = [
 ];
 
 export const CERTIFICATIONS = [
-  { name: "CompTIA Security+", status: "Active", year: "2025" },
-  { name: "CEH", status: "In Progress", year: "2026" },
-  { name: "AWS Cloud Practitioner", status: "Active", year: "2025" },
+  { name: "Cloud and Network Security", status: "Active", year: "2026" },
+  { name: "CEH", status: "Active", year: "2026" },
+  {
+    name: "Automated Security Testing with Python",
+    status: "In Progress",
+    year: "2026",
+  },
 ];
 
 export const TIMELINE = [
-  { year: "2026", event: "SOC-style portfolio & threat intel tooling" },
+  { year: "2026", event: "Cloud and Network Security & VAPT" },
   { year: "2025", event: "Web app pentesting focus — OWASP labs" },
-  { year: "2024", event: "Cloud security & IAM hardening projects" },
-  { year: "2023", event: "Started cybersecurity journey — home lab" },
+  { year: "2024", event: "Cybersecurity Research & Development" },
+  { year: "2023", event: "Web Development & Cybersecurity Foundation" },
 ];
 
 export default api;

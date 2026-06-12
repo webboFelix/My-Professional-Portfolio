@@ -88,7 +88,7 @@ export function TerminalCarousel() {
           <div className="w-3 h-3 rounded-full bg-cyber-green" />
         </div>
         <span className="font-mono text-xs text-cyber-green ml-2">
-          user@portfolio ~ [recent_posts]
+          webbo@pentester ~ [recent_posts]
         </span>
       </div>
 

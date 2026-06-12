@@ -159,7 +159,7 @@ export function AutoTypingTerminal() {
           <div className="w-3 h-3 rounded-full bg-cyber-green" />
         </div>
         <span className="font-mono text-xs text-cyber-green ml-2">
-          root@kali:~# SYSTEM_PROFILE
+          root@pentester:~# Webbo_Felix
         </span>
       </div>
 

@@ -30,6 +30,9 @@ export default function HomePage() {
             className="mb-6 rounded-lg border border-dashed border-cyber-amber/50 bg-cyber-amber/5 px-4 py-2 font-mono text-xs text-cyber-amber"
           >
             Welcome Dear Guest, let's <code>Connect!</code>
+            <a href="/contact" className="ml-1 text-cyber-amber/80 underline">
+              Contact Me
+            </a>
           </motion.div>
         )}
 
@@ -81,6 +84,14 @@ export default function HomePage() {
                 </li>
               ))}
             </ul>
+            <div className="mt-4 text-center">
+              <a
+                href="https://drive.google.com/drive/folders/1jF6q5K-4_kPe7Z76yrtoQiQ-zeZZpAAf?usp=sharing"
+                className="inline-block rounded-md border border-cyber-cyan px-4 py-2 text-sm text-cyber-cyan hover:bg-cyber-cyan/10 transition-colors"
+              >
+                View All Certifications
+              </a>
+            </div>
           </GlassCard>
         </div>
 

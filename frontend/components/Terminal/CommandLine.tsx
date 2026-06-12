@@ -1,27 +1,30 @@
-'use client';
+"use client";
 
-import { useState, useCallback, KeyboardEvent } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useCallback, KeyboardEvent } from "react";
+import { useRouter } from "next/navigation";
 
 const COMMANDS: Record<string, string | (() => void)> = {
-  help: 'Commands: help, about, skills, home, labs, projects, dashboard, logs, contact, clear',
-  about: 'VAPT Engineer | Ethical Hacker | Pentester — offensive & defensive security.',
-  skills: 'OWASP | VAPT | Cloud | Python | SIEM | Network Security',
+  help: "Commands: help, about, skills, home, labs, projects, dashboard, logs, contact, clear",
+  about:
+    "VAPT Engineer | Ethical Hacker | Pentester — offensive & defensive security.",
+  skills: "OWASP | VAPT | Cloud | Python | SIEM | Network Security",
   clear: () => {},
 };
 
 const ROUTES: Record<string, string> = {
-  home: '/home',
-  labs: '/labs',
-  projects: '/projects',
-  dashboard: '/dashboard',
-  logs: '/logs',
-  contact: '/contact',
+  home: "/home",
+  labs: "/labs",
+  projects: "/projects",
+  dashboard: "/dashboard",
+  logs: "/logs",
+  contact: "/contact",
 };
 
 export function CommandLine() {
-  const [history, setHistory] = useState<string[]>(['Type "help" for available commands.']);
-  const [input, setInput] = useState('');
+  const [history, setHistory] = useState<string[]>([
+    'Type "help" for available commands.',
+  ]);
+  const [input, setInput] = useState("");
   const router = useRouter();
 
   const runCommand = useCallback(
@@ -31,7 +34,7 @@ export function CommandLine() {
 
       setHistory((h) => [...h, `> ${raw}`]);
 
-      if (cmd === 'clear') {
+      if (cmd === "clear") {
         setHistory([]);
         return;
       }
@@ -43,7 +46,7 @@ export function CommandLine() {
       }
 
       const response = COMMANDS[cmd];
-      if (typeof response === 'string') {
+      if (typeof response === "string") {
         setHistory((h) => [...h, response]);
       } else if (response) {
         response();
@@ -51,13 +54,13 @@ export function CommandLine() {
         setHistory((h) => [...h, `Unknown command: ${cmd}. Try "help".`]);
       }
     },
-    [router]
+    [router],
   );
 
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       runCommand(input);
-      setInput('');
+      setInput("");
     }
   };
 
@@ -65,13 +68,13 @@ export function CommandLine() {
     <div className="rounded-lg border border-cyber-green/30 bg-black/80 p-4 font-mono text-sm">
       <div className="mb-3 max-h-40 overflow-y-auto space-y-1 text-gray-400">
         {history.map((line, i) => (
-          <p key={i} className={line.startsWith('>') ? 'text-cyber-cyan' : ''}>
+          <p key={i} className={line.startsWith(">") ? "text-cyber-cyan" : ""}>
             {line}
           </p>
         ))}
       </div>
       <div className="flex items-center gap-2 border-t border-cyber-border pt-3">
-        <span className="text-cyber-green">guest@nexus:~$</span>
+        <span className="text-cyber-green">webbo@pentester:~$</span>
         <input
           type="text"
           value={input}

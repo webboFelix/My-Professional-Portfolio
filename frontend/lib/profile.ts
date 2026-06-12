@@ -12,7 +12,7 @@ export const profile = {
   location: process.env.NEXT_PUBLIC_LOCATION || "Nairobi, Kenya",
   phone: process.env.NEXT_PUBLIC_PHONE || "+254702803400",
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "felixwebbo.fw@gmail.com",
-  github: process.env.NEXT_PUBLIC_GITHUB_URL || "https://github.com/webbofelix",
+  github: process.env.NEXT_PUBLIC_GITHUB_URL || "https://github.com/webboFelix",
   linkedin:
     process.env.NEXT_PUBLIC_LINKEDIN_URL ||
     "https://linkedin.com/in/webbofelix",

@@ -58,7 +58,7 @@ export default function PostsPage() {
             <div className="font-mono text-sm space-y-2">
               <div className="text-cyber-green">$ ls -la | wc -l</div>
               <div className="text-gray-400">
-                Total entries:{" "}
+                Total Posts:{" "}
                 <span className="text-cyan-400">{posts.length}</span>
               </div>
             </div>

@@ -7,7 +7,7 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   const links = [
-    { label: "GitHub", href: "https://github.com/webbofelix" },
+    { label: "GitHub", href: "https://github.com/webboFelix" },
     { label: "LinkedIn", href: "https://linkedin.com/in/webbofelix" },
     { label: "Email", href: "mailto:felixwebbo.fw@gmail.com" },
   ];
