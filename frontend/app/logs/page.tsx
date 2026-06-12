@@ -103,6 +103,7 @@ export default function LogsPage() {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [paused, setPaused] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const streamInterval = useRef<NodeJS.Timeout>();
 
   // Initialize with some logs and start streaming
@@ -130,14 +131,7 @@ export default function LogsPage() {
     };
   }, [paused]);
 
-  // Auto-scroll to bottom when new logs arrive
-  useEffect(() => {
-    if (!paused) {
-      setTimeout(() => {
-        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-      }, 100);
-    }
-  }, [logs, paused]);
+  // User controls scrolling - no forced auto-scroll to avoid interrupting reading
 
   const injectEvent = () => {
     const newLog = generateLog();
@@ -209,7 +203,10 @@ export default function LogsPage() {
             className="flex flex-1 flex-col overflow-hidden !p-0"
             title="SOC@LIVE_FEED"
           >
-            <div className="flex-1 overflow-y-auto p-4 font-mono text-xs leading-relaxed space-y-1">
+            <div
+              ref={scrollContainerRef}
+              className="flex-1 overflow-y-auto p-4 font-mono text-xs leading-relaxed space-y-1"
+            >
               {logs.length === 0 ? (
                 <motion.p
                   initial={{ opacity: 0 }}
