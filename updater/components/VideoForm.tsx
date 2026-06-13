@@ -57,14 +57,14 @@ export default function VideoForm({ initialData, id }: VideoFormProps) {
 
   const handleUpload = (
     url: string,
-    publicId: string,
+    publicId?: string,
     duration?: number,
     thumbnail?: string,
   ) => {
     setFormData((prev) => ({
       ...prev,
       cloudinaryUrl: url,
-      cloudinaryPublicId: publicId,
+      cloudinaryPublicId: publicId || "",
       duration: duration || 0,
       thumbnailUrl: thumbnail || "",
     }));
