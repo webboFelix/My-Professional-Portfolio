@@ -26,6 +26,7 @@ function normalizePost(raw: any): Post {
     slug: raw.slug,
     excerpt: raw.excerpt || raw.description || "",
     content: raw.content || "",
+    writeUp: raw.writeUp || "",
     tags: raw.tags || [],
     publishedAt: raw.date || raw.publishedAt || new Date().toISOString(),
     featured: raw.featured || false,
@@ -116,6 +117,8 @@ const postsSlice = createSlice({
         } else {
           state.items.push(action.payload);
         }
+        // Update cache with new items
+        saveToCache(CACHE_KEY, state.items);
       })
       .addCase(fetchPostById.rejected, (state, action) => {
         state.loading = false;
@@ -133,6 +136,8 @@ const postsSlice = createSlice({
         } else {
           state.items.push(action.payload);
         }
+        // Update cache with new items
+        saveToCache(CACHE_KEY, state.items);
       })
       .addCase(fetchPostBySlug.rejected, (state, action) => {
         state.loading = false;

@@ -89,26 +89,28 @@ function ProjectCard({ project, index }: ProjectCardProps) {
           {/* Links */}
           <div className="pt-4 flex gap-3 border-t border-cyan-500/20">
             {project.githubUrl && (
-              <a
-                href={project.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.open(project.githubUrl, "_blank");
+                }}
                 className="text-xs text-cyan-400 hover:text-blue-300 transition-colors font-mono"
               >
                 $ github
-              </a>
+              </button>
             )}
             {project.liveUrl && (
-              <a
-                href={project.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.open(project.liveUrl, "_blank");
+                }}
                 className="text-xs text-cyan-400 hover:text-blue-300 transition-colors font-mono"
               >
                 $ live
-              </a>
+              </button>
             )}
             {project.createdAt && (
               <span className="ml-auto text-xs text-gray-500 font-mono">

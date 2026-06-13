@@ -1,7 +1,9 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
 import { useProjectById } from "@/lib/hooks/useProjects";
 import { GlassCard } from "@/components/UI/GlassCard";
 import { Matrix3D } from "@/components/Effects/Matrix3D";
@@ -13,6 +15,22 @@ export default function ProjectDetailPage({
   params: { id: string };
 }) {
   const { project, loading, error } = useProjectById(params.id);
+  const [markdownContent, setMarkdownContent] = useState<string>("");
+  const [loadingMarkdown, setLoadingMarkdown] = useState(false);
+
+  useEffect(() => {
+    if (project?.writeUp) {
+      setLoadingMarkdown(true);
+      fetch(project.writeUp)
+        .then((res) => res.text())
+        .then((content) => setMarkdownContent(content))
+        .catch((err) => {
+          console.error("Failed to load markdown:", err);
+          setMarkdownContent("Failed to load content");
+        })
+        .finally(() => setLoadingMarkdown(false));
+    }
+  }, [project]);
 
   if (loading) {
     return (
@@ -90,17 +108,16 @@ export default function ProjectDetailPage({
                 {project.title}
               </h1>
             </GlitchEffect>
-            <p className="text-gray-400 mb-4">{project.description}</p>
             <div className="flex items-center gap-4 text-sm text-gray-500">
               <span className="font-mono">
-                {new Date(project.createdAt).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </span>
-              <span className="px-2 py-1 bg-cyan-500/20 text-cyan-400 rounded-sm border border-cyan-500/50 font-mono">
-                {project.category}
+                {new Date(project.date || project.createdAt).toLocaleDateString(
+                  "en-US",
+                  {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  },
+                )}
               </span>
             </div>
           </motion.div>
@@ -159,13 +176,13 @@ export default function ProjectDetailPage({
           >
             <GlassCard>
               <div className="space-y-3">
-                <h2 className="text-lg font-bold text-cyber-green font-mono">
+                <h2 className="text-lg font-bold text-cyan-400 font-mono">
                   $ Links
                 </h2>
                 <div className="flex flex-col gap-2">
-                  {project.githubUrl && (
+                  {project.githubLink && (
                     <a
-                      href={project.githubUrl}
+                      href={project.githubLink}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-4 py-2 bg-cyan-500/20 text-cyan-400 rounded border border-cyan-500/50 hover:bg-cyan-500/30 transition-colors font-mono text-sm"
@@ -173,9 +190,9 @@ export default function ProjectDetailPage({
                       → GitHub Repository
                     </a>
                   )}
-                  {project.liveUrl && (
+                  {project.liveLink && (
                     <a
-                      href={project.liveUrl}
+                      href={project.liveLink}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-4 py-2 bg-lime-500/20 text-lime-400 rounded border border-lime-500/50 hover:bg-lime-500/30 transition-colors font-mono text-sm"
@@ -187,6 +204,82 @@ export default function ProjectDetailPage({
               </div>
             </GlassCard>
           </motion.div>
+
+          {/* Write-up Content */}
+          {markdownContent && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              {loadingMarkdown ? (
+                <GlassCard>
+                  <div className="text-center text-gray-500 font-mono">
+                    Loading content...
+                  </div>
+                </GlassCard>
+              ) : (
+                <GlassCard>
+                  <div className="prose prose-invert max-w-none text-gray-300">
+                    <style>{`
+                      .prose-invert h1, .prose-invert h2, .prose-invert h3, .prose-invert h4, .prose-invert h5, .prose-invert h6 {
+                        color: #00bdff;
+                        margin-top: 1.5em;
+                        margin-bottom: 0.5em;
+                        font-weight: 700;
+                      }
+                      .prose-invert p {
+                        color: #e0e0e0;
+                        line-height: 1.8;
+                        margin-bottom: 1em;
+                      }
+                      .prose-invert code {
+                        background: rgba(0, 0, 0, 0.3);
+                        color: #00bdff;
+                        padding: 2px 6px;
+                        border-radius: 3px;
+                        font-family: monospace;
+                      }
+                      .prose-invert pre {
+                        background: rgba(0, 0, 0, 0.5);
+                        border: 1px solid rgba(0, 189, 255, 0.2);
+                        padding: 1em;
+                        border-radius: 6px;
+                        overflow-x: auto;
+                      }
+                      .prose-invert pre code {
+                        background: none;
+                        color: #00bdff;
+                        padding: 0;
+                      }
+                      .prose-invert blockquote {
+                        border-left: 4px solid #00bdff;
+                        padding-left: 1em;
+                        color: #a8dadc;
+                        font-style: italic;
+                      }
+                      .prose-invert a {
+                        color: #00bdff;
+                        text-decoration: underline;
+                        transition: color 0.2s;
+                      }
+                      .prose-invert a:hover {
+                        color: #00ddff;
+                      }
+                      .prose-invert ul, .prose-invert ol {
+                        margin-bottom: 1em;
+                      }
+                      .prose-invert li {
+                        margin-bottom: 0.5em;
+                        color: #e0e0e0;
+                      }
+                    `}</style>
+                    <ReactMarkdown>{markdownContent}</ReactMarkdown>
+                  </div>
+                </GlassCard>
+              )}
+            </motion.div>
+          )}
         </div>
       </div>
     </div>

@@ -1,7 +1,9 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
 import { usePostBySlug } from "@/lib/hooks/usePosts";
 import { GlassCard } from "@/components/UI/GlassCard";
 import { Matrix3D } from "@/components/Effects/Matrix3D";
@@ -13,6 +15,25 @@ export default function PostDetailPage({
   params: { slug: string };
 }) {
   const { post, loading, error } = usePostBySlug(params.slug);
+  const [markdownContent, setMarkdownContent] = useState<string>("");
+  const [loadingMarkdown, setLoadingMarkdown] = useState(false);
+
+  useEffect(() => {
+    if (post?.writeUp) {
+      setLoadingMarkdown(true);
+      fetch(post.writeUp)
+        .then((res) => res.text())
+        .then((content) => setMarkdownContent(content))
+        .catch((err) => {
+          console.error("Failed to load markdown:", err);
+          setMarkdownContent("Failed to load content");
+        })
+        .finally(() => setLoadingMarkdown(false));
+    } else if (post?.content) {
+      // Fallback to old content field
+      setMarkdownContent(post.content);
+    }
+  }, [post]);
 
   if (loading) {
     return (
@@ -92,16 +113,22 @@ export default function PostDetailPage({
             </GlitchEffect>
             <div className="flex items-center gap-4 text-sm text-gray-500 flex-wrap">
               <span className="font-mono">
-                {new Date(post.publishedAt).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
+                {new Date(post.date || post.publishedAt).toLocaleDateString(
+                  "en-US",
+                  {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  },
+                )}
               </span>
               <span>•</span>
               <span className="text-gray-400">
-                {Math.ceil((post.content || "").split(" ").length / 200)} min
-                read
+                {post.readTime ||
+                  Math.ceil(
+                    (markdownContent || "").split(" ").length / 200,
+                  )}{" "}
+                min read
               </span>
             </div>
           </motion.div>
@@ -151,13 +178,72 @@ export default function PostDetailPage({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            <GlassCard>
-              <div className="prose prose-invert max-w-none">
-                <div className="text-gray-300 leading-relaxed whitespace-pre-wrap font-mono text-sm">
-                  {post.content || post.excerpt}
+            {loadingMarkdown ? (
+              <GlassCard>
+                <div className="text-center text-gray-500 font-mono">
+                  Loading content...
                 </div>
-              </div>
-            </GlassCard>
+              </GlassCard>
+            ) : (
+              <GlassCard>
+                <div className="prose prose-invert max-w-none text-gray-300">
+                  <style>{`
+                    .prose-invert h1, .prose-invert h2, .prose-invert h3, .prose-invert h4, .prose-invert h5, .prose-invert h6 {
+                      color: #00ff88;
+                      margin-top: 1.5em;
+                      margin-bottom: 0.5em;
+                      font-weight: 700;
+                    }
+                    .prose-invert p {
+                      color: #e0e0e0;
+                      line-height: 1.8;
+                      margin-bottom: 1em;
+                    }
+                    .prose-invert code {
+                      background: rgba(0, 0, 0, 0.3);
+                      color: #00ff88;
+                      padding: 2px 6px;
+                      border-radius: 3px;
+                      font-family: monospace;
+                    }
+                    .prose-invert pre {
+                      background: rgba(0, 0, 0, 0.5);
+                      border: 1px solid rgba(0, 255, 136, 0.2);
+                      padding: 1em;
+                      border-radius: 6px;
+                      overflow-x: auto;
+                    }
+                    .prose-invert pre code {
+                      background: none;
+                      color: #00ff88;
+                      padding: 0;
+                    }
+                    .prose-invert blockquote {
+                      border-left: 4px solid #00ff88;
+                      padding-left: 1em;
+                      color: #a8dadc;
+                      font-style: italic;
+                    }
+                    .prose-invert a {
+                      color: #00ff88;
+                      text-decoration: underline;
+                      transition: color 0.2s;
+                    }
+                    .prose-invert a:hover {
+                      color: #00ffaa;
+                    }
+                    .prose-invert ul, .prose-invert ol {
+                      margin-bottom: 1em;
+                    }
+                    .prose-invert li {
+                      margin-bottom: 0.5em;
+                      color: #e0e0e0;
+                    }
+                  `}</style>
+                  <ReactMarkdown>{markdownContent}</ReactMarkdown>
+                </div>
+              </GlassCard>
+            )}
           </motion.div>
 
           {/* Excerpt */}

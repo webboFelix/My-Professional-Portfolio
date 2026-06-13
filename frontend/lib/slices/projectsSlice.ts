@@ -24,6 +24,7 @@ function normalizeProject(raw: any): Project {
     id: raw.$id || raw.id,
     title: raw.title,
     description: raw.description,
+    writeUp: raw.writeUp || "",
     techStack: raw.technologies || raw.techStack || [],
     githubUrl: raw.githubLink || raw.githubUrl,
     liveUrl: raw.liveLink || raw.liveUrl,
@@ -105,6 +106,8 @@ const projectsSlice = createSlice({
         } else {
           state.items.push(action.payload);
         }
+        // Update cache with new items
+        saveToCache(CACHE_KEY, state.items);
       })
       .addCase(fetchProjectById.rejected, (state, action) => {
         state.loading = false;

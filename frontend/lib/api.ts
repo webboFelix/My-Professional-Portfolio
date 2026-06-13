@@ -17,7 +17,8 @@ export interface Post {
   title: string;
   slug: string;
   excerpt: string;
-  content: string;
+  content?: string;
+  writeUp?: string;
   tags: string[];
   publishedAt: string;
   featured?: boolean;
@@ -27,7 +28,8 @@ export interface Post {
 export interface Lab {
   id: string;
   title: string;
-  description: string;
+  description?: string;
+  writeUp?: string;
   difficulty: string;
   category: string;
   status: string;
@@ -40,7 +42,8 @@ export interface Lab {
 export interface Project {
   id: string;
   title: string;
-  description: string;
+  description?: string;
+  writeUp?: string;
   techStack: string[];
   githubUrl?: string;
   liveUrl?: string;

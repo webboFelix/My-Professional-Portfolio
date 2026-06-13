@@ -1,7 +1,9 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
 import { useLabById } from "@/lib/hooks/useLabs";
 import { GlassCard } from "@/components/UI/GlassCard";
 import { Matrix3D } from "@/components/Effects/Matrix3D";
@@ -16,6 +18,25 @@ const difficultyColors: Record<string, { bg: string; text: string }> = {
 
 export default function LabDetailPage({ params }: { params: { id: string } }) {
   const { lab, loading, error } = useLabById(params.id);
+  const [markdownContent, setMarkdownContent] = useState<string>("");
+  const [loadingMarkdown, setLoadingMarkdown] = useState(false);
+
+  useEffect(() => {
+    if (lab?.writeUp) {
+      setLoadingMarkdown(true);
+      fetch(lab.writeUp)
+        .then((res) => res.text())
+        .then((content) => setMarkdownContent(content))
+        .catch((err) => {
+          console.error("Failed to load markdown:", err);
+          setMarkdownContent("Failed to load content");
+        })
+        .finally(() => setLoadingMarkdown(false));
+    } else if (lab?.content) {
+      // Fallback to old content field
+      setMarkdownContent(lab.content);
+    }
+  }, [lab]);
 
   if (loading) {
     return (
@@ -181,6 +202,82 @@ export default function LabDetailPage({ params }: { params: { id: string } }) {
                   </a>
                 </div>
               </GlassCard>
+            </motion.div>
+          )}
+
+          {/* Write-up Content */}
+          {markdownContent && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              {loadingMarkdown ? (
+                <GlassCard>
+                  <div className="text-center text-gray-500 font-mono">
+                    Loading content...
+                  </div>
+                </GlassCard>
+              ) : (
+                <GlassCard>
+                  <div className="prose prose-invert max-w-none text-gray-300">
+                    <style>{`
+                      .prose-invert h1, .prose-invert h2, .prose-invert h3, .prose-invert h4, .prose-invert h5, .prose-invert h6 {
+                        color: #00ff88;
+                        margin-top: 1.5em;
+                        margin-bottom: 0.5em;
+                        font-weight: 700;
+                      }
+                      .prose-invert p {
+                        color: #e0e0e0;
+                        line-height: 1.8;
+                        margin-bottom: 1em;
+                      }
+                      .prose-invert code {
+                        background: rgba(0, 0, 0, 0.3);
+                        color: #00ff88;
+                        padding: 2px 6px;
+                        border-radius: 3px;
+                        font-family: monospace;
+                      }
+                      .prose-invert pre {
+                        background: rgba(0, 0, 0, 0.5);
+                        border: 1px solid rgba(0, 255, 136, 0.2);
+                        padding: 1em;
+                        border-radius: 6px;
+                        overflow-x: auto;
+                      }
+                      .prose-invert pre code {
+                        background: none;
+                        color: #00ff88;
+                        padding: 0;
+                      }
+                      .prose-invert blockquote {
+                        border-left: 4px solid #00ff88;
+                        padding-left: 1em;
+                        color: #a8dadc;
+                        font-style: italic;
+                      }
+                      .prose-invert a {
+                        color: #00ff88;
+                        text-decoration: underline;
+                        transition: color 0.2s;
+                      }
+                      .prose-invert a:hover {
+                        color: #00ffaa;
+                      }
+                      .prose-invert ul, .prose-invert ol {
+                        margin-bottom: 1em;
+                      }
+                      .prose-invert li {
+                        margin-bottom: 0.5em;
+                        color: #e0e0e0;
+                      }
+                    `}</style>
+                    <ReactMarkdown>{markdownContent}</ReactMarkdown>
+                  </div>
+                </GlassCard>
+              )}
             </motion.div>
           )}
         </div>

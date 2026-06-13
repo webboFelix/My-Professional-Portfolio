@@ -24,7 +24,7 @@ export default function PostForm({ initialData, id }: PostFormProps) {
   const [form, setForm] = useState({
     title: (initialData?.title as string) || "",
     slug: (initialData?.slug as string) || "",
-    content: (initialData?.content as string) || "",
+    writeUp: (initialData?.writeUp as string) || "",
     excerpt: (initialData?.excerpt as string) || "",
     wordCount: (initialData?.wordCount as number) || 0,
     readTime: (initialData?.readTime as number) || 0,
@@ -46,14 +46,6 @@ export default function PostForm({ initialData, id }: PostFormProps) {
     }));
     if (name === "title") {
       setForm((prev) => ({ ...prev, slug: slugify(value) }));
-    }
-    if (name === "content") {
-      const words = value.trim().split(/\s+/).filter(Boolean).length;
-      setForm((prev) => ({
-        ...prev,
-        wordCount: words,
-        readTime: Math.max(1, Math.ceil(words / 200)),
-      }));
     }
   };
 
@@ -133,19 +125,15 @@ export default function PostForm({ initialData, id }: PostFormProps) {
         </FormSection>
 
         <FormSection
-          title="Content"
-          description="Markdown body — word count auto-calculates"
+          title="Write-up Content"
+          description="Upload markdown file with your content"
           icon={FileText}
         >
-          <Textarea
-            label="Content"
-            name="content"
-            rows={12}
-            value={form.content}
-            onChange={handleChange}
-            required
-            className="font-mono"
-            placeholder="Write your markdown content here..."
+          <CloudinaryUpload
+            resourceType="markdown"
+            initialPreview={form.writeUp ? "writeup.md" : undefined}
+            onUpload={(url) => setForm((prev) => ({ ...prev, writeUp: url }))}
+            label="Upload Markdown File"
           />
           <div className="grid grid-cols-2 gap-5">
             <Input

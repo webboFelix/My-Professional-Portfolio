@@ -24,6 +24,7 @@ function normalizeLab(raw: any): Lab {
     id: raw.$id || raw.id,
     title: raw.title,
     description: raw.description || raw.content || "",
+    writeUp: raw.writeUp || "",
     difficulty: raw.difficulty || "Medium",
     category: raw.category || raw.platform || "General",
     status: raw.status || (raw.published ? "active" : "draft"),
@@ -105,6 +106,8 @@ const labsSlice = createSlice({
         } else {
           state.items.push(action.payload);
         }
+        // Update cache with new items
+        saveToCache(CACHE_KEY, state.items);
       })
       .addCase(fetchLabById.rejected, (state, action) => {
         state.loading = false;

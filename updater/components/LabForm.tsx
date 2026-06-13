@@ -29,7 +29,7 @@ export default function LabForm({ initialData, id }: LabFormProps) {
     date:
       (initialData?.date as string)?.split("T")[0] ||
       new Date().toISOString().split("T")[0],
-    content: (initialData?.content as string) || "",
+    writeUp: (initialData?.writeUp as string) || "",
     difficulty: (initialData?.difficulty as string) || "Easy",
     platform: (initialData?.platform as string) || "HTB",
     tags: initialData?.tags ? (initialData.tags as string[]).join(", ") : "",
@@ -170,19 +170,17 @@ export default function LabForm({ initialData, id }: LabFormProps) {
         </FormSection>
 
         <FormSection
-          title="Content"
-          description="Markdown writeup"
+          title="Write-up Content"
+          description="Upload markdown writeup file"
           icon={FileText}
         >
-          <Textarea
-            label="Content"
-            name="content"
-            rows={12}
-            value={formData.content}
-            onChange={handleChange}
-            required
-            className="font-mono text-sm"
-            hint="Markdown supported"
+          <CloudinaryUpload
+            resourceType="markdown"
+            initialPreview={formData.writeUp ? "writeup.md" : undefined}
+            onUpload={(url) =>
+              setFormData((prev) => ({ ...prev, writeUp: url }))
+            }
+            label="Upload Markdown File"
           />
         </FormSection>
 

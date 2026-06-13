@@ -24,7 +24,7 @@ export default function ProjectForm({ initialData, id }: ProjectFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     title: (initialData?.title as string) || "",
-    description: (initialData?.description as string) || "",
+    writeUp: (initialData?.writeUp as string) || "",
     githubLink: (initialData?.githubLink as string) || "",
     liveLink: (initialData?.liveLink as string) || "",
     technologies: initialData?.technologies
@@ -91,7 +91,7 @@ export default function ProjectForm({ initialData, id }: ProjectFormProps) {
 
         <FormSection
           title="Project Overview"
-          description="Title, description, and date"
+          description="Title, writeup file, and date"
           icon={Briefcase}
         >
           <Input
@@ -102,14 +102,13 @@ export default function ProjectForm({ initialData, id }: ProjectFormProps) {
             required
             placeholder="My awesome project"
           />
-          <Textarea
-            label="Description"
-            name="description"
-            rows={4}
-            value={formData.description}
-            onChange={handleChange}
-            required
-            placeholder="Brief summary of the project..."
+          <CloudinaryUpload
+            resourceType="markdown"
+            initialPreview={formData.writeUp ? "writeup.md" : undefined}
+            onUpload={(url) =>
+              setFormData((prev) => ({ ...prev, writeUp: url }))
+            }
+            label="Upload Project Write-up (Markdown)"
           />
           <Input
             label="Date"
