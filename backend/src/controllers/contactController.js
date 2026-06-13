@@ -1,21 +1,40 @@
 import { databases, DATABASE_ID, ID } from "../config/appwrite.js";
 import { listCollection } from "../utils/appwriteQueries.js";
+import { sendContactEmail } from "../config/email.js";
 
 const COLLECTION_ID = "contacts";
 
 export const createContact = async (req, res) => {
   try {
+    const { name, email, message } = req.body;
+
+    // Validate required fields
+    if (!name || !email || !message) {
+      return res.status(400).json({ error: "Missing required fields" });
+    }
+
     const data = {
       ...req.body,
       date: new Date().toISOString(),
       read: false,
     };
+
+    // Save to database
     await databases.createDocument(
       DATABASE_ID,
       COLLECTION_ID,
       ID.unique(),
       data,
     );
+
+    // Send email
+    try {
+      await sendContactEmail(name, email, message);
+    } catch (emailError) {
+      console.error("Failed to send email:", emailError);
+      // Don't fail the request if email fails - still saved to DB
+    }
+
     res.status(201).json({ message: "Message sent successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });

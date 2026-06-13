@@ -37,6 +37,7 @@ I am a cybersecurity professional with a strong foundation in Vulnerability Asse
 ## 🧰 Tools & Technologies
 
 ### Security
+
 - Burp Suite
 - Nmap
 - Wireshark
@@ -44,12 +45,14 @@ I am a cybersecurity professional with a strong foundation in Vulnerability Asse
 - Kali Linux
 
 ### Cloud
+
 - AWS
 - Azure
 - GCP
 - IAM
 
 ### Programming & Automation
+
 - Python
 - Bash
 - PowerShell
@@ -59,9 +62,9 @@ I am a cybersecurity professional with a strong foundation in Vulnerability Asse
 
 ## 🤝 Let's Connect
 
-📧 **Email:** felixwebbo8@gmail.com
+📧 **Email:** felixwebbo.fw@gmail.com
 
-💼 **LinkedIn:** [linkedin.com/in/webboFelix](https://linkedin.com/in/webboFelix)
+💼 **LinkedIn:** [linkedin.com/in/webboFelix](https://linkedin.com/in/webbofelix)
 
 💻 **GitHub:** [github.com/webboFelix](https://github.com/webboFelix)
 
