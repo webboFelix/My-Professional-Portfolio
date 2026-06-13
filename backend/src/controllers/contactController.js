@@ -27,17 +27,15 @@ export const createContact = async (req, res) => {
       data,
     );
 
-    // Send email
-    try {
-      await sendContactEmail(name, email, message);
-    } catch (emailError) {
-      console.error("Failed to send email:", emailError);
-      // Don't fail the request if email fails - still saved to DB
-    }
+    // Send email (don't await, let it happen in background)
+    sendContactEmail(name, email, message).catch((error) => {
+      console.error("Failed to send email:", error);
+    });
 
-    res.status(201).json({ message: "Message sent successfully" });
+    // Return success immediately
+    return res.status(201).json({ message: "Message sent successfully" });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 

@@ -1,13 +1,6 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
-// Create transporter using Gmail SMTP
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD, // App password for Gmail
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 /**
  * Send contact form email with styled HTML
@@ -183,15 +176,18 @@ export const sendContactEmail = async (name, email, message) => {
   `;
 
   try {
-    const mailOptions = {
-      from: `"Portfolio Contact" <${process.env.EMAIL_USER}>`,
+    const result = await resend.emails.send({
+      from: "Portfolio Contact <onboarding@resend.dev>",
       to: process.env.EMAIL_USER,
       replyTo: email,
       subject: `💬 New Message from ${name} - Portfolio Contact Form`,
       html: htmlContent,
-    };
+    });
 
-    await transporter.sendMail(mailOptions);
+    if (result.error) {
+      throw new Error(result.error.message);
+    }
+
     return { success: true, message: "Email sent successfully" };
   } catch (error) {
     console.error("Email sending error:", error);
