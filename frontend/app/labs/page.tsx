@@ -148,7 +148,7 @@ export default function LabsPage() {
 
                               {/* Description */}
                               <p className="text-sm text-gray-400 hover:text-gray-300 line-clamp-2">
-                                {truncateToWords(lab.description, 10)}
+                                {truncateToWords(lab.description || "", 10)}
                               </p>
 
                               {/* Tools */}

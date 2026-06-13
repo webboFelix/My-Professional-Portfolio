@@ -113,22 +113,16 @@ export default function PostDetailPage({
             </GlitchEffect>
             <div className="flex items-center gap-4 text-sm text-gray-500 flex-wrap">
               <span className="font-mono">
-                {new Date(post.date || post.publishedAt).toLocaleDateString(
-                  "en-US",
-                  {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  },
-                )}
+                {new Date(post.publishedAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
               </span>
               <span>•</span>
               <span className="text-gray-400">
-                {post.readTime ||
-                  Math.ceil(
-                    (markdownContent || "").split(" ").length / 200,
-                  )}{" "}
-                min read
+                {Math.ceil((markdownContent || "").split(" ").length / 200)} min
+                read
               </span>
             </div>
           </motion.div>

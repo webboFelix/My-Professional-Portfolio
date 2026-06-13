@@ -1,7 +1,8 @@
 export interface Lab {
   id: string;
   title: string;
-  description: string;
+  description?: string;
+  writeUp?: string;
   difficulty: "beginner" | "intermediate" | "advanced" | "expert";
   category: string;
   status: "active" | "completed" | "archived";

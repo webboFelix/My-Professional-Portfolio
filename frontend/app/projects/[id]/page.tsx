@@ -110,14 +110,11 @@ export default function ProjectDetailPage({
             </GlitchEffect>
             <div className="flex items-center gap-4 text-sm text-gray-500">
               <span className="font-mono">
-                {new Date(project.date || project.createdAt).toLocaleDateString(
-                  "en-US",
-                  {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  },
-                )}
+                {new Date(project.createdAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
               </span>
             </div>
           </motion.div>
@@ -180,9 +177,9 @@ export default function ProjectDetailPage({
                   $ Links
                 </h2>
                 <div className="flex flex-col gap-2">
-                  {project.githubLink && (
+                  {project.githubUrl && (
                     <a
-                      href={project.githubLink}
+                      href={project.githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-4 py-2 bg-cyan-500/20 text-cyan-400 rounded border border-cyan-500/50 hover:bg-cyan-500/30 transition-colors font-mono text-sm"
@@ -190,9 +187,9 @@ export default function ProjectDetailPage({
                       → GitHub Repository
                     </a>
                   )}
-                  {project.liveLink && (
+                  {project.liveUrl && (
                     <a
-                      href={project.liveLink}
+                      href={project.liveUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-4 py-2 bg-lime-500/20 text-lime-400 rounded border border-lime-500/50 hover:bg-lime-500/30 transition-colors font-mono text-sm"

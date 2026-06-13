@@ -32,9 +32,6 @@ export default function LabDetailPage({ params }: { params: { id: string } }) {
           setMarkdownContent("Failed to load content");
         })
         .finally(() => setLoadingMarkdown(false));
-    } else if (lab?.content) {
-      // Fallback to old content field
-      setMarkdownContent(lab.content);
     }
   }, [lab]);
 
