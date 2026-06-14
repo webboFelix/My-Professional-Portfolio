@@ -42,7 +42,10 @@ export default function HomePage() {
             animate={{ opacity: 1 }}
             className="mb-4 font-mono text-xs text-cyber-green"
           >
-            ✓ OPERATIVE CLEARANCE ACTIVE
+            ✓ For more queries,{" "}
+            <a href="/contact" className="underline text-cyber-green/80">
+              <b>Send a Message</b>
+            </a>
           </motion.p>
         )}
 

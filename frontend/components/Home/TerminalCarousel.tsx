@@ -28,12 +28,12 @@ export function TerminalCarousel() {
       { id: "1", text: "$ cat recent_activity.log", delay: 0 },
       {
         id: "2",
-        text: `[${new Date(currentPost.publishedAt).toLocaleString()}] Loaded: ${currentPost.title}`,
+        text: `${currentPost.title}`,
         delay: 0.5,
       },
       {
         id: "3",
-        text: `✓ Tags: ${currentPost.tags?.join(", ") || "N/A"}`,
+        text: `✓ ${currentPost.tags?.join(", ") || "N/A"}`,
         delay: 1.1,
       },
       { id: "4", text: "$ _", delay: 1.6 },
