@@ -155,6 +155,8 @@ export default function LabForm({ initialData, id }: LabFormProps) {
             >
               <option>HTB</option>
               <option>THM</option>
+              <option>Pwned Labs</option>
+              <option>HackerOne</option>
               <option>VulnHub</option>
               <option>Other</option>
             </Select>
