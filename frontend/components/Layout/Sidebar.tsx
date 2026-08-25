@@ -54,7 +54,7 @@ export function Sidebar() {
             exit={{ opacity: 0 }}
           >
             <p className="font-display text-xs tracking-[0.3em] text-cyber-cyan">
-              CYBER_OPS
+              CYBERSECURITY OPS
             </p>
             <p className="font-mono text-lg text-cyber-green cyber-glow-text">
               {site.brand}
@@ -69,7 +69,7 @@ export function Sidebar() {
             className="text-center"
           >
             <p className="font-mono text-xs text-cyber-green cyber-glow-text">
-              OPS
+              {site.brand}
             </p>
           </motion.div>
         )}

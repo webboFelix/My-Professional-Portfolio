@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   title: `${site.name} | ${site.title}`,
   description: site.tagline,
   icons: {
-    icon: "/icon.svg",
+    icon: "/assets/images/Ethical Hacker.png",
   },
 };
 
