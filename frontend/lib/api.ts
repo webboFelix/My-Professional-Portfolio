@@ -21,6 +21,7 @@ export interface Post {
   writeUp?: string;
   tags: string[];
   publishedAt: string;
+  published?: boolean;
   featured?: boolean;
   coverImage?: string;
 }
@@ -33,6 +34,7 @@ export interface Lab {
   difficulty: string;
   category: string;
   status: string;
+  published?: boolean;
   tools: string[];
   url?: string;
   coverImage?: string;

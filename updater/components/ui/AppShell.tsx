@@ -12,10 +12,10 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="relative min-h-screen text-gray-100">
       <AppBackground />
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <div className="lg:ml-64">
-        <main className="min-h-screen px-4 py-6 sm:px-6 lg:px-8">
+      <div className="lg:ml-72">
+        <main className="min-h-screen px-4 pb-12 pt-4 sm:px-8 lg:px-12 lg:pb-16">
           <TopBar onMenuClick={() => setSidebarOpen(true)} />
-          <div className="animate-fade-in">{children}</div>
+          <div className="app-content animate-fade-in">{children}</div>
         </main>
       </div>
     </div>

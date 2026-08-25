@@ -16,11 +16,36 @@ import { useStats } from "@/components/providers/StatsProvider";
 
 const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard, countKey: null },
-  { href: "/posts", label: "Posts", icon: FileText, countKey: "posts" as const },
-  { href: "/labs", label: "Labs", icon: FlaskConical, countKey: "labs" as const },
-  { href: "/projects", label: "Projects", icon: FolderKanban, countKey: "projects" as const },
-  { href: "/videos", label: "Videos", icon: Video, countKey: "videos" as const },
-  { href: "/contacts", label: "Messages", icon: Mail, countKey: "contacts" as const },
+  {
+    href: "/posts",
+    label: "Posts",
+    icon: FileText,
+    countKey: "posts" as const,
+  },
+  {
+    href: "/labs",
+    label: "Labs",
+    icon: FlaskConical,
+    countKey: "labs" as const,
+  },
+  {
+    href: "/projects",
+    label: "Projects",
+    icon: FolderKanban,
+    countKey: "projects" as const,
+  },
+  {
+    href: "/videos",
+    label: "Videos",
+    icon: Video,
+    countKey: "videos" as const,
+  },
+  {
+    href: "/contacts",
+    label: "Messages",
+    icon: Mail,
+    countKey: "contacts" as const,
+  },
 ];
 
 interface SidebarProps {
@@ -42,13 +67,13 @@ export function Sidebar({ open, onClose }: SidebarProps) {
       )}
 
       <aside
-        className={`fixed left-0 top-0 z-40 flex h-screen w-64 flex-col border-r border-white/5 bg-[#0a0f1a]/95 backdrop-blur-xl transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed left-0 top-0 z-40 flex h-screen w-72 flex-col border-r border-white/10 bg-[#09111d]/95 shadow-2xl shadow-black/30 backdrop-blur-xl transition-transform duration-300 lg:translate-x-0 ${
           open ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between border-b border-white/5 px-6 py-5">
+        <div className="flex items-center justify-between border-b border-white/10 px-5 py-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/20">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-400 shadow-lg shadow-cyan-500/20">
               <Shield size={18} className="text-white" />
             </div>
             <div>
@@ -65,7 +90,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           </button>
         </div>
 
-        <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
+        <nav className="flex-1 space-y-2 overflow-y-auto px-4 py-6">
           {navItems.map(({ href, label, icon: Icon, countKey }) => {
             const active =
               href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -76,7 +101,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                 key={href}
                 href={href}
                 onClick={onClose}
-                className={`flex items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${
+                className={`flex min-h-11 items-center justify-between rounded-xl px-3.5 py-3 text-sm font-medium transition-all ${
                   active
                     ? "bg-cyan-500/10 text-cyan-400 shadow-[inset_0_0_0_1px_rgba(34,211,238,0.2)]"
                     : "text-gray-400 hover:bg-white/5 hover:text-gray-200"
@@ -102,9 +127,11 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           })}
         </nav>
 
-        <div className="border-t border-white/5 px-6 py-4">
+        <div className="border-t border-white/10 px-5 py-5">
           <p className="text-xs text-gray-600">Cyber Portfolio CMS</p>
-          <p className="mt-1 text-[10px] text-gray-700">v1.0 · Appwrite + Cloudinary</p>
+          <p className="mt-1 text-[10px] text-gray-700">
+            v1.0 · Appwrite + Cloudinary
+          </p>
         </div>
       </aside>
     </>

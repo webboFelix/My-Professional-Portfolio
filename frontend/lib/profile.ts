@@ -5,10 +5,10 @@ export const profile = {
   handle: process.env.NEXT_PUBLIC_AUTHOR_HANDLE || "webboFelix",
   headline:
     process.env.NEXT_PUBLIC_AUTHOR_HEADLINE ||
-    "CYBERSECURITY ANALYST | VAPT ENGINEER | ETHICAL HACKING ENTHUSIAST",
+    "SOC ANALYST | VAPT ENGINEER | Ethical Hacker | Cloud Security Enthusiast",
   bio:
     process.env.NEXT_PUBLIC_AUTHOR_BIO ||
-    "Cybersecurity Analyst and aspiring VAPT Engineer with hands-on experience in Vulnerability Assessments, Web Application Security Testing, Cloud and Network Security. Proficient in penetration testing methodologies, OWASP Top 10, Kali Linux, Burp Suite, and Nmap. Certified in Ethical Hacking and Cloud Security. Enthusiastic about uncovering vulnerabilities and developing new skills in offensive security and vulnerability management.",
+    "SOC Analyst and Cloud Security Engineer with hands-on experience in Vulnerability Assessment, Penetration Testing, Web Application Security, Cloud Security, and Network Security. Skilled in Kali Linux, Burp Suite, Nmap, OWASP Top 10, vulnerability management, and offensive security methodologies, with certifications in Ethical Hacking and Cloud Security. Passionate about identifying vulnerabilities, analyzing threats, strengthening security defenses, and securing cloud and enterprise environments.",
   location: process.env.NEXT_PUBLIC_LOCATION || "Nairobi, Kenya",
   phone: process.env.NEXT_PUBLIC_PHONE || "+254702803400",
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "felixwebbo.fw@gmail.com",
@@ -22,6 +22,7 @@ export const profile = {
 };
 
 export const aboutBullets = [
+  "SOC Analyst & Threat Hunting.",
   "Vulnerability assessments & penetration testing",
   "Web, network & cloud security assessments",
   "Ethical hacking with OWASP-aligned methodology",
@@ -33,6 +34,11 @@ export const skillGroups = [
     title: "Offensive Security",
     color: "border-cyber-green text-cyber-green",
     skills: ["Ethical Hacking", "Penetration Testing", "OWASP Top 10"],
+  },
+  {
+    title: "SOC & Threat Analysis",
+    color: "border-cyber-cyan text-cyber-cyan",
+    skills: ["SIEM", "Threat Hunting", "Incident Response", "Log Analysis"],
   },
   {
     title: "Web Security",
@@ -57,7 +63,7 @@ export const skillGroups = [
 ];
 
 export const focusAreas = [
-  { icon: "🎯", label: "Vulnerability Assessments" },
+  { icon: "🎯", label: "SOC & Vulnerability Assessments" },
   { icon: "🌐", label: "Web App Testing" },
   { icon: "📡", label: "Network Recon" },
   { icon: "☁️", label: "Cloud Security" },
@@ -67,6 +73,7 @@ export const focusAreas = [
 
 export const tools = [
   "Kali Linux",
+  "SIEM Tools",
   "Nmap",
   "Burp Suite",
   "Wireshark",

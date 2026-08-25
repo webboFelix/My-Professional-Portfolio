@@ -7,7 +7,6 @@ import { Edit, Trash2, Play } from "lucide-react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Badge } from "@/components/ui/Badge";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { LoadingSkeleton } from "@/components/ui/LoadingSkeleton";
 import { SearchInput } from "@/components/ui/SearchInput";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useToast } from "@/components/providers/ToastProvider";
@@ -53,8 +52,7 @@ export default function VideosPage() {
     if (!q) return videos;
     return videos.filter(
       (v) =>
-        v.title.toLowerCase().includes(q) ||
-        v.slug.toLowerCase().includes(q),
+        v.title.toLowerCase().includes(q) || v.slug.toLowerCase().includes(q),
     );
   }, [videos, search]);
 
@@ -100,7 +98,7 @@ export default function VideosPage() {
       )}
 
       {loading ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="content-grid">
           {Array.from({ length: 3 }).map((_, i) => (
             <div
               key={i}
@@ -116,15 +114,18 @@ export default function VideosPage() {
           actionHref="/videos/new"
         />
       ) : filtered.length === 0 ? (
-        <EmptyState title="No matches" description={`Nothing found for "${search}"`} />
+        <EmptyState
+          title="No matches"
+          description={`Nothing found for "${search}"`}
+        />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((video) => (
             <div
               key={video.$id}
-              className="group overflow-hidden rounded-xl border border-white/5 bg-white/[0.02] transition hover:border-white/10"
+              className="group overflow-hidden rounded-2xl border border-white/10 bg-slate-900/70 shadow-xl shadow-black/10 transition duration-300 hover:-translate-y-1 hover:border-pink-400/30"
             >
-              <div className="relative flex h-36 items-center justify-center bg-white/[0.03]">
+              <div className="content-card-media relative flex items-center justify-center bg-slate-800/80">
                 {video.thumbnailUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
@@ -141,7 +142,7 @@ export default function VideosPage() {
                   </span>
                 ) : null}
               </div>
-              <div className="p-4">
+              <div className="flex min-h-[132px] flex-col p-5">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0 flex-1">
                     <h3 className="truncate font-semibold text-white">
@@ -153,7 +154,7 @@ export default function VideosPage() {
                     {video.published ? "Live" : "Draft"}
                   </Badge>
                 </div>
-                <div className="mt-3 flex justify-end gap-1 opacity-60 transition group-hover:opacity-100">
+                <div className="mt-auto flex justify-end gap-1 border-t border-white/10 pt-4 opacity-70 transition group-hover:opacity-100">
                   <Link
                     href={`/videos/${video.$id}`}
                     className="rounded-lg p-2 text-gray-400 transition hover:bg-white/5 hover:text-cyan-400"

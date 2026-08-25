@@ -20,6 +20,7 @@ interface Lab {
   slug: string;
   difficulty: string;
   platform: string;
+  coverImage?: string;
   date: string;
   published: boolean;
 }
@@ -112,76 +113,70 @@ export default function LabsPage() {
           actionHref="/labs/new"
         />
       ) : filtered.length === 0 ? (
-        <EmptyState title="No matches" description={`Nothing found for "${search}"`} />
+        <EmptyState
+          title="No matches"
+          description={`Nothing found for "${search}"`}
+        />
       ) : (
-        <div className="overflow-hidden rounded-xl border border-white/5">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[640px]">
-              <thead>
-                <tr className="border-b border-white/5 bg-white/[0.02]">
-                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Title
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Difficulty
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Platform
-                  </th>
-                  <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Status
-                  </th>
-                  <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((lab) => (
-                  <tr
-                    key={lab.$id}
-                    className="border-b border-white/5 transition hover:bg-white/[0.02]"
+        <div className="content-grid">
+          {filtered.map((lab) => (
+            <div
+              key={lab.$id}
+              className="group flex min-h-[300px] flex-col overflow-hidden rounded-2xl border border-white/10 bg-slate-900/70 shadow-xl shadow-black/10 transition duration-300 hover:-translate-y-1 hover:border-violet-400/30"
+            >
+              <div className="content-card-media relative shrink-0 overflow-hidden bg-slate-800/80">
+                {lab.coverImage ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={lab.coverImage}
+                    alt=""
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center bg-gradient-to-br from-violet-500/10 via-slate-900 to-fuchsia-500/10 text-xs uppercase tracking-[0.2em] text-slate-500">
+                    Lab notes
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-1 flex-col p-5">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <h2 className="truncate font-semibold text-white">
+                      {lab.title}
+                    </h2>
+                    <p className="mt-1 truncate text-sm text-slate-500">
+                      {lab.slug}
+                    </p>
+                  </div>
+                  <Badge variant={lab.published ? "success" : "warning"}>
+                    {lab.published ? "Published" : "Draft"}
+                  </Badge>
+                </div>
+                <div className="mt-5 flex items-center gap-2 text-sm text-slate-300">
+                  <Badge variant={difficultyColor[lab.difficulty] || "default"}>
+                    {lab.difficulty}
+                  </Badge>
+                  <span className="text-slate-500">{lab.platform}</span>
+                </div>
+                <div className="mt-auto flex justify-end gap-1 border-t border-white/10 pt-4 opacity-70 transition group-hover:opacity-100">
+                  <Link
+                    href={`/labs/${lab.$id}`}
+                    className="rounded-lg p-2 text-gray-400 transition hover:bg-white/5 hover:text-cyan-400"
+                    aria-label={`Edit ${lab.title}`}
                   >
-                    <td className="px-4 py-3">
-                      <p className="font-medium text-white">{lab.title}</p>
-                      <p className="text-xs text-gray-600">{lab.slug}</p>
-                    </td>
-                    <td className="px-4 py-3">
-                      <Badge
-                        variant={difficultyColor[lab.difficulty] || "default"}
-                      >
-                        {lab.difficulty}
-                      </Badge>
-                    </td>
-                    <td className="px-4 py-3 text-sm text-gray-400">
-                      {lab.platform}
-                    </td>
-                    <td className="px-4 py-3">
-                      <Badge variant={lab.published ? "success" : "warning"}>
-                        {lab.published ? "Published" : "Draft"}
-                      </Badge>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex justify-end gap-1">
-                        <Link
-                          href={`/labs/${lab.$id}`}
-                          className="rounded-lg p-2 text-gray-400 transition hover:bg-white/5 hover:text-cyan-400"
-                        >
-                          <Edit size={16} />
-                        </Link>
-                        <button
-                          onClick={() => open(lab)}
-                          className="rounded-lg p-2 text-gray-400 transition hover:bg-red-500/10 hover:text-red-400"
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                    <Edit size={16} />
+                  </Link>
+                  <button
+                    onClick={() => open(lab)}
+                    className="rounded-lg p-2 text-gray-400 transition hover:bg-red-500/10 hover:text-red-400"
+                    aria-label={`Delete ${lab.title}`}
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 

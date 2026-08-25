@@ -22,7 +22,7 @@ export default function LabDetailPage({ params }: { params: { id: string } }) {
   const [loadingMarkdown, setLoadingMarkdown] = useState(false);
 
   useEffect(() => {
-    if (lab?.writeUp) {
+    if (lab?.published && lab.writeUp) {
       setLoadingMarkdown(true);
       fetch(lab.writeUp)
         .then((res) => res.text())
@@ -32,6 +32,9 @@ export default function LabDetailPage({ params }: { params: { id: string } }) {
           setMarkdownContent("Failed to load content");
         })
         .finally(() => setLoadingMarkdown(false));
+    } else {
+      setMarkdownContent("");
+      setLoadingMarkdown(false);
     }
   }, [lab]);
 
@@ -203,13 +206,25 @@ export default function LabDetailPage({ params }: { params: { id: string } }) {
           )}
 
           {/* Write-up Content */}
-          {markdownContent && (
+          {(markdownContent || !lab.published) && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
             >
-              {loadingMarkdown ? (
+              {!lab.published ? (
+                <GlassCard>
+                  <div className="space-y-3 text-center">
+                    <h2 className="text-lg font-bold text-amber-400 font-mono">
+                      Write-up unavailable
+                    </h2>
+                    <p className="text-gray-400">
+                      This write-up is not published yet. It will be available
+                      after the expiration period.
+                    </p>
+                  </div>
+                </GlassCard>
+              ) : loadingMarkdown ? (
                 <GlassCard>
                   <div className="text-center text-gray-500 font-mono">
                     Loading content...

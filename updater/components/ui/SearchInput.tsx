@@ -14,7 +14,7 @@ export function SearchInput({
   placeholder = "Search...",
 }: SearchInputProps) {
   return (
-    <div className="relative">
+    <div className="relative w-full sm:w-80">
       <Search
         size={16}
         className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
@@ -24,13 +24,13 @@ export function SearchInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full rounded-lg border border-white/10 bg-white/5 py-2.5 pl-10 pr-10 text-sm text-white placeholder-gray-600 outline-none transition focus:border-cyan-500/40 focus:ring-1 focus:ring-cyan-500/20 sm:w-72"
+        className="control-input w-full py-3 pl-10 pr-10 text-sm placeholder:text-slate-600"
       />
       {value && (
         <button
           type="button"
           onClick={() => onChange("")}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
+          className="absolute right-3 top-1/2 -translate-y-1/2 rounded-md p-1 text-gray-500 transition hover:bg-white/10 hover:text-white"
         >
           <X size={14} />
         </button>

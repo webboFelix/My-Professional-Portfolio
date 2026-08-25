@@ -33,7 +33,7 @@ export function TopBar({ onMenuClick }: TopBarProps) {
     : [{ label: "Dashboard", href: "/", last: true }];
 
   return (
-    <header className="sticky top-0 z-10 -mx-8 -mt-8 mb-8 border-b border-white/5 bg-[#060b14]/80 px-4 py-3 backdrop-blur-xl sm:px-8">
+    <header className="sticky top-0 z-10 -mx-4 mb-10 border-b border-white/10 bg-[#070b12]/90 px-4 py-3 backdrop-blur-xl sm:-mx-8 sm:px-8 lg:-mx-12 lg:px-12">
       <div className="flex items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-3">
           <button
@@ -45,11 +45,17 @@ export function TopBar({ onMenuClick }: TopBarProps) {
             <Menu size={20} />
           </button>
           <nav className="flex min-w-0 items-center gap-1 text-sm">
-            <Link href="/" className="shrink-0 text-gray-500 hover:text-gray-300">
+            <Link
+              href="/"
+              className="shrink-0 text-gray-500 hover:text-gray-300"
+            >
               Home
             </Link>
             {crumbs.map((crumb) => (
-              <span key={crumb.href} className="flex min-w-0 items-center gap-1">
+              <span
+                key={crumb.href}
+                className="flex min-w-0 items-center gap-1"
+              >
                 <ChevronRight size={14} className="shrink-0 text-gray-700" />
                 {crumb.last ? (
                   <span className="truncate font-medium text-white">

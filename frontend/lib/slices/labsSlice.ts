@@ -28,6 +28,7 @@ function normalizeLab(raw: any): Lab {
     difficulty: raw.difficulty || "Medium",
     category: raw.category || raw.platform || "General",
     status: raw.status || (raw.published ? "active" : "draft"),
+    published: raw.published === true,
     tools: raw.tools || [],
     url: raw.url || raw.link,
     coverImage: raw.coverImage,

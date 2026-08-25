@@ -29,6 +29,7 @@ function normalizePost(raw: any): Post {
     writeUp: raw.writeUp || "",
     tags: raw.tags || [],
     publishedAt: raw.date || raw.publishedAt || new Date().toISOString(),
+    published: raw.published === true,
     featured: raw.featured || false,
     coverImage: raw.coverImage || "",
   };

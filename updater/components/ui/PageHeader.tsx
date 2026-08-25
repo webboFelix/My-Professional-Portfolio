@@ -15,7 +15,7 @@ export function PageHeader({
   backHref,
 }: PageHeaderProps) {
   return (
-    <div className="mb-8">
+    <div className="mb-8 border-b border-white/10 pb-7">
       {backHref && (
         <Link
           href={backHref}
@@ -25,19 +25,24 @@ export function PageHeader({
           Back
         </Link>
       )}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400/80">
+            Portfolio workspace
+          </p>
+          <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
             {title}
           </h1>
           {description && (
-            <p className="mt-1 text-sm text-gray-500">{description}</p>
+            <p className="mt-2 max-w-xl text-sm leading-6 text-slate-400">
+              {description}
+            </p>
           )}
         </div>
         {action && (
           <Link
             href={action.href}
-            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 px-4 py-2.5 text-sm font-medium text-white shadow-lg shadow-cyan-500/20 transition hover:from-cyan-500 hover:to-blue-500"
+            className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-cyan-500/20 transition hover:-translate-y-0.5 hover:bg-cyan-300"
           >
             <Plus size={16} />
             {action.label}

@@ -17,7 +17,7 @@ export function Input({
         {label}
       </label>
       <input
-        className={`w-full rounded-lg border-2 border-white/10 bg-white/5 px-4 py-3 text-sm text-white shadow-sm transition placeholder:text-gray-600 focus:border-cyan-500/70 focus:bg-white/10 focus:shadow-lg focus:shadow-cyan-500/10 focus:outline-none ${className}`}
+        className={`control-input w-full text-sm shadow-sm placeholder:text-slate-600 ${className}`}
         {...props}
       />
       {hint && <p className="text-xs text-gray-500">{hint}</p>}
@@ -37,7 +37,7 @@ export function Textarea({
         {label}
       </label>
       <textarea
-        className={`w-full rounded-lg border-2 border-white/10 bg-white/5 px-4 py-3 text-sm text-white shadow-sm transition placeholder:text-gray-600 focus:border-cyan-500/70 focus:bg-white/10 focus:shadow-lg focus:shadow-cyan-500/10 focus:outline-none ${className}`}
+        className={`control-input w-full min-h-28 text-sm shadow-sm placeholder:text-slate-600 ${className}`}
         {...props}
       />
       {hint && <p className="text-xs text-gray-500">{hint}</p>}
@@ -57,7 +57,7 @@ export function Select({
         {label}
       </label>
       <select
-        className={`w-full rounded-lg border-2 border-white/10 bg-white/5 px-4 py-3 text-sm text-white shadow-sm transition focus:border-cyan-500/70 focus:bg-white/10 focus:shadow-lg focus:shadow-cyan-500/10 focus:outline-none ${className}`}
+        className={`control-input w-full text-sm shadow-sm ${className}`}
         {...props}
       >
         {children}

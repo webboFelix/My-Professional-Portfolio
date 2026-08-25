@@ -14,7 +14,7 @@ export function FormSection({
   children,
 }: FormSectionProps) {
   return (
-    <section className="space-y-4 rounded-2xl border-2 border-white/5 bg-gradient-to-br from-white/[0.05] to-white/[0.02] p-6 shadow-lg backdrop-blur-sm transition hover:border-white/10 hover:from-white/[0.08]">
+    <section className="space-y-5 rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/90 to-slate-950/70 p-5 shadow-xl shadow-black/10 backdrop-blur-sm transition hover:border-white/20 sm:p-6">
       <div className="flex items-start gap-4 border-b border-white/5 pb-4">
         {Icon && (
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 ring-1 ring-cyan-500/30">
@@ -28,7 +28,7 @@ export function FormSection({
           )}
         </div>
       </div>
-      <div className="space-y-5">{children}</div>
+      <div className="space-y-6">{children}</div>
     </section>
   );
 }

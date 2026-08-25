@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { useStats } from "@/components/providers/StatsProvider";
 import { Card } from "@/components/ui/Card";
 import { StatCardSkeleton } from "@/components/ui/LoadingSkeleton";
@@ -12,6 +13,7 @@ import {
   Zap,
   Sparkles,
   ArrowRight,
+  Plus,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -62,6 +64,7 @@ const quickActions = [
   {
     label: "New Post",
     href: "/posts/new",
+    icon: FileText,
     color: "from-cyan-500/10 to-cyan-600/5",
     text: "text-cyan-400",
     border: "hover:border-cyan-500/30",
@@ -69,6 +72,7 @@ const quickActions = [
   {
     label: "New Lab",
     href: "/labs/new",
+    icon: FlaskConical,
     color: "from-violet-500/10 to-violet-600/5",
     text: "text-violet-400",
     border: "hover:border-violet-500/30",
@@ -76,6 +80,7 @@ const quickActions = [
   {
     label: "New Project",
     href: "/projects/new",
+    icon: FolderKanban,
     color: "from-emerald-500/10 to-emerald-600/5",
     text: "text-emerald-400",
     border: "hover:border-emerald-500/30",
@@ -83,6 +88,7 @@ const quickActions = [
   {
     label: "New Video",
     href: "/videos/new",
+    icon: Video,
     color: "from-pink-500/10 to-pink-600/5",
     text: "text-pink-400",
     border: "hover:border-pink-500/30",
@@ -95,13 +101,21 @@ export default function Dashboard() {
 
   return (
     <div>
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold tracking-tight text-white">
-          Dashboard
-        </h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Manage your portfolio content from one place
-        </p>
+      <div className="mb-8 flex flex-col gap-5 border-b border-white/10 pb-8 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-400/80">
+            Portfolio workspace
+          </p>
+          <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+            Dashboard
+          </h1>
+          <p className="mt-2 text-sm leading-6 text-slate-400">
+            Manage your portfolio content from one place
+          </p>
+        </div>
+        <div className="rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1.5 text-xs font-semibold text-emerald-300">
+          Workspace ready
+        </div>
       </div>
 
       {error && (
@@ -134,7 +148,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+      <div className="dashboard-stat-grid">
         {loading
           ? Array.from({ length: 5 }).map((_, i) => (
               <StatCardSkeleton key={i} />
@@ -152,32 +166,100 @@ export default function Dashboard() {
             ))}
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <div className="rounded-xl border-2 border-white/5 bg-gradient-to-br from-white/[0.05] to-white/[0.02] p-6 shadow-lg">
-          <div className="mb-5 flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-500/10">
-              <Zap size={20} className="text-cyan-400" />
+      <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="dashboard-panel">
+          <div className="mb-6 flex items-center justify-between gap-3">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400/70">
+                Launchpad
+              </p>
+              <h2 className="mt-1 text-xl font-semibold text-white">
+                Quick Actions
+              </h2>
             </div>
-            <h2 className="text-lg font-semibold text-white">Quick Actions</h2>
+            <Zap size={20} className="text-cyan-400" />
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
             {quickActions.map((action) => (
               <Link
                 key={action.href}
                 href={action.href}
                 className={`group rounded-xl border-2 border-white/5 bg-gradient-to-br px-5 py-4 text-sm font-medium transition ${action.color} ${action.text} ${action.border} hover:border-white/10`}
               >
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">+</span>
-                  <span>{action.label}</span>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="flex items-center gap-3">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-black/20">
+                      <action.icon size={17} />
+                    </span>
+                    <span>{action.label}</span>
+                  </span>
+                  <Plus
+                    size={16}
+                    className="opacity-50 transition group-hover:rotate-90 group-hover:opacity-100"
+                  />
                 </div>
               </Link>
             ))}
           </div>
         </div>
 
-        <div className="rounded-xl border-2 border-white/5 bg-gradient-to-br from-white/[0.05] to-white/[0.02] p-6 shadow-lg">
-          <h2 className="mb-5 text-lg font-semibold text-white">Overview</h2>
+        <div className="dashboard-panel">
+          <div className="mb-6 flex items-start justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                At a glance
+              </p>
+              <h2 className="mt-1 text-xl font-semibold text-white">
+                Portfolio pulse
+              </h2>
+            </div>
+            <span className="rounded-full border border-white/10 px-2.5 py-1 text-xs text-slate-400">
+              Live data
+            </span>
+          </div>
+          <div className="mb-7 flex flex-col items-center gap-6 sm:flex-row sm:items-center">
+            <div
+              className="dashboard-ring"
+              style={
+                {
+                  "--ring-progress": `${contentTotal ? Math.min(contentTotal * 10, 100) : 0}%`,
+                } as CSSProperties
+              }
+            >
+              <div className="dashboard-ring-inner">
+                <span className="text-3xl font-bold text-white">
+                  {loading ? "—" : contentTotal}
+                </span>
+                <span className="text-[10px] uppercase tracking-[0.18em] text-slate-500">
+                  total items
+                </span>
+              </div>
+            </div>
+            <div className="grid flex-1 grid-cols-2 gap-x-6 gap-y-3 text-sm">
+              <div>
+                <span className="block text-slate-500">Content items</span>
+                <strong className="text-white">
+                  {loading
+                    ? "—"
+                    : stats.posts + stats.labs + stats.projects + stats.videos}
+                </strong>
+              </div>
+              <div>
+                <span className="block text-slate-500">Messages</span>
+                <strong className="text-amber-300">
+                  {loading ? "—" : stats.contacts}
+                </strong>
+              </div>
+              <div>
+                <span className="block text-slate-500">Collections</span>
+                <strong className="text-cyan-300">5</strong>
+              </div>
+              <div>
+                <span className="block text-slate-500">Status</span>
+                <strong className="text-emerald-300">Online</strong>
+              </div>
+            </div>
+          </div>
           <div className="space-y-5">
             {[
               { label: "Posts", value: stats.posts, color: "bg-cyan-500" },

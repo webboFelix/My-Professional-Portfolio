@@ -81,7 +81,7 @@ export default function ProjectForm({ initialData, id }: ProjectFormProps) {
   };
 
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="form-page">
       <form onSubmit={handleSubmit} className="space-y-6">
         {error && (
           <div className="rounded-xl border-2 border-red-500/30 bg-gradient-to-r from-red-500/10 to-red-600/5 px-5 py-4 text-sm font-medium text-red-300 shadow-lg shadow-red-500/10">
@@ -165,7 +165,7 @@ export default function ProjectForm({ initialData, id }: ProjectFormProps) {
           />
         </FormSection>
 
-        <div className="flex gap-3 pt-4">
+        <div className="form-actions">
           <button
             type="submit"
             disabled={loading}

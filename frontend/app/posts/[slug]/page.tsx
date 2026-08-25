@@ -19,7 +19,7 @@ export default function PostDetailPage({
   const [loadingMarkdown, setLoadingMarkdown] = useState(false);
 
   useEffect(() => {
-    if (post?.writeUp) {
+    if (post?.published && post.writeUp) {
       setLoadingMarkdown(true);
       fetch(post.writeUp)
         .then((res) => res.text())
@@ -29,9 +29,12 @@ export default function PostDetailPage({
           setMarkdownContent("Failed to load content");
         })
         .finally(() => setLoadingMarkdown(false));
-    } else if (post?.content) {
+    } else if (post?.published && post.content) {
       // Fallback to old content field
       setMarkdownContent(post.content);
+    } else {
+      setMarkdownContent("");
+      setLoadingMarkdown(false);
     }
   }, [post]);
 
@@ -172,7 +175,19 @@ export default function PostDetailPage({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            {loadingMarkdown ? (
+            {!post.published ? (
+              <GlassCard>
+                <div className="space-y-3 text-center">
+                  <h2 className="text-lg font-bold text-amber-400 font-mono">
+                    Write-up unavailable
+                  </h2>
+                  <p className="text-gray-400">
+                    This write-up is not published yet. It will be available
+                    after the expiration period.
+                  </p>
+                </div>
+              </GlassCard>
+            ) : loadingMarkdown ? (
               <GlassCard>
                 <div className="text-center text-gray-500 font-mono">
                   Loading content...

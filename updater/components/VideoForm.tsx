@@ -110,7 +110,7 @@ export default function VideoForm({ initialData, id }: VideoFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-2xl space-y-5 rounded-xl border border-white/5 bg-white/[0.02] p-6"
+      className="form-page space-y-6 rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/90 to-slate-950/70 p-5 shadow-xl shadow-black/10 sm:p-7"
     >
       {error && (
         <div className="rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
@@ -172,7 +172,7 @@ export default function VideoForm({ initialData, id }: VideoFormProps) {
         onChange={handleChange}
       />
 
-      <div className="flex gap-3 pt-2">
+      <div className="form-actions">
         <Button type="submit" disabled={loading}>
           {loading ? "Saving..." : id ? "Update Video" : "Create Video"}
         </Button>

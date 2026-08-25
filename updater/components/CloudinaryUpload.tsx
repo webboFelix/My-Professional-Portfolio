@@ -198,7 +198,7 @@ export default function CloudinaryUpload({
         }}
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
-        className={`rounded-xl border-2 p-8 transition ${
+        className={`upload-surface transition ${
           dragOver
             ? "border-cyan-400 bg-cyan-500/10 shadow-lg shadow-cyan-500/10"
             : "border-dashed border-white/20 bg-white/[0.02] hover:border-cyan-500/40 hover:bg-white/[0.05]"
@@ -212,14 +212,10 @@ export default function CloudinaryUpload({
                 <img
                   src={preview}
                   alt="Preview"
-                  className="mx-auto max-h-64 rounded-xl shadow-lg"
+                  className="upload-preview upload-image-preview"
                 />
               ) : resourceType === "video" ? (
-                <video
-                  src={preview}
-                  controls
-                  className="mx-auto max-h-64 rounded-xl shadow-lg"
-                />
+                <video src={preview} controls className="upload-preview" />
               ) : (
                 <div className="mx-auto flex max-w-sm items-center gap-3 rounded-lg bg-green-500/10 p-4 text-green-400">
                   <FileText size={24} />
