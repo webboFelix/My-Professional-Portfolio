@@ -8,6 +8,7 @@ import { Matrix3D } from "@/components/Effects/Matrix3D";
 import { GlitchEffect } from "@/components/Effects/GlitchEffect";
 import { Lab3DCube } from "@/components/Effects/Lab3DCube";
 import { truncateToWords } from "@/lib/utils/textTruncate";
+import { RelativeTime } from "@/components/UI/RelativeTime";
 
 const container = {
   hidden: { opacity: 0 },
@@ -102,7 +103,9 @@ export default function LabsPage() {
                     variants={container}
                     initial="hidden"
                     animate="show"
-                    className="grid gap-4 md:grid-cols-2"
+                    className="grid-scroll grid gap-4 md:grid-cols-2"
+                    tabIndex={0}
+                    aria-label={`${category} labs`}
                   >
                     {categoryLabs.map((lab, index) => (
                       <motion.div key={lab.id} variants={item}>
@@ -183,28 +186,19 @@ export default function LabsPage() {
                                     $ start_lab →
                                   </a>
                                   {lab.createdAt && (
-                                    <span className="text-xs text-gray-500 font-mono">
-                                      {new Date(
-                                        lab.createdAt,
-                                      ).toLocaleDateString("en-US", {
-                                        year: "numeric",
-                                        month: "short",
-                                      })}
-                                    </span>
+                                    <RelativeTime
+                                      date={lab.createdAt}
+                                      className="text-xs text-gray-500 font-mono"
+                                    />
                                   )}
                                 </div>
                               )}
                               {!lab.url && lab.createdAt && (
                                 <div className="pt-3 border-t border-white/10 flex justify-end">
-                                  <span className="text-xs text-gray-500 font-mono">
-                                    {new Date(lab.createdAt).toLocaleDateString(
-                                      "en-US",
-                                      {
-                                        year: "numeric",
-                                        month: "short",
-                                      },
-                                    )}
-                                  </span>
+                                  <RelativeTime
+                                    date={lab.createdAt}
+                                    className="text-xs text-gray-500 font-mono"
+                                  />
                                 </div>
                               )}
                             </div>

@@ -14,6 +14,8 @@ import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useToast } from "@/components/providers/ToastProvider";
 import { useStats } from "@/components/providers/StatsProvider";
 import { useDeleteConfirm } from "@/hooks/useDeleteConfirm";
+import { newestFirst } from "@/lib/utils";
+import { RelativeTime } from "@/components/ui/RelativeTime";
 
 export default function PostsPage() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -27,7 +29,7 @@ export default function PostsPage() {
   const fetchPosts = async () => {
     try {
       const res = await listAll("/posts");
-      setPosts(res.data);
+      setPosts(newestFirst(res.data));
     } catch {
       setPosts([]);
     } finally {
@@ -132,6 +134,10 @@ export default function PostsPage() {
                     {post.published ? "Published" : "Draft"}
                   </Badge>
                 </div>
+                <RelativeTime
+                  date={post.date}
+                  className="mt-3 text-xs text-slate-500"
+                />
                 <div className="mt-auto flex justify-end gap-1 border-t border-white/10 pt-4 opacity-70 transition group-hover:opacity-100">
                   <Link
                     href={`/posts/${post.$id}`}

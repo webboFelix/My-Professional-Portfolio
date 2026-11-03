@@ -8,6 +8,7 @@ import { useProjectById } from "@/lib/hooks/useProjects";
 import { GlassCard } from "@/components/UI/GlassCard";
 import { Matrix3D } from "@/components/Effects/Matrix3D";
 import { GlitchEffect } from "@/components/Effects/GlitchEffect";
+import { RelativeTime } from "@/components/UI/RelativeTime";
 
 export default function ProjectDetailPage({
   params,
@@ -110,11 +111,7 @@ export default function ProjectDetailPage({
             </GlitchEffect>
             <div className="flex items-center gap-4 text-sm text-gray-500">
               <span className="font-mono">
-                {new Date(project.createdAt).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
+                <RelativeTime date={project.createdAt} />
               </span>
             </div>
           </motion.div>

@@ -7,6 +7,7 @@ import { Matrix3D } from "@/components/Effects/Matrix3D";
 import { GlitchEffect } from "@/components/Effects/GlitchEffect";
 import { Video3DCard } from "@/components/Effects/Video3DCard";
 import { truncateToWords } from "@/lib/utils/textTruncate";
+import { RelativeTime } from "@/components/UI/RelativeTime";
 
 const container = {
   hidden: { opacity: 0 },
@@ -95,7 +96,9 @@ export default function VideosPage() {
                     variants={container}
                     initial="hidden"
                     animate="show"
-                    className="grid gap-4 md:grid-cols-2 lg:grid-cols-3"
+                    className="grid-scroll grid gap-4 md:grid-cols-2 lg:grid-cols-3"
+                    tabIndex={0}
+                    aria-label={`${category} videos`}
                   >
                     {categoryVideos.map((video, index) => (
                       <motion.div key={video.id} variants={item}>
@@ -109,9 +112,16 @@ export default function VideosPage() {
                           >
                             {/* Video Thumbnail */}
                             <div className="relative aspect-video flex flex-col items-center justify-center bg-black/50 hover:bg-black/30 transition-colors space-y-2">
-                              <div className="text-4xl">▶</div>
+                              {video.thumbnail && (
+                                <img
+                                  src={video.thumbnail}
+                                  alt=""
+                                  className="absolute inset-0 h-full w-full object-cover opacity-50"
+                                />
+                              )}
+                              <div className="relative z-10 text-4xl">▶</div>
                               {video.duration && (
-                                <div className="text-xs text-gray-400 font-mono">
+                                <div className="relative z-10 text-xs text-gray-400 font-mono">
                                   {Math.floor(video.duration / 60)}:
                                   {(video.duration % 60)
                                     .toString()
@@ -130,14 +140,7 @@ export default function VideosPage() {
                               </p>
                               <div className="text-xs text-gray-500 flex justify-between items-center pt-2 border-t border-white/10">
                                 <span className="font-mono">
-                                  {new Date(video.createdAt).toLocaleDateString(
-                                    "en-US",
-                                    {
-                                      year: "numeric",
-                                      month: "short",
-                                      day: "numeric",
-                                    },
-                                  )}
+                                  <RelativeTime date={video.createdAt} />
                                 </span>
                                 <span>Watch →</span>
                               </div>

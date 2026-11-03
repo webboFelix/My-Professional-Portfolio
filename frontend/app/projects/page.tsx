@@ -8,6 +8,7 @@ import { Matrix3D } from "@/components/Effects/Matrix3D";
 import { GlitchEffect } from "@/components/Effects/GlitchEffect";
 import { Project3DCard } from "@/components/Effects/Project3DCard";
 import { truncateToWords } from "@/lib/utils/textTruncate";
+import { RelativeTime } from "@/components/UI/RelativeTime";
 
 const container = {
   hidden: { opacity: 0 },
@@ -114,7 +115,7 @@ function ProjectCard({ project, index }: ProjectCardProps) {
             )}
             {project.createdAt && (
               <span className="ml-auto text-xs text-gray-500 font-mono">
-                {new Date(project.createdAt).toLocaleDateString()}
+                <RelativeTime date={project.createdAt} />
               </span>
             )}
           </div>
@@ -185,7 +186,9 @@ export default function ProjectsPage() {
                   variants={container}
                   initial="hidden"
                   animate="show"
-                  className="grid gap-4 md:grid-cols-2"
+                  className="grid-scroll grid gap-4 md:grid-cols-2"
+                  tabIndex={0}
+                  aria-label="Featured projects"
                 >
                   {featured.map((project, index) => (
                     <motion.div key={project.id} variants={item}>
@@ -205,7 +208,9 @@ export default function ProjectsPage() {
                 variants={container}
                 initial="hidden"
                 animate="show"
-                className="grid gap-4 md:grid-cols-2 lg:grid-cols-3"
+                className="grid-scroll grid gap-4 md:grid-cols-2 lg:grid-cols-3"
+                tabIndex={0}
+                aria-label="All projects"
               >
                 {projects.map((project, index) => (
                   <motion.div key={project.id} variants={item}>

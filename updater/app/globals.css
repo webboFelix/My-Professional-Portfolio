@@ -196,6 +196,21 @@ body {
   align-items: stretch;
 }
 
+.grid-scroll,
+.content-grid {
+  max-height: min(78vh, 68rem);
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable;
+  padding: 0.25rem 0.65rem 0.75rem 0;
+}
+
+.grid-scroll:focus-visible,
+.content-grid:focus-visible {
+  outline: 1px solid rgba(34, 211, 238, 0.45);
+  outline-offset: 3px;
+}
+
 .post-card {
   border: 1px solid rgba(148, 163, 184, 0.16) !important;
   border-radius: 1rem !important;

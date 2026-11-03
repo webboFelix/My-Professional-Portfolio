@@ -2,7 +2,7 @@
 
 import { GlassCard } from '@/components/UI/GlassCard';
 import type { Lab } from '@/lib/api';
-import { formatDate } from '@/lib/utils';
+import { RelativeTime } from '@/components/UI/RelativeTime';
 
 interface ActivityFeedProps {
   labs: Lab[];
@@ -31,7 +31,7 @@ export function ActivityFeed({ labs }: ActivityFeedProps) {
       </ul>
       {labs.length > 0 && (
         <p className="mt-3 font-mono text-[10px] text-gray-600">
-          Last sync: {formatDate(labs[0]?.createdAt || new Date().toISOString())}
+          Last sync: <RelativeTime date={labs[0]?.createdAt} />
         </p>
       )}
     </GlassCard>

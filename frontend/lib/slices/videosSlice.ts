@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api, { type Video } from "../api";
 import { getFromCache, saveToCache } from "../cacheUtils";
+import { newestFirst } from "../utils";
 
 interface VideosState {
   items: Video[];
@@ -40,7 +41,7 @@ export const fetchVideos = createAsyncThunk(
       // Try to get from cache first
       const cached = getFromCache<Video[]>(CACHE_KEY);
       if (cached) {
-        return cached;
+        return newestFirst(cached);
       }
 
       // If not in cache, fetch from backend
@@ -50,7 +51,7 @@ export const fetchVideos = createAsyncThunk(
       // Save to cache
       saveToCache(CACHE_KEY, normalized);
 
-      return normalized;
+      return newestFirst(normalized);
     } catch (error) {
       return rejectWithValue((error as Error).message);
     }
@@ -102,7 +103,7 @@ const videosSlice = createSlice({
         if (index >= 0) {
           state.items[index] = action.payload;
         } else {
-          state.items.push(action.payload);
+          state.items.unshift(action.payload);
         }
       })
       .addCase(fetchVideoById.rejected, (state, action) => {

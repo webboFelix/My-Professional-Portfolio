@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/Button";
 import { useToast } from "@/components/providers/ToastProvider";
 import { useStats } from "@/components/providers/StatsProvider";
 import { useDeleteConfirm } from "@/hooks/useDeleteConfirm";
+import { newestFirst } from "@/lib/utils";
+import { RelativeTime } from "@/components/ui/RelativeTime";
 
 interface Contact {
   $id: string;
@@ -35,7 +37,7 @@ export default function ContactsPage() {
   const fetchContacts = async () => {
     try {
       const res = await api.get("/contacts");
-      setContacts(res.data);
+      setContacts(newestFirst(res.data));
     } catch {
       setContacts([]);
     } finally {
@@ -147,9 +149,10 @@ export default function ContactsPage() {
                     </div>
                     {!contact.read && <Badge variant="info">New</Badge>}
                   </div>
-                  <p className="mt-1 text-xs text-gray-600">
-                    {new Date(contact.date).toLocaleString()}
-                  </p>
+                  <RelativeTime
+                    date={contact.date}
+                    className="mt-1 text-xs text-gray-600"
+                  />
                   <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-gray-300">
                     {contact.message}
                   </p>

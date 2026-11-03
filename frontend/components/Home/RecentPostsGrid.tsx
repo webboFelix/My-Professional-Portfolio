@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { usePosts } from "@/lib/hooks/usePosts";
 import { truncateToWords } from "@/lib/utils/textTruncate";
+import { RelativeTime } from "@/components/UI/RelativeTime";
 
 const container = {
   hidden: { opacity: 0 },
@@ -42,7 +43,9 @@ export function RecentPostsGrid() {
         variants={container}
         initial="hidden"
         animate="show"
-        className="grid gap-4 md:grid-cols-2 lg:grid-cols-3"
+        className="grid-scroll grid gap-4 md:grid-cols-2 lg:grid-cols-3"
+        tabIndex={0}
+        aria-label="Recent posts"
       >
         {displayedPosts.map((post, index) => (
           <motion.div key={post.id} variants={item}>
@@ -99,7 +102,7 @@ export function RecentPostsGrid() {
                   {/* Date */}
                   <div className="pt-2 flex items-center justify-between text-xs text-gray-500 group-hover:text-gray-400">
                     <span>
-                      {new Date(post.publishedAt).toLocaleDateString()}
+                      <RelativeTime date={post.publishedAt} />
                     </span>
                     <span className="text-cyber-green group-hover:text-lime-300">
                       →

@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api, { type Lab } from "../api";
 import { getFromCache, saveToCache } from "../cacheUtils";
+import { newestFirst } from "../utils";
 
 interface LabsState {
   items: Lab[];
@@ -43,7 +44,7 @@ export const fetchLabs = createAsyncThunk(
       // Try to get from cache first
       const cached = getFromCache<Lab[]>(CACHE_KEY);
       if (cached) {
-        return cached;
+        return newestFirst(cached);
       }
 
       // If not in cache, fetch from backend
@@ -53,7 +54,7 @@ export const fetchLabs = createAsyncThunk(
       // Save to cache
       saveToCache(CACHE_KEY, normalized);
 
-      return normalized;
+      return newestFirst(normalized);
     } catch (error) {
       return rejectWithValue((error as Error).message);
     }
@@ -105,10 +106,10 @@ const labsSlice = createSlice({
         if (index >= 0) {
           state.items[index] = action.payload;
         } else {
-          state.items.push(action.payload);
+          state.items.unshift(action.payload);
         }
         // Update cache with new items
-        saveToCache(CACHE_KEY, state.items);
+        saveToCache(CACHE_KEY, newestFirst(state.items));
       })
       .addCase(fetchLabById.rejected, (state, action) => {
         state.loading = false;

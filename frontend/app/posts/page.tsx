@@ -8,6 +8,7 @@ import { Matrix3D } from "@/components/Effects/Matrix3D";
 import { GlitchEffect } from "@/components/Effects/GlitchEffect";
 import { Post3DCard } from "@/components/Effects/Post3DCard";
 import { truncateToWords } from "@/lib/utils/textTruncate";
+import { RelativeTime } from "@/components/UI/RelativeTime";
 
 const container = {
   hidden: { opacity: 0 },
@@ -77,7 +78,9 @@ export default function PostsPage() {
             variants={container}
             initial="hidden"
             animate="show"
-            className="mx-auto max-w-6xl grid gap-4 md:grid-cols-2 lg:grid-cols-3"
+            className="grid-scroll mx-auto max-w-6xl grid gap-4 md:grid-cols-2 lg:grid-cols-3"
+            tabIndex={0}
+            aria-label="Posts"
           >
             {posts.map((post, index) => (
               <motion.div key={post.id} variants={item}>
@@ -139,14 +142,7 @@ export default function PostsPage() {
                         {/* Footer */}
                         <div className="pt-3 flex items-center justify-between text-xs text-gray-500 group-hover:text-gray-400 border-t border-cyber-green/20">
                           <span className="font-mono">
-                            {new Date(post.publishedAt).toLocaleDateString(
-                              "en-US",
-                              {
-                                year: "numeric",
-                                month: "short",
-                                day: "numeric",
-                              },
-                            )}
+                            <RelativeTime date={post.publishedAt} />
                           </span>
                           <span className="text-cyber-green group-hover:text-lime-300 transition-colors">
                             Read →

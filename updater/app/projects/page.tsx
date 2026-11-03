@@ -13,6 +13,8 @@ import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useToast } from "@/components/providers/ToastProvider";
 import { useStats } from "@/components/providers/StatsProvider";
 import { useDeleteConfirm } from "@/hooks/useDeleteConfirm";
+import { newestFirst } from "@/lib/utils";
+import { RelativeTime } from "@/components/ui/RelativeTime";
 
 interface Project {
   $id: string;
@@ -38,7 +40,7 @@ export default function ProjectsPage() {
   const fetchProjects = async () => {
     try {
       const res = await api.get("/projects");
-      setProjects(res.data);
+      setProjects(newestFirst(res.data));
     } catch {
       setProjects([]);
     } finally {
@@ -176,6 +178,10 @@ export default function ProjectsPage() {
                         </a>
                       )}
                     </div>
+                    <RelativeTime
+                      date={project.date}
+                      className="mt-3 text-xs text-slate-500"
+                    />
                   </div>
                   <div className="mt-auto flex shrink-0 justify-end gap-1 border-t border-white/10 pt-4 opacity-70 transition group-hover:opacity-100">
                     <Link

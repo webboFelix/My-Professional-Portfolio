@@ -73,3 +73,7 @@ I am a cybersecurity professional with a strong foundation in Vulnerability Asse
 ---
 
 > Securing today, automating the future, and continuously learning to stay ahead of emerging threats.
+
+## DevSecOps
+
+The GitHub Actions workflow in `.github/workflows/devsecops.yml` runs on pushes to `main`/`master`, pull requests, weekly, and on demand. It checks dependency vulnerabilities (npm audit), TypeScript static analysis, CodeQL SAST, repository secrets (Gitleaks), generates an SPDX SBOM artifact, scans built frontend/API images with Trivy, and runs an OWASP ZAP baseline DAST scan against the built portfolio frontend. High and critical dependency/image findings and ZAP alerts fail the workflow.

@@ -178,6 +178,19 @@ body {
   border-radius: 6px;
 }
 
+.grid-scroll {
+  max-height: min(78vh, 68rem);
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable;
+  padding: 0.25rem 0.65rem 0.75rem 0;
+}
+
+.grid-scroll:focus-visible {
+  outline: 1px solid rgba(0, 255, 157, 0.45);
+  outline-offset: 3px;
+}
+
 ::selection {
   background: rgba(0, 255, 157, 0.3);
   color: #fff;

@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api, { type Post } from "../api";
 import { getFromCache, saveToCache } from "../cacheUtils";
+import { newestFirst } from "../utils";
 
 interface PostsState {
   items: Post[];
@@ -42,7 +43,7 @@ export const fetchPosts = createAsyncThunk(
       // Try to get from cache first
       const cached = getFromCache<Post[]>(CACHE_KEY);
       if (cached) {
-        return cached;
+        return newestFirst(cached);
       }
 
       // If not in cache, fetch from backend
@@ -52,7 +53,7 @@ export const fetchPosts = createAsyncThunk(
       // Save to cache
       saveToCache(CACHE_KEY, normalized);
 
-      return normalized;
+      return newestFirst(normalized);
     } catch (error) {
       return rejectWithValue((error as Error).message);
     }
@@ -116,10 +117,10 @@ const postsSlice = createSlice({
         if (index >= 0) {
           state.items[index] = action.payload;
         } else {
-          state.items.push(action.payload);
+          state.items.unshift(action.payload);
         }
         // Update cache with new items
-        saveToCache(CACHE_KEY, state.items);
+        saveToCache(CACHE_KEY, newestFirst(state.items));
       })
       .addCase(fetchPostById.rejected, (state, action) => {
         state.loading = false;
@@ -135,10 +136,10 @@ const postsSlice = createSlice({
         if (index >= 0) {
           state.items[index] = action.payload;
         } else {
-          state.items.push(action.payload);
+          state.items.unshift(action.payload);
         }
         // Update cache with new items
-        saveToCache(CACHE_KEY, state.items);
+        saveToCache(CACHE_KEY, newestFirst(state.items));
       })
       .addCase(fetchPostBySlug.rejected, (state, action) => {
         state.loading = false;

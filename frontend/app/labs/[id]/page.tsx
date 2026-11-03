@@ -8,6 +8,7 @@ import { useLabById } from "@/lib/hooks/useLabs";
 import { GlassCard } from "@/components/UI/GlassCard";
 import { Matrix3D } from "@/components/Effects/Matrix3D";
 import { GlitchEffect } from "@/components/Effects/GlitchEffect";
+import { RelativeTime } from "@/components/UI/RelativeTime";
 
 const difficultyColors: Record<string, { bg: string; text: string }> = {
   easy: { bg: "bg-green-500/20", text: "text-green-400" },
@@ -125,11 +126,7 @@ export default function LabDetailPage({ params }: { params: { id: string } }) {
                 </span>
               )}
               <span className="font-mono">
-                {new Date(lab.createdAt).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                })}
+                <RelativeTime date={lab.createdAt} />
               </span>
             </div>
           </motion.div>

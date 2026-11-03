@@ -13,6 +13,8 @@ import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useToast } from "@/components/providers/ToastProvider";
 import { useStats } from "@/components/providers/StatsProvider";
 import { useDeleteConfirm } from "@/hooks/useDeleteConfirm";
+import { newestFirst } from "@/lib/utils";
+import { RelativeTime } from "@/components/ui/RelativeTime";
 
 interface Lab {
   $id: string;
@@ -47,7 +49,7 @@ export default function LabsPage() {
   const fetchLabs = async () => {
     try {
       const res = await listAll("/labs");
-      setLabs(res.data);
+      setLabs(newestFirst(res.data));
     } catch {
       setLabs([]);
     } finally {
@@ -158,6 +160,10 @@ export default function LabsPage() {
                   </Badge>
                   <span className="text-slate-500">{lab.platform}</span>
                 </div>
+                <RelativeTime
+                  date={lab.date}
+                  className="mt-3 text-xs text-slate-500"
+                />
                 <div className="mt-auto flex justify-end gap-1 border-t border-white/10 pt-4 opacity-70 transition group-hover:opacity-100">
                   <Link
                     href={`/labs/${lab.$id}`}

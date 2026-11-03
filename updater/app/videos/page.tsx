@@ -12,6 +12,8 @@ import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { useToast } from "@/components/providers/ToastProvider";
 import { useStats } from "@/components/providers/StatsProvider";
 import { useDeleteConfirm } from "@/hooks/useDeleteConfirm";
+import { newestFirst } from "@/lib/utils";
+import { RelativeTime } from "@/components/ui/RelativeTime";
 
 interface Video {
   $id: string;
@@ -35,7 +37,7 @@ export default function VideosPage() {
   const fetchVideos = async () => {
     try {
       const res = await listAll("/videos");
-      setVideos(res.data);
+      setVideos(newestFirst(res.data));
     } catch {
       setVideos([]);
     } finally {
@@ -119,7 +121,11 @@ export default function VideosPage() {
           description={`Nothing found for "${search}"`}
         />
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div
+          className="grid-scroll grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          tabIndex={0}
+          aria-label="Videos"
+        >
           {filtered.map((video) => (
             <div
               key={video.$id}
@@ -154,6 +160,10 @@ export default function VideosPage() {
                     {video.published ? "Live" : "Draft"}
                   </Badge>
                 </div>
+                <RelativeTime
+                  date={video.date}
+                  className="mt-3 text-xs text-slate-500"
+                />
                 <div className="mt-auto flex justify-end gap-1 border-t border-white/10 pt-4 opacity-70 transition group-hover:opacity-100">
                   <Link
                     href={`/videos/${video.$id}`}
